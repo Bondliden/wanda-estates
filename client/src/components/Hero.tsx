@@ -1,4 +1,4 @@
-import videoSource from "@assets/generated_videos/cinematic_drone_shot_of_luxury_marbella_villa.mp4";
+import videoSource from "@assets/generated_videos/Dec_11__0958_31s_202512111144_8qsab.mp4";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
