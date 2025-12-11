@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
