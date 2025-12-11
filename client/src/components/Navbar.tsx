@@ -1,19 +1,36 @@
 import { Link } from "wouter";
 import { useState } from "react";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logo from "@assets/generated_images/wanda_estates_logo.png";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === "en" ? "es" : "en";
-    i18n.changeLanguage(newLang);
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
   };
+
+  const languages = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+    { code: 'sv', label: 'Svenska', flag: '🇸🇪' },
+    { code: 'pl', label: 'Polski', flag: '🇵🇱' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  ];
+
+  const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
 
   const links = [
     { name: t("nav.home"), href: "/" },
@@ -46,27 +63,59 @@ export default function Navbar() {
             </Link>
           ))}
           
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={toggleLanguage}
-            className="text-white hover:text-[#e09900] hover:bg-white/10 ml-4 font-bold uppercase"
-          >
-            <Globe className="w-4 h-4 mr-2" />
-            {i18n.language === "en" ? "ES" : "EN"}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-white hover:text-[#e09900] hover:bg-white/10 ml-4 font-bold uppercase flex items-center gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                {currentLang.code.toUpperCase()}
+                <ChevronDown className="w-3 h-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white text-[#2c3e50]">
+              {languages.map((lang) => (
+                <DropdownMenuItem 
+                  key={lang.code}
+                  onClick={() => changeLanguage(lang.code)}
+                  className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
+                >
+                  <span className="text-lg">{lang.flag}</span>
+                  {lang.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 lg:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={toggleLanguage}
-              className="text-white hover:text-[#e09900] hover:bg-white/10 font-bold uppercase p-0 h-auto"
-            >
-              {i18n.language === "en" ? "ES" : "EN"}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-white hover:text-[#e09900] hover:bg-white/10 font-bold uppercase p-0 h-auto flex items-center gap-1"
+                >
+                  {currentLang.code.toUpperCase()}
+                  <ChevronDown className="w-3 h-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-white text-[#2c3e50]">
+                {languages.map((lang) => (
+                  <DropdownMenuItem 
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code)}
+                    className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <button 
               className="text-white"
