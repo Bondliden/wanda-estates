@@ -1,17 +1,25 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import heroBg from "@assets/generated_images/luxury_modern_villa_in_marbella_with_infinity_pool_at_sunset.png";
+import heroVideo from "@assets/generated_videos/cinematic_drone_shot_of_luxury_marbella_villa.mp4";
 
 export default function Hero() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      >
-        <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
+      {/* Background Video */}
+      <div className="absolute inset-0 w-full h-full">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src={heroVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        {/* Dark Overlay for text readability */}
+        <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
       </div>
 
       {/* Content */}
