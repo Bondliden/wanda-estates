@@ -1,4 +1,6 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+
 import { Button } from "@/components/ui/button";
 import teamMeeting from "@assets/generated_images/real_estate_agent_team_meeting.png";
 
@@ -97,12 +99,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#f8f8f8] py-12 border-t border-gray-200">
-        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-           <p>&copy; {new Date().getFullYear()} Wanda Estates. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

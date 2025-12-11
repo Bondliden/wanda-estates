@@ -1,70 +1,5 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
-import { Bed, Bath, Maximize, MapPin } from "lucide-react";
-
-// Mock data for properties
-const properties = [
-  {
-    id: 1,
-    title: "Luxury Villa in Sierra Blanca",
-    location: "Sierra Blanca, Marbella",
-    price: "€4,500,000",
-    beds: 5,
-    baths: 6,
-    sqm: 650,
-    image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Modern Apartment in Puerto Banús",
-    location: "Puerto Banús, Marbella",
-    price: "€1,200,000",
-    beds: 3,
-    baths: 2,
-    sqm: 140,
-    image: "https://images.unsplash.com/photo-1600596542815-2495db98dada?q=80&w=2070&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Exclusive Penthouse with Sea Views",
-    location: "Golden Mile, Marbella",
-    price: "€3,800,000",
-    beds: 4,
-    baths: 4,
-    sqm: 320,
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop"
-  },
-  {
-    id: 4,
-    title: "Contemporary Villa in Nueva Andalucía",
-    location: "Nueva Andalucía, Marbella",
-    price: "€2,950,000",
-    beds: 4,
-    baths: 5,
-    sqm: 450,
-    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop"
-  },
-  {
-    id: 5,
-    title: "Beachfront Villa in Los Monteros",
-    location: "Los Monteros, Marbella East",
-    price: "€6,500,000",
-    beds: 6,
-    baths: 7,
-    sqm: 800,
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974&auto=format&fit=crop"
-  },
-  {
-    id: 6,
-    title: "Golf Front Villa in Guadalmina",
-    location: "Guadalmina Baja, San Pedro",
-    price: "€3,200,000",
-    beds: 5,
-    baths: 5,
-    sqm: 500,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
-  }
-];
 
 export default function PropertiesForSale() {
   return (
@@ -137,12 +72,7 @@ export default function PropertiesForSale() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#f8f8f8] py-12 border-t border-gray-200">
-        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-           <p>&copy; {new Date().getFullYear()} Wanda Estates. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
