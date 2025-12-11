@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.jpg";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export default function Home() {
                     </div>
                     <div className="col-span-1 md:col-span-2 grid grid-cols-3 gap-1">
                          {/* Grid of smaller images as seen in the HTML snippet */}
-                         <img src="https://images.unsplash.com/photo-1600596542815-2495db98dada?q=80&w=2070&auto=format&fit=crop" className="w-full h-40 object-cover" />
+                         <img src={luxuryApartment} alt="Luxury Apartment Interior" className="w-full h-40 object-cover" />
                          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop" className="w-full h-40 object-cover" />
                          <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop" className="w-full h-40 object-cover" />
                          
