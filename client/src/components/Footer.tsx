@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import logo from "@assets/94619c94-36ad-48b0-a352-bb57de222d8a_1765433403428.png";
+import logo from "@assets/generated_images/wanda_estates_logo.png";
 
 export default function Footer() {
   return (
