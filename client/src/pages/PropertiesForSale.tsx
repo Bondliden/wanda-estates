@@ -23,7 +23,7 @@ const properties = [
     beds: 3,
     baths: 2,
     sqm: 140,
-    image: "https://images.unsplash.com/photo-1600596542815-2495db98dada?q=80&w=2070&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop"
   },
   {
     id: 3,
