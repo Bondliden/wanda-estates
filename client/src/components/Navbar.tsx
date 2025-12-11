@@ -50,7 +50,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-[#013b7a] p-4 absolute top-full left-0 right-0 border-t border-white/10">
+        <div className="lg:hidden bg-[#013b7a] p-4 absolute top-full left-0 right-0 border-t border-white/10 z-50">
           <div className="flex flex-col space-y-4">
             {links.map((link) => (
               <Link key={link.name} href={link.href}>
