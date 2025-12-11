@@ -24,8 +24,8 @@ export default function Home() {
                 </div>
 
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-serif text-[#2c3e50] mb-2 uppercase">The Oakhill</h2>
-                    <h3 className="text-xl font-light text-gray-500 mb-4">Luxury apartments within a private estate</h3>
+                    <h2 className="text-3xl font-serif text-[#2c3e50] mb-2 uppercase">Luxury Apartments</h2>
+                    <h3 className="text-xl font-light text-gray-500 mb-4">Within a private estate</h3>
                     <p className="text-[#e09900] font-semibold">Prices from €299,000</p>
                 </div>
 
@@ -33,7 +33,7 @@ export default function Home() {
                     <div className="col-span-1 md:col-span-1">
                         <img 
                             src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070&auto=format&fit=crop" 
-                            alt="The Oakhill Exterior" 
+                            alt="Luxury Apartments Exterior" 
                             className="w-full h-64 object-cover"
                         />
                         <div className="text-center mt-4">

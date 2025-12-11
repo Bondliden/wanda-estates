@@ -9,7 +9,7 @@ import apartmentComplex from "@assets/generated_images/modern_luxury_apartment_c
 const developments = [
   {
     id: 1,
-    title: "The Oakhill",
+    title: "Luxury Apartments",
     location: "Ojén, Marbella",
     priceFrom: "€299,000",
     description: "Luxury apartments within a private estate featuring breathtaking views and world-class amenities.",

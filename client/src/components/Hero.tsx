@@ -27,10 +27,10 @@ export default function Hero() {
           {/* Right Column (Content) */}
           <div className="flex flex-col items-center md:items-center text-center text-white bg-black/40 p-12 backdrop-blur-sm rounded-sm">
             <h1 className="text-4xl md:text-5xl font-serif mb-4 tracking-wide uppercase">
-              The Oakhill
+              Luxury Apartments
             </h1>
             <h3 className="text-xl md:text-2xl font-light mb-6">
-              Luxury apartments within a private estate
+              Within a private estate
             </h3>
             <p className="text-lg mb-8 text-gray-200">
               Prices from €299,000
