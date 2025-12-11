@@ -1,20 +1,21 @@
 import { Link } from "wouter";
 import logo from "@assets/generated_images/wanda_estates_logo.png";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-[#f8f8f8] py-12 border-t border-gray-200">
       <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="flex justify-center md:justify-start items-center">
-                   <Link href="/">
-                    <a className="block w-[200px]">
+                   <Link href="/" className="block w-[200px]">
                       <img 
                         src={logo} 
                         alt="Wanda Estates" 
                         className="w-full h-auto object-contain"
                       />
-                    </a>
                    </Link>
               </div>
               
@@ -36,23 +37,23 @@ export default function Footer() {
                   
                   <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs uppercase text-gray-500 font-semibold">
                       <div className="space-y-2">
-                           <Link href="/">
-                             <a className="block hover:text-[#2ea3f2]">home</a>
+                           <Link href="/" className="block hover:text-[#2ea3f2]">
+                             {t("nav.home")}
                            </Link>
-                           <Link href="/properties-for-sale">
-                             <a className="block hover:text-[#2ea3f2]">properties for sale</a>
+                           <Link href="/properties-for-sale" className="block hover:text-[#2ea3f2]">
+                             {t("nav.properties")}
                            </Link>
                            <a href="#" className="block hover:text-[#2ea3f2]">areas</a>
                       </div>
                       <div className="space-y-2">
-                           <Link href="/about-us">
-                             <a className="block hover:text-[#2ea3f2]">about us</a>
+                           <Link href="/about-us" className="block hover:text-[#2ea3f2]">
+                             {t("nav.about")}
                            </Link>
-                           <Link href="/new-developments">
-                             <a className="block hover:text-[#2ea3f2]">new developments</a>
+                           <Link href="/new-developments" className="block hover:text-[#2ea3f2]">
+                             {t("nav.developments")}
                            </Link>
-                           <Link href="/contact-us">
-                             <a className="block hover:text-[#2ea3f2]">contact us</a>
+                           <Link href="/contact-us" className="block hover:text-[#2ea3f2]">
+                             {t("nav.contact")}
                            </Link>
                       </div>
                   </div>
@@ -61,13 +62,16 @@ export default function Footer() {
               <div className="text-gray-500 text-sm space-y-4">
                    <div className="flex items-start">
                       <span className="w-8 flex-shrink-0 text-center text-[#2ea3f2]"><svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
-                      <p>El Rodeo Alto Nº4, Nueva Andalucía, 29660, Marbella, Málaga</p>
+                      <p>{t("footer.address")}</p>
                    </div>
                    <div className="flex items-center">
                       <span className="w-8 flex-shrink-0 text-center text-[#2ea3f2]"><svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></span>
                       <p>info@wandaestates.com</p>
                    </div>
               </div>
+          </div>
+          <div className="text-center mt-8 text-xs text-gray-400">
+            <p>{t("footer.rights", { year: new Date().getFullYear() })}</p>
           </div>
       </div>
     </footer>

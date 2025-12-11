@@ -1,7 +1,10 @@
 import videoSource from "@assets/generated_videos/cinematic_drone_shot_of_luxury_marbella_villa.mp4";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative w-full h-screen overflow-hidden">
       {/* Background Video */}
@@ -27,18 +30,18 @@ export default function Hero() {
           {/* Right Column (Content) */}
           <div className="flex flex-col items-center md:items-center text-center text-white bg-black/40 p-12 backdrop-blur-sm rounded-sm">
             <h1 className="text-4xl md:text-5xl font-serif mb-4 tracking-wide uppercase">
-              Luxury Apartments
+              {t("home.hero.title")}
             </h1>
             <h3 className="text-xl md:text-2xl font-light mb-6">
-              Within a private estate
+              {t("home.hero.subtitle")}
             </h3>
             <p className="text-lg mb-8 text-gray-200">
-              Prices from €299,000
+              {t("home.hero.price")}
             </p>
             <Button 
               className="bg-white text-[#2ea3f2] hover:bg-gray-100 hover:text-[#2ea3f2] uppercase tracking-wider font-bold px-8 py-6 rounded-none text-sm transition-all"
             >
-              View Property
+              {t("home.hero.button")}
             </Button>
           </div>
         </div>

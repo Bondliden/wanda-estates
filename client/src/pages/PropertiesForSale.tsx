@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Bed, Bath, Maximize, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Mock data for properties
 const properties = [
@@ -68,6 +69,8 @@ const properties = [
 ];
 
 export default function PropertiesForSale() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
@@ -75,9 +78,9 @@ export default function PropertiesForSale() {
       {/* Header */}
       <div className="bg-[#2c3e50] text-white pt-32 pb-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">Properties for Sale</h1>
+          <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">{t("properties.title")}</h1>
           <p className="text-lg font-light text-gray-300 max-w-2xl mx-auto">
-            Discover our exclusive portfolio of luxury properties in Marbella and the Costa del Sol.
+            {t("properties.subtitle")}
           </p>
         </div>
       </div>
@@ -96,7 +99,7 @@ export default function PropertiesForSale() {
                   />
                   <div className="absolute top-4 left-4">
                     <span className="bg-[#e09900] text-white text-xs font-bold uppercase tracking-widest px-3 py-1">
-                      For Sale
+                      {t("properties.forsale")}
                     </span>
                   </div>
                 </div>
@@ -114,11 +117,11 @@ export default function PropertiesForSale() {
                   <div className="flex justify-between border-t border-gray-100 pt-4 text-gray-500 text-xs uppercase tracking-wider">
                     <div className="flex items-center gap-1">
                       <Bed className="w-4 h-4" />
-                      <span>{property.beds} Beds</span>
+                      <span>{property.beds} {t("properties.beds")}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Bath className="w-4 h-4" />
-                      <span>{property.baths} Baths</span>
+                      <span>{property.baths} {t("properties.baths")}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Maximize className="w-4 h-4" />
@@ -128,7 +131,7 @@ export default function PropertiesForSale() {
                   
                   <div className="mt-6 text-center">
                     <Button variant="outline" className="w-full rounded-none border-gray-300 text-gray-500 hover:bg-[#2ea3f2] hover:text-white uppercase text-xs tracking-wider">
-                      View Details
+                      {t("properties.view")}
                     </Button>
                   </div>
                 </div>

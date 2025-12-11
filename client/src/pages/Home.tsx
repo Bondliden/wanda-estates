@@ -2,8 +2,11 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
@@ -16,7 +19,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center mb-12">
                     <div className="w-full md:w-1/4">
                         <div className="bg-[#2c3e50] text-white py-3 px-6 text-center uppercase tracking-wider text-sm font-semibold">
-                            Featured Property
+                            {t("home.featured.title")}
                         </div>
                     </div>
                     <div className="w-full md:w-3/4 pl-0 md:pl-4 mt-4 md:mt-0">
@@ -25,9 +28,9 @@ export default function Home() {
                 </div>
 
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-serif text-[#2c3e50] mb-2 uppercase">Luxury Apartments</h2>
-                    <h3 className="text-xl font-light text-gray-500 mb-4">Within a private estate</h3>
-                    <p className="text-[#e09900] font-semibold">Prices from €299,000</p>
+                    <h2 className="text-3xl font-serif text-[#2c3e50] mb-2 uppercase">{t("home.featured.name")}</h2>
+                    <h3 className="text-xl font-light text-gray-500 mb-4">{t("home.featured.desc")}</h3>
+                    <p className="text-[#e09900] font-semibold">{t("home.featured.price")}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
@@ -39,7 +42,7 @@ export default function Home() {
                         />
                         <div className="text-center mt-4">
                             <Button variant="outline" className="rounded-none border-gray-300 text-gray-500 hover:bg-[#2ea3f2] hover:text-white uppercase text-xs tracking-wider px-6">
-                                View Property
+                                {t("home.featured.button")}
                             </Button>
                         </div>
                     </div>
@@ -63,7 +66,7 @@ export default function Home() {
              <div className="flex flex-wrap items-center mb-12">
                     <div className="w-full md:w-1/4">
                         <div className="bg-[#2c3e50] text-white py-3 px-6 text-center uppercase tracking-wider text-sm font-semibold">
-                            Our Services
+                            {t("home.services.title")}
                         </div>
                     </div>
                     <div className="w-full md:w-3/4 pl-0 md:pl-4 mt-4 md:mt-0">
@@ -74,10 +77,10 @@ export default function Home() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="text-gray-600 space-y-6 text-justify">
                    <p>
-                     Wanda Estate Property Group is a dynamic new real estate agency with a refreshing approach. Established by José Maria Esquerdo, Wanda Estate Property Group combines expertise from the real estate and financial sectors to help you make wise investments in real estate in Marbella and achieve maximum value from the property market.
+                     {t("home.services.desc1")}
                    </p>
                    <p>
-                     We have a track record for delivering ambitious luxury resorts around the world for more than 20 years in hotel and real estate development, and significant experience tailoring investments to generate rapid profits for clients.
+                     {t("home.services.desc2")}
                    </p>
                 </div>
                 <div className="flex justify-center items-center">
@@ -96,19 +99,19 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div></div> {/* Empty left column */}
                     <div>
-                        <h2 className="text-3xl font-serif text-[#2c3e50] mb-8 uppercase">Wanda Real Estate</h2>
+                        <h2 className="text-3xl font-serif text-[#2c3e50] mb-8 uppercase">{t("home.contact.title")}</h2>
                         <form className="space-y-4">
                             <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">Name</label>
-                                <input type="text" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder="Name" />
+                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.name")}</label>
+                                <input type="text" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.name")} />
                             </div>
                             <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">Email Address</label>
-                                <input type="email" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder="Email Address" />
+                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.email")}</label>
+                                <input type="email" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.email")} />
                             </div>
                             <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">Phone</label>
-                                <input type="tel" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder="Phone" />
+                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.phone")}</label>
+                                <input type="tel" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.phone")} />
                             </div>
                             
                             <div className="flex justify-between items-center pt-4">
@@ -117,7 +120,7 @@ export default function Home() {
                                     <input type="text" className="w-16 border border-gray-300 ml-2 p-1" />
                                 </div>
                                 <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-8">
-                                    Send
+                                    {t("form.send")}
                                 </Button>
                             </div>
                         </form>

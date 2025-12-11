@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import apartmentComplex from "@assets/generated_images/modern_luxury_apartment_complex_exterior.png";
+import { useTranslation } from "react-i18next";
 
 // Mock data for new developments
 const developments = [
@@ -42,6 +43,8 @@ const developments = [
 ];
 
 export default function NewDevelopments() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
@@ -49,9 +52,9 @@ export default function NewDevelopments() {
       {/* Header */}
       <div className="bg-[#2c3e50] text-white pt-32 pb-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">New Developments</h1>
+          <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">{t("developments.title")}</h1>
           <p className="text-lg font-light text-gray-300 max-w-2xl mx-auto">
-            Explore the finest new construction projects and off-plan investments in Marbella.
+            {t("developments.subtitle")}
           </p>
         </div>
       </div>
@@ -72,7 +75,7 @@ export default function NewDevelopments() {
                 
                 <div className="w-full md:w-1/2 space-y-6 text-center md:text-left">
                   <div className="inline-block bg-[#e09900] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 mb-2">
-                    New Development
+                    {t("developments.badge")}
                   </div>
                   <h2 className="text-3xl font-serif text-[#2c3e50] uppercase">{dev.title}</h2>
                   <div className="flex items-center justify-center md:justify-start text-gray-500">
@@ -83,10 +86,10 @@ export default function NewDevelopments() {
                     {dev.description}
                   </p>
                   <p className="text-xl font-bold text-[#2c3e50]">
-                    From {dev.priceFrom}
+                    {t("developments.from", { price: dev.priceFrom })}
                   </p>
                   <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-8 py-6">
-                    View Project
+                    {t("developments.view")}
                   </Button>
                 </div>
               </div>
