@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { useState } from "react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import logo from "@assets/wanda_logo_horizontal.png";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,7 +47,7 @@ export default function Navbar() {
         <div className="w-[200px] md:w-[274px]">
           <Link href="/" className="block">
               <img 
-                src={logo} 
+                src="/wanda_logo_horizontal.png" 
                 alt="Wanda Estates" 
                 className="w-full h-auto object-contain"
               />

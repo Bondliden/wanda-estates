@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import logo from "@assets/wanda_logo_horizontal.png";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
@@ -12,7 +11,7 @@ export default function Footer() {
               <div className="flex justify-center md:justify-start items-center">
                    <Link href="/" className="block w-[200px]">
                       <img 
-                        src={logo} 
+                        src="/wanda_logo_horizontal.png" 
                         alt="Wanda Estates" 
                         className="w-full h-auto object-contain"
                       />
