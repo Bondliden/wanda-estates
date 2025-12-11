@@ -75,7 +75,7 @@ export default function Home() {
                     </div>
                 </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+             <div className="max-w-4xl mx-auto">
                 <div className="text-gray-600 space-y-6 text-justify">
                    <p>
                      {t("home.services.desc1")}
@@ -83,12 +83,6 @@ export default function Home() {
                    <p>
                      {t("home.services.desc2")}
                    </p>
-                </div>
-                <div className="flex justify-center items-center">
-                    {/* Placeholder for logo image seen in HTML */}
-                    <div className="p-8 border border-gray-200 bg-white shadow-sm">
-                        <img src="/wanda_logo_horizontal.png?v=2" alt="Wanda Estates Logo" className="h-16 object-contain" />
-                    </div>
                 </div>
              </div>
           </div>
