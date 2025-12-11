@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logo from "@assets/94619c94-36ad-48b0-a352-bb57de222d8a_1765433403428.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +22,12 @@ export default function Navbar() {
         {/* Logo Area */}
         <div className="w-[200px] md:w-[274px]">
           <Link href="/">
-            <a className="block text-2xl font-serif font-bold tracking-widest uppercase">
-              {/* Replacing missing image with text for now, or using a placeholder if preferred */}
-              Wanda<span className="text-[#c5a059]">Estates</span>
+            <a className="block">
+              <img 
+                src={logo} 
+                alt="Wanda Estates" 
+                className="w-full h-auto object-contain"
+              />
             </a>
           </Link>
         </div>
