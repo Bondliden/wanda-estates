@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useState } from "react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import logo from "@assets/generated_images/wanda_estates_logo.png";
+import logo from "@assets/wanda_logo_horizontal.png";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {

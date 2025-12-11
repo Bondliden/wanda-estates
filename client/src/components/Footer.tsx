@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import logo from "@assets/generated_images/wanda_estates_logo.png";
+import logo from "@assets/wanda_logo_horizontal.png";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
