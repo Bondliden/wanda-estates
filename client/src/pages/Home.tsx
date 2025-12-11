@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.jpg";
+import wandaLogo from "@assets/wanda_logo_horizontal.png";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -87,7 +88,7 @@ export default function Home() {
                 <div className="flex justify-center items-center">
                     {/* Placeholder for logo image seen in HTML */}
                     <div className="p-8 border border-gray-200 bg-white shadow-sm">
-                        <h2 className="text-3xl font-serif text-primary uppercase tracking-widest font-bold">Wanda<span className="text-secondary">Estates</span></h2>
+                        <img src={wandaLogo} alt="Wanda Estates Logo" className="h-16 object-contain" />
                     </div>
                 </div>
              </div>
