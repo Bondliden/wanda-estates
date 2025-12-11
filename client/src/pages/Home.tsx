@@ -1,53 +1,39 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import FeaturedListings from "@/components/FeaturedListings";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col w-full">
+    <div className="min-h-screen bg-white font-sans">
       <Navbar />
-      <main className="flex-grow">
+      <main>
         <Hero />
         
-        {/* Intro Section */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-6 text-center max-w-4xl">
-            <span className="text-secondary text-sm font-bold uppercase tracking-widest mb-4 block">Welcome to Wanda Estates</span>
-            <h2 className="text-3xl md:text-5xl font-serif text-primary mb-8 leading-snug">
-              A Refreshing Approach to <br/>Luxury Real Estate
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
-              With over 20 years of experience in hotel and real estate development, 
-              we combine industry expertise with financial acumen to help our clients 
-              make wise property investments in Marbella. We don't just sell homes; 
-              we curate lifestyles and secure legacies.
-            </p>
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white rounded-none uppercase tracking-widest px-8 py-6">
-              Learn More About Us
-            </Button>
+        {/* Section below Hero as seen in HTML snippet */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+             {/* This section appeared to have a "Need Help?" block in the snippet */}
+             <div className="flex justify-center">
+                <div className="text-center max-w-2xl">
+                   <p className="text-gray-600 text-lg mb-6">
+                     Wanda Estate Property Group is a dynamic new real estate agency with a refreshing approach. Established by José Maria Esquerdo, Wanda Estate Property Group combines expertise from the real estate and financial sectors to help you make wise investments in real estate in Marbella and achieve maximum value from the property market.
+                   </p>
+                   <p className="text-gray-600 text-lg">
+                     We have a track record for delivering ambitious luxury resorts around the world for more than 20 years in hotel and real estate development, and significant experience tailoring investments to generate rapid profits for clients.
+                   </p>
+                </div>
+             </div>
           </div>
         </section>
 
-        <FeaturedListings />
-
-        {/* CTA Section */}
-        <section className="py-32 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center opacity-20 bg-fixed"></div>
-          <div className="container mx-auto px-6 relative z-10 text-center">
-            <h2 className="text-4xl md:text-6xl font-serif text-white mb-8">Looking to Sell Your Property?</h2>
-            <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light">
-              Trust your property with Marbella's most dynamic real estate team. 
-              We offer bespoke marketing strategies to reach the right buyers globally.
-            </p>
-            <Button className="bg-secondary text-primary hover:bg-white hover:text-primary rounded-none uppercase tracking-widest px-10 py-6 text-sm font-bold">
-              Request a Valuation
-            </Button>
-          </div>
-        </section>
       </main>
-      <Footer />
+      
+      {/* Simple Footer based on snippet */}
+      <footer className="bg-[#f8f8f8] py-12 border-t border-gray-200">
+        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+           <p>&copy; {new Date().getFullYear()} Wanda Estates. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

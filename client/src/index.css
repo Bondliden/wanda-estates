@@ -9,45 +9,33 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Mediterranean Luxury Palette */
-  --color-background: hsl(40 20% 98%); /* Creamy White */
-  --color-foreground: hsl(220 15% 20%); /* Charcoal */
+  /* Original Palette extracted from HTML/CSS */
+  --color-background: hsl(0 0% 100%); 
+  --color-foreground: hsl(0 0% 20%);
   
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(220 15% 20%);
+  --color-primary: hsl(207 89% 56%); /* #2ea3f2 Blue */
+  --color-primary-foreground: hsl(0 0% 100%);
   
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(220 15% 20%);
+  --color-secondary: hsl(38 71% 44%); /* #e09900 Gold/Orange */
+  --color-secondary-foreground: hsl(0 0% 100%);
   
-  --color-primary: hsl(215 30% 25%); /* Deep Navy */
-  --color-primary-foreground: hsl(40 20% 98%);
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
   
-  --color-secondary: hsl(38 45% 55%); /* Champagne Gold */
-  --color-secondary-foreground: hsl(220 15% 20%);
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
   
-  --color-muted: hsl(220 10% 94%);
-  --color-muted-foreground: hsl(220 10% 40%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
   
-  --color-accent: hsl(40 30% 90%); /* Soft Sand */
-  --color-accent-foreground: hsl(215 30% 25%);
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(207 89% 56%);
   
-  --color-destructive: hsl(0 84% 60%);
-  --color-destructive-foreground: hsl(0 0% 98%);
+  --font-sans: 'Open Sans', sans-serif; /* Divi uses Open Sans usually */
+  --font-serif: 'Playfair Display', serif; /* Keeping Playfair for headers as it fits the luxury vibe even if original was different */
   
-  --color-border: hsl(220 10% 90%);
-  --color-input: hsl(220 10% 90%);
-  --color-ring: hsl(215 30% 25%);
-  
-  --color-chart-1: hsl(215 30% 25%);
-  --color-chart-2: hsl(38 45% 55%);
-  --color-chart-3: hsl(220 15% 40%);
-  --color-chart-4: hsl(40 20% 80%);
-  --color-chart-5: hsl(215 20% 60%);
-
-  --font-sans: 'Montserrat', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-  
-  --radius: 0rem; /* Sharp corners for luxury feel, or very slightly rounded */
+  --radius: 0.5rem;
 }
 
 @layer base {
@@ -55,28 +43,6 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-secondary/30;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
-  }
-}
-
-/* Custom Utilities for Luxury Feel */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  
-  .glass-panel {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
-  }
-  
-  .luxury-gradient {
-    @apply bg-gradient-to-r from-primary to-[#1a2b4b];
-  }
-  
-  .gold-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#C5A059] to-[#E5C585];
+    @apply font-sans antialiased bg-background text-foreground;
   }
 }
