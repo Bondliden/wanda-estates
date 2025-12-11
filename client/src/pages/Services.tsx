@@ -1,0 +1,104 @@
+import Navbar from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
+import { Check, ArrowRight } from "lucide-react";
+import officeImage from "@assets/generated_images/modern_office_building_exterior.png";
+
+const services = [
+  {
+    title: "Property Sales",
+    description: "Our core business is the sale of luxury residential property. We guide you through the entire process, from property selection to completion, ensuring a seamless experience.",
+    features: ["Portfolio of exclusive listings", "Market valuation and analysis", "Legal and financial guidance", "Negotiation expertise"]
+  },
+  {
+    title: "Investment Consultancy",
+    description: "We provide expert advice on real estate investment opportunities in Marbella, helping you build a profitable portfolio with high potential for capital appreciation and rental yield.",
+    features: ["ROI analysis", "Market trends and forecasting", "Asset management strategies", "Off-plan investment opportunities"]
+  },
+  {
+    title: "Property Management",
+    description: "Our comprehensive property management services ensure your investment is well-maintained and generating income when you're not in residence.",
+    features: ["Maintenance and repairs", "Rental management", "Key holding services", "Regular property inspections"]
+  },
+  {
+    title: "Project Development",
+    description: "With our background in development, we can assist with refurbishment projects or new builds, connecting you with the best architects, contractors, and designers.",
+    features: ["Project management", "Architectural planning", "Interior design coordination", "Licensing and permits"]
+  }
+];
+
+export default function Services() {
+  return (
+    <div className="min-h-screen bg-white font-sans">
+      <Navbar />
+      
+      {/* Header */}
+      <div className="bg-[#2c3e50] text-white pt-32 pb-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-serif uppercase tracking-widest mb-4">Our Services</h1>
+          <p className="text-lg font-light text-gray-300 max-w-2xl mx-auto">
+            Comprehensive real estate solutions tailored to your unique needs and lifestyle.
+          </p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            
+            {/* Left Column: Image */}
+            <div className="sticky top-24">
+              <img 
+                src={officeImage} 
+                alt="Wanda Estates Office" 
+                className="w-full h-auto shadow-xl"
+              />
+              <div className="bg-[#e09900] p-8 text-white mt-[-40px] ml-[40px] relative z-10 shadow-lg hidden md:block">
+                <h3 className="text-2xl font-serif mb-4">Why Choose Us?</h3>
+                <p className="font-light">
+                  "We combine industry expertise with financial acumen to help our clients make wise investments in real estate in Marbella."
+                </p>
+              </div>
+            </div>
+
+            {/* Right Column: Services List */}
+            <div className="space-y-12">
+              {services.map((service, index) => (
+                <div key={index} className="border-b border-gray-100 pb-12 last:border-0 last:pb-0">
+                  <h2 className="text-2xl font-serif text-[#2c3e50] uppercase mb-4">{service.title}</h2>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <ul className="space-y-3">
+                    {service.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center text-gray-500 text-sm">
+                        <span className="w-6 h-6 rounded-full bg-[#f0f9ff] text-[#2ea3f2] flex items-center justify-center mr-3 flex-shrink-0">
+                          <Check className="w-3 h-3" />
+                        </span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              <div className="pt-8">
+                <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-8 py-6 w-full md:w-auto">
+                  Contact Us for a Consultation <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#f8f8f8] py-12 border-t border-gray-200">
+        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+           <p>&copy; {new Date().getFullYear()} Wanda Estates. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
