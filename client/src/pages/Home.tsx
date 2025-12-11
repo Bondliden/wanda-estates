@@ -87,7 +87,7 @@ export default function Home() {
                 <div className="flex justify-center items-center">
                     {/* Placeholder for logo image seen in HTML */}
                     <div className="p-8 border border-gray-200 bg-white shadow-sm">
-                        <img src="/wanda_logo_horizontal.png" alt="Wanda Estates Logo" className="h-16 object-contain" />
+                        <img src="/wanda_logo_horizontal.png?v=2" alt="Wanda Estates Logo" className="h-16 object-contain" />
                     </div>
                 </div>
              </div>
