@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import apartmentComplex from "@assets/generated_images/modern_luxury_apartment_complex_exterior.png";
-import luxuryApartmentBuilding from "@assets/stock_images/luxury_apartment_bui_57d1567b.jpg";
+import luxuryApartmentBuilding from "@assets/stock_images/luxury_modern_apartm_e719836f.jpg";
 import { useTranslation } from "react-i18next";
 
 // Mock data for new developments
