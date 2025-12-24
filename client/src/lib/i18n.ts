@@ -102,7 +102,24 @@ const resources = {
       "contact.hours.sat": "Saturday: By Appointment",
       "contact.hours.sun": "Sunday: Closed",
       "contact.form.title": "Send a Message",
-      "contact.form.send": "Send Message"
+      "contact.form.send": "Send Message",
+      
+      "form.cta": "Request Private Dossier",
+      "leadmagnet.title": "Marbella Investment Guide 2025",
+      "leadmagnet.desc": "Exclusive insights on tax advantages, prime locations, and ROI projections for luxury real estate.",
+      "leadmagnet.cta": "Download Free Guide",
+      "leadmagnet.privacy": "Your data is protected. We respect your privacy.",
+      
+      "chat.title": "Wanda Assistant",
+      "chat.subtitle": "24/7 Luxury Concierge",
+      "chat.welcome": "Hello! I'm your personal luxury real estate advisor. How can I help you find your Mediterranean sanctuary?",
+      "chat.placeholder": "Ask about properties, locations, investment...",
+      "chat.error": "Sorry, an error occurred. Please try again.",
+      "chat.open": "Open chat",
+      
+      "properties.cta": "Request Private Dossier",
+      "neighborhoods.title": "Exclusive Neighborhoods",
+      "neighborhoods.subtitle": "Discover the most prestigious enclaves of the Costa del Sol"
     }
   },
   es: {
@@ -142,6 +159,23 @@ const resources = {
       
       "footer.rights": "© {{year}} Wanda Estates. Todos los derechos reservados.",
       "footer.address": "El Rodeo Alto Nº4, Nueva Andalucía, 29660, Marbella, Málaga",
+      
+      "form.cta": "Solicitar Dossier Privado",
+      "leadmagnet.title": "Guía de Inversión Marbella 2025",
+      "leadmagnet.desc": "Información exclusiva sobre ventajas fiscales, ubicaciones premium y proyecciones de ROI para inmuebles de lujo.",
+      "leadmagnet.cta": "Descargar Guía Gratuita",
+      "leadmagnet.privacy": "Sus datos están protegidos. Respetamos su privacidad.",
+      
+      "chat.title": "Asistente Wanda",
+      "chat.subtitle": "Concierge de Lujo 24/7",
+      "chat.welcome": "¡Hola! Soy su asesor personal de inmuebles de lujo. ¿Cómo puedo ayudarle a encontrar su santuario mediterráneo?",
+      "chat.placeholder": "Pregunte sobre propiedades, ubicaciones, inversión...",
+      "chat.error": "Lo siento, ha ocurrido un error. Por favor, inténtelo de nuevo.",
+      "chat.open": "Abrir chat",
+      
+      "properties.cta": "Solicitar Dossier Privado",
+      "neighborhoods.title": "Barrios Exclusivos",
+      "neighborhoods.subtitle": "Descubra los enclaves más prestigiosos de la Costa del Sol",
       
       "properties.title": "Propiedades en Venta",
       "properties.subtitle": "Descubra nuestra exclusiva cartera de propiedades de lujo en Marbella y la Costa del Sol.",
@@ -306,7 +340,24 @@ const resources = {
       "contact.hours.sat": "Zaterdag: Op afspraak",
       "contact.hours.sun": "Zondag: Gesloten",
       "contact.form.title": "Stuur een bericht",
-      "contact.form.send": "Verstuur bericht"
+      "contact.form.send": "Verstuur bericht",
+      
+      "form.cta": "Privé Dossier Aanvragen",
+      "leadmagnet.title": "Marbella Investeringsgids 2025",
+      "leadmagnet.desc": "Exclusieve inzichten over belastingvoordelen, toplocaties en ROI-projecties voor luxe vastgoed.",
+      "leadmagnet.cta": "Gratis Gids Downloaden",
+      "leadmagnet.privacy": "Uw gegevens zijn beschermd. Wij respecteren uw privacy.",
+      
+      "chat.title": "Wanda Assistent",
+      "chat.subtitle": "24/7 Luxe Conciërge",
+      "chat.welcome": "Hallo! Ik ben uw persoonlijke luxe vastgoedadviseur. Hoe kan ik u helpen uw mediterraanse toevluchtsoord te vinden?",
+      "chat.placeholder": "Vraag over eigendommen, locaties, investering...",
+      "chat.error": "Sorry, er is een fout opgetreden. Probeer het opnieuw.",
+      "chat.open": "Chat openen",
+      
+      "properties.cta": "Privé Dossier Aanvragen",
+      "neighborhoods.title": "Exclusieve Wijken",
+      "neighborhoods.subtitle": "Ontdek de meest prestigieuze enclaves van de Costa del Sol"
     }
   },
   sv: {
@@ -408,7 +459,24 @@ const resources = {
       "contact.hours.sat": "Lördag: Enligt överenskommelse",
       "contact.hours.sun": "Söndag: Stängt",
       "contact.form.title": "Skicka ett meddelande",
-      "contact.form.send": "Skicka Meddelande"
+      "contact.form.send": "Skicka Meddelande",
+      
+      "form.cta": "Begär Privat Dossier",
+      "leadmagnet.title": "Marbella Investeringsguide 2025",
+      "leadmagnet.desc": "Exklusiva insikter om skattefördelar, premiumlägen och ROI-projektioner för lyxfastigheter.",
+      "leadmagnet.cta": "Ladda Ner Gratis Guide",
+      "leadmagnet.privacy": "Din data är skyddad. Vi respekterar din integritet.",
+      
+      "chat.title": "Wanda Assistent",
+      "chat.subtitle": "24/7 Lyx Concierge",
+      "chat.welcome": "Hej! Jag är din personliga lyxfastighetsrådgivare. Hur kan jag hjälpa dig att hitta din medelhavsfristad?",
+      "chat.placeholder": "Fråga om fastigheter, platser, investering...",
+      "chat.error": "Tyvärr uppstod ett fel. Försök igen.",
+      "chat.open": "Öppna chatt",
+      
+      "properties.cta": "Begär Privat Dossier",
+      "neighborhoods.title": "Exklusiva Stadsdelar",
+      "neighborhoods.subtitle": "Upptäck de mest prestigefyllda enklaverna på Costa del Sol"
     }
   },
   pl: {
@@ -510,7 +578,24 @@ const resources = {
       "contact.hours.sat": "Sobota: Po umówieniu",
       "contact.hours.sun": "Niedziela: Zamknięte",
       "contact.form.title": "Wyślij Wiadomość",
-      "contact.form.send": "Wyślij Wiadomość"
+      "contact.form.send": "Wyślij Wiadomość",
+      
+      "form.cta": "Poproś o Prywatne Dossier",
+      "leadmagnet.title": "Przewodnik Inwestycyjny Marbella 2025",
+      "leadmagnet.desc": "Ekskluzywne informacje o korzyściach podatkowych, lokalizacjach premium i prognozach ROI dla luksusowych nieruchomości.",
+      "leadmagnet.cta": "Pobierz Darmowy Przewodnik",
+      "leadmagnet.privacy": "Twoje dane są chronione. Szanujemy Twoją prywatność.",
+      
+      "chat.title": "Asystent Wanda",
+      "chat.subtitle": "24/7 Luksusowy Concierge",
+      "chat.welcome": "Witaj! Jestem Twoim osobistym doradcą ds. luksusowych nieruchomości. Jak mogę pomóc Ci znaleźć Twoje śródziemnomorskie sanktuarium?",
+      "chat.placeholder": "Zapytaj o nieruchomości, lokalizacje, inwestycje...",
+      "chat.error": "Przepraszamy, wystąpił błąd. Spróbuj ponownie.",
+      "chat.open": "Otwórz czat",
+      
+      "properties.cta": "Poproś o Prywatne Dossier",
+      "neighborhoods.title": "Ekskluzywne Dzielnice",
+      "neighborhoods.subtitle": "Odkryj najbardziej prestiżowe enklawy Costa del Sol"
     }
   },
   fr: {
@@ -612,7 +697,24 @@ const resources = {
       "contact.hours.sat": "Samedi : Sur rendez-vous",
       "contact.hours.sun": "Dimanche : Fermé",
       "contact.form.title": "Envoyer un Message",
-      "contact.form.send": "Envoyer Message"
+      "contact.form.send": "Envoyer Message",
+      
+      "form.cta": "Demander Dossier Privé",
+      "leadmagnet.title": "Guide d'Investissement Marbella 2025",
+      "leadmagnet.desc": "Informations exclusives sur les avantages fiscaux, les emplacements premium et les projections de ROI pour l'immobilier de luxe.",
+      "leadmagnet.cta": "Télécharger Guide Gratuit",
+      "leadmagnet.privacy": "Vos données sont protégées. Nous respectons votre vie privée.",
+      
+      "chat.title": "Assistant Wanda",
+      "chat.subtitle": "Conciergerie Luxe 24/7",
+      "chat.welcome": "Bonjour ! Je suis votre conseiller personnel en immobilier de luxe. Comment puis-je vous aider à trouver votre sanctuaire méditerranéen ?",
+      "chat.placeholder": "Demandez à propos de propriétés, emplacements, investissement...",
+      "chat.error": "Désolé, une erreur s'est produite. Veuillez réessayer.",
+      "chat.open": "Ouvrir le chat",
+      
+      "properties.cta": "Demander Dossier Privé",
+      "neighborhoods.title": "Quartiers Exclusifs",
+      "neighborhoods.subtitle": "Découvrez les enclaves les plus prestigieuses de la Costa del Sol"
     }
   },
   de: {
@@ -714,7 +816,24 @@ const resources = {
       "contact.hours.sat": "Samstag: Nach Terminvereinbarung",
       "contact.hours.sun": "Sonntag: Geschlossen",
       "contact.form.title": "Nachricht Senden",
-      "contact.form.send": "Nachricht Senden"
+      "contact.form.send": "Nachricht Senden",
+      
+      "form.cta": "Privates Dossier Anfordern",
+      "leadmagnet.title": "Marbella Investmentguide 2025",
+      "leadmagnet.desc": "Exklusive Einblicke in Steuervorteile, Premium-Standorte und ROI-Projektionen für Luxusimmobilien.",
+      "leadmagnet.cta": "Kostenlosen Guide Herunterladen",
+      "leadmagnet.privacy": "Ihre Daten sind geschützt. Wir respektieren Ihre Privatsphäre.",
+      
+      "chat.title": "Wanda Assistent",
+      "chat.subtitle": "24/7 Luxus-Concierge",
+      "chat.welcome": "Hallo! Ich bin Ihr persönlicher Luxus-Immobilienberater. Wie kann ich Ihnen helfen, Ihr mediterranes Refugium zu finden?",
+      "chat.placeholder": "Fragen Sie nach Immobilien, Standorten, Investitionen...",
+      "chat.error": "Entschuldigung, ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "chat.open": "Chat öffnen",
+      
+      "properties.cta": "Privates Dossier Anfordern",
+      "neighborhoods.title": "Exklusive Viertel",
+      "neighborhoods.subtitle": "Entdecken Sie die prestigeträchtigsten Enklaven der Costa del Sol"
     }
   }
 };

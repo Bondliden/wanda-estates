@@ -43,7 +43,7 @@ export default function Home() {
                             className="w-full h-64 object-cover"
                         />
                         <div className="text-center mt-4">
-                            <Button variant="outline" className="rounded-none border-gray-300 text-gray-500 hover:bg-[#2ea3f2] hover:text-white uppercase text-xs tracking-wider px-6">
+                            <Button variant="outline" className="rounded-none border-gray-300 text-gray-500 hover:bg-[#2ea3f2] hover:text-white uppercase text-xs tracking-wider px-6 min-h-[44px]">
                                 {t("home.featured.button")}
                             </Button>
                         </div>
@@ -96,7 +96,7 @@ export default function Home() {
                     <div></div> {/* Empty left column */}
                     <div>
                         <h2 className="text-3xl font-serif text-[#2c3e50] mb-8 uppercase">{t("home.contact.title")}</h2>
-                        <ContactForm />
+                        <ContactForm variant="minimal" />
                     </div>
                 </div>
             </div>
