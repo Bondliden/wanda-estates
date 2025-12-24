@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
+import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.jpg";
@@ -95,30 +96,7 @@ export default function Home() {
                     <div></div> {/* Empty left column */}
                     <div>
                         <h2 className="text-3xl font-serif text-[#2c3e50] mb-8 uppercase">{t("home.contact.title")}</h2>
-                        <form className="space-y-4">
-                            <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.name")}</label>
-                                <input type="text" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.name")} />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.email")}</label>
-                                <input type="email" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.email")} />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.phone")}</label>
-                                <input type="tel" className="w-full bg-[#f8f8f8] border border-gray-200 p-3 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.phone")} />
-                            </div>
-                            
-                            <div className="flex justify-between items-center pt-4">
-                                <div className="text-gray-600">
-                                    <span className="font-bold">10 + 4 = </span>
-                                    <input type="text" className="w-16 border border-gray-300 ml-2 p-1" />
-                                </div>
-                                <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-8">
-                                    {t("form.send")}
-                                </Button>
-                            </div>
-                        </form>
+                        <ContactForm />
                     </div>
                 </div>
             </div>

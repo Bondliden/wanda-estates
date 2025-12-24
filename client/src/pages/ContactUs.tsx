@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ContactForm from "@/components/ContactForm";
 
-import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -92,34 +92,7 @@ export default function ContactUs() {
             {/* Contact Form */}
             <div className="bg-[#f9f9f9] p-10 border border-gray-100">
               <h2 className="text-2xl font-serif text-[#2c3e50] uppercase mb-8">{t("contact.form.title")}</h2>
-              <form className="space-y-6">
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.name")}</label>
-                    <input type="text" className="w-full bg-white border border-gray-200 p-4 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.name")} />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.email")}</label>
-                    <input type="email" className="w-full bg-white border border-gray-200 p-4 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.email")} />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.phone")}</label>
-                    <input type="tel" className="w-full bg-white border border-gray-200 p-4 text-gray-700 focus:outline-none focus:border-[#2ea3f2]" placeholder={t("form.phone")} />
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2 uppercase">{t("form.message")}</label>
-                    <textarea className="w-full bg-white border border-gray-200 p-4 text-gray-700 focus:outline-none focus:border-[#2ea3f2] h-32" placeholder={t("form.message")}></textarea>
-                </div>
-                
-                <div className="flex justify-between items-center pt-4">
-                    <div className="text-gray-600 text-sm">
-                        <span className="font-bold">10 + 4 = </span>
-                        <input type="text" className="w-16 border border-gray-300 ml-2 p-1 bg-white" />
-                    </div>
-                    <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-10 py-6">
-                        {t("contact.form.send")}
-                    </Button>
-                </div>
-              </form>
+              <ContactForm showMessage={true} className="space-y-6" />
             </div>
           </div>
         </div>
