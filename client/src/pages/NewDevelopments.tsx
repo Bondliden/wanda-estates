@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import apartmentComplex from "@assets/generated_images/modern_luxury_apartment_complex_exterior.png";
+import luxuryApartmentBuilding from "@assets/stock_images/luxury_apartment_bui_57d1567b.jpg";
 import { useTranslation } from "react-i18next";
 
 // Mock data for new developments
@@ -14,7 +15,7 @@ const developments = [
     location: "Ojén, Marbella",
     priceFrom: "€299,000",
     description: "Luxury apartments within a private estate featuring breathtaking views and world-class amenities.",
-    image: "https://images.unsplash.com/photo-1600596542815-2495db98dada?q=80&w=2070&auto=format&fit=crop"
+    image: luxuryApartmentBuilding
   },
   {
     id: 2,
