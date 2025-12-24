@@ -4,9 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import officeImage from "@assets/generated_images/modern_office_building_exterior.png";
 import { useTranslation } from "react-i18next";
-import React, { Suspense } from "react";
-
-const AuditTable = React.lazy(() => import("@/components/AuditTable"));
 
 export default function Services() {
   const { t } = useTranslation();
@@ -96,13 +93,6 @@ export default function Services() {
               </div>
             </div>
 
-          </div>
-
-          {/* Strategic Marketing Audit Section */}
-          <div className="mt-24">
-             <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading Audit Data...</div>}>
-                <AuditTable />
-             </Suspense>
           </div>
         </div>
       </section>
