@@ -6,43 +6,43 @@ export const AUDIT_DATA: AuditData = {
   items: [
     {
       id: "1",
-      pillar: "Immersive Visual Intelligence",
-      currentStatus: "Static high-res imagery and standard walkthroughs.",
-      gapAnalysis: "Missing emotional hooks and narrative depth required by ultra-HNW individuals.",
-      strategicAction: "Implement AI-driven cinematic video tours (Veo AI) that adapt pacing and music to user behavior.",
-      impact2025: "Increase dwell time by 40% and emotional recall by 3x through sensory-rich storytelling."
+      pillar: "Copywriting de Alto Impacto",
+      currentStatus: "Descripciones técnicas centradas en características (m2, habitaciones).",
+      gapAnalysis: "Falta de conexión emocional y narrativa aspiracional ('Future Pacing').",
+      strategicAction: "Reescribir listings usando palabras sensoriales: 'refugio', 'santuario', 'legado'. Describir experiencias, no solo espacios: 'despertar con el horizonte mediterráneo integrándose en tu salón'.",
+      impact2025: "Aumentar la percepción de valor y la conexión emocional con el comprador ultra-high-net-worth."
     },
     {
       id: "2",
-      pillar: "Hyper-Personalized Client Journeys",
-      currentStatus: "Segmented email campaigns based on broad budget ranges.",
-      gapAnalysis: "Lacks real-time behavioral adaptation and predictive intent modeling.",
-      strategicAction: "Deploy predictive AI lead scoring to identify 'silent signals' of purchase intent before inquiry.",
-      impact2025: "Reduce sales cycle by 25% by engaging prospects at the precise moment of high intent."
+      pillar: "Experiencia de Usuario (UX/UI)",
+      currentStatus: "Diseño funcional pero con áreas de clic inconsistentes.",
+      gapAnalysis: "Fricción en la navegación móvil y falta de jerarquía visual clara.",
+      strategicAction: "Implementar botones táctiles de mínimo 44x44px y diseño tipo 'Bento-Box' para destacar propiedades clave de forma accionable.",
+      impact2025: "Navegación fluida e intuitiva que retiene al usuario y guía hacia la conversión."
     },
     {
       id: "3",
-      pillar: "Voice & Semantic Search Dominance",
-      currentStatus: "Traditional keyword optimization (SEO) for 'Marbella villas'.",
-      gapAnalysis: "Invisible to conversational AI queries (Siri, ChatGPT Search) used by mobile-first buyers.",
-      strategicAction: "Re-architect content for Natural Language Processing (NLP) to capture 'conversational' ultra-luxury queries.",
-      impact2025: "Capture 50% of voice-search traffic for long-tail luxury queries in the Costa del Sol region."
+      pillar: "SEO Hiperlocal y Dominio de Voz",
+      currentStatus: "Posicionamiento genérico para 'Marbella'.",
+      gapAnalysis: "Poca visibilidad en micro-mercados exclusivos.",
+      strategicAction: "Crear contenido específico para La Zagaleta, Sierra Blanca y Puerto Banús, optimizado para búsquedas por voz.",
+      impact2025: "Capturar tráfico cualificado buscando zonas exclusivas específicas."
     },
     {
       id: "4",
-      pillar: "Exclusive 'Off-Market' Digital Ecosystem",
-      currentStatus: "Public listings available to all site visitors.",
-      gapAnalysis: "Fails to leverage the 'scarcity principle' attractive to billionaire buyers.",
-      strategicAction: "Create a biometric-gated 'Private Vault' for pocket listings, accessible only via verified invitation.",
-      impact2025: "Elevate brand prestige and attract top-tier exclusive mandates seeking discretion."
+      pillar: "Captación de Leads (Baja Fricción)",
+      currentStatus: "Formularios extensos solicitando demasiada información.",
+      gapAnalysis: "Alta tasa de abandono en formularios de contacto.",
+      strategicAction: "Implementar formularios simplificados (Nombre/Email) y ofrecer 'Guía de Inversión Marbella 2025' como Lead Magnet.",
+      impact2025: "Incrementar drásticamente la conversión de visitantes a leads cualificados."
     },
     {
       id: "5",
-      pillar: "Omnichannel Brand Orchestration",
-      currentStatus: "Consistent logo usage but disjointed narrative across platforms.",
-      gapAnalysis: "Brand story dilutes across fragmented touchpoints (Instagram vs. Web vs. Email).",
-      strategicAction: "Unify narrative arcs using a 'Chapter-based' content strategy that unfolds the Wanda lifestyle story across all channels.",
-      impact2025: "Build an impenetrable brand moat that establishes Wanda Estates as the sole authority in Marbella luxury."
+      pillar: "Innovación Tecnológica",
+      currentStatus: "Galerías de fotos estáticas.",
+      gapAnalysis: "Ausencia de experiencias inmersivas e interactividad en tiempo real.",
+      strategicAction: "Integrar recorridos de Video 360 inmersivos y Chatbots con IA para atención inmediata 24/7.",
+      impact2025: "Diferenciación tecnológica que posiciona a Wanda Estates como líder innovador."
     }
   ]
 };
