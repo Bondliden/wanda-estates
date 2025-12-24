@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import officeImage from "@assets/generated_images/modern_office_building_exterior.png";
 import { useTranslation } from "react-i18next";
+import AuditTable from "@/components/AuditTable";
 
 export default function Services() {
   const { t } = useTranslation();
@@ -93,6 +94,11 @@ export default function Services() {
               </div>
             </div>
 
+          </div>
+
+          {/* Strategic Marketing Audit Section */}
+          <div className="mt-24">
+             <AuditTable />
           </div>
         </div>
       </section>
