@@ -22,6 +22,7 @@ const resources = {
       "home.featured.desc": "Within a private estate",
       "home.featured.price": "Prices from €299,000",
       "home.featured.button": "View Property",
+      "home.featured.quote.text": "«True luxury is freedom of spirit; it is the inner peace that allows us to enjoy the beautiful things in the world without being slaves to them.»",
 
       "home.services.title": "Our Services",
       "home.services.desc1": "Wanda Estate Property Group is a dynamic new real estate agency with a refreshing approach. Established by José Maria Esquerdo, Wanda Estate Property Group combines expertise from the real estate and financial sectors to help you make wise investments in real estate in Marbella and achieve maximum value from the property market.",
@@ -155,6 +156,7 @@ const resources = {
       "home.featured.desc": "Dentro de una finca privada",
       "home.featured.price": "Precios desde 299.000 €",
       "home.featured.button": "Ver Propiedad",
+      "home.featured.quote.text": "«El verdadero lujo es la libertad de espíritu; es la paz interior lo que nos permite disfrutar de las cosas bellas del mundo sin ser esclavos de ellas.»",
 
       "home.services.title": "Nuestros Servicios",
       "home.services.desc1": "Wanda Estate Property Group es una nueva agencia inmobiliaria dinámica con un enfoque refrescante. Establecido por José María Esquerdo, Wanda Estate Property Group combina la experiencia de los sectores inmobiliario y financiero para ayudarle a realizar inversiones inteligentes en bienes raíces en Marbella y lograr el máximo valor del mercado inmobiliario.",
@@ -687,6 +689,7 @@ const resources = {
       "home.featured.desc": "Au sein d'un domaine privé",
       "home.featured.price": "Prix à partir de 299 000 €",
       "home.featured.button": "Voir la Propriété",
+      "home.featured.quote.text": "«Le vrai luxe est la liberté d'esprit; c'est la paix intérieure qui nous permet de profiter des belles choses du monde sans en être les esclaves.»",
 
       "home.services.title": "Nos Services",
       "home.services.desc1": "Wanda Estate Property Group est une nouvelle agence immobilière dynamique avec une approche rafraîchissante. Fondée par José Maria Esquerdo, Wanda Estate Property Group combine l'expertise des secteurs immobilier et financier pour vous aider à investir judicieusement dans l'immobilier à Marbella et à obtenir une valeur maximale du marché immobilier.",
