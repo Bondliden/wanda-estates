@@ -28,13 +28,23 @@ export default function Services() {
       title: t("services.project.title"),
       description: t("services.project.desc"),
       features: ["Project management", "Architectural planning", "Interior design coordination", "Licensing and permits"]
+    },
+    {
+      title: t("services.offmarket.title"),
+      description: t("services.offmarket.desc"),
+      features: [t("services.offmarket.f1"), t("services.offmarket.f2"), t("services.offmarket.f3"), t("services.offmarket.f4")]
+    },
+    {
+      title: t("services.auction.title"),
+      description: t("services.auction.desc"),
+      features: [t("services.auction.f1"), t("services.auction.f2"), t("services.auction.f3"), t("services.auction.f4")]
     }
   ];
 
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
-      
+
       {/* Header */}
       <div className="bg-[#2c3e50] text-white pt-32 pb-16">
         <div className="container mx-auto px-4 text-center">
@@ -49,12 +59,12 @@ export default function Services() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            
+
             {/* Left Column: Image */}
             <div className="sticky top-24">
-              <img 
-                src={officeImage} 
-                alt="Wanda Estates Office" 
+              <img
+                src={officeImage}
+                alt="Wanda Estates Office"
                 className="w-full h-auto shadow-xl"
               />
               <div className="bg-[#e09900] p-8 text-white mt-[-40px] ml-[40px] relative z-10 shadow-lg hidden md:block">

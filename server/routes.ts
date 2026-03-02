@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import nodemailer from 'nodemailer';
 import { storage } from "./storage";
 import { setupChatbotRoutes } from "./chatbot";
 import { insertContactInquirySchema } from "@shared/schema";
@@ -40,11 +41,59 @@ export async function registerRoutes(
       });
     }
   });
+
+  // Configure Nodemailer Transport
+  // This uses standard SMTP setup, relying on env variables in Railway
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com', // fallback example
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
   // Contact inquiry endpoint
   app.post("/api/contact", async (req, res) => {
     try {
       const validatedData = insertContactInquirySchema.parse(req.body);
+
+      // Store in database
       const inquiry = await storage.createContactInquiry(validatedData);
+
+      // Send Email Notification
+      const mailOptions = {
+        from: process.env.SMTP_FROM || '"Wanda Estates" <no-reply@wandaestates.com>',
+        to: 'info@wandaestates.com',
+        subject: `Nuevo mensaje de contacto: ${validatedData.name}`,
+        text: `Has recibido un nuevo mensaje de contacto:\n\nNombre: ${validatedData.name}\nEmail: ${validatedData.email}\nTeléfono: ${validatedData.phone || 'No proporcionado'}\nMensaje:\n${validatedData.message}\n\nIdioma preferido: ${req.body.language || 'es'}`,
+        html: `
+          <h3>Nuevo mensaje de contacto - Wanda Estates</h3>
+          <p><strong>Nombre:</strong> ${validatedData.name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${validatedData.email}">${validatedData.email}</a></p>
+          <p><strong>Teléfono:</strong> ${validatedData.phone || 'No proporcionado'}</p>
+          <hr/>
+          <p><strong>Mensaje:</strong></p>
+          <p>${validatedData.message?.replace(/\n/g, '<br/>') || 'No se adjuntó mensaje adjunto.'}</p>
+          <br/>
+          <p><small>Este correo fue generado automáticamente desde la web.</small></p>
+        `
+      };
+
+      // We wrap the sendMail process in a try-catch to not crash if SMTP is not properly configured locally
+      try {
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+          await transporter.sendMail(mailOptions);
+          console.log("Email Notification Sent to info@wandaestates.com");
+        } else {
+          console.log("SMTP not configured. Skipping email sending. Mail options:", mailOptions);
+        }
+      } catch (emailError) {
+        console.error("Error sending notification email:", emailError);
+        // Let the flow continue even if email fails, UI will show success based on DB save.
+      }
+
       res.status(201).json({
         success: true,
         message: "Contact inquiry submitted successfully",
@@ -66,6 +115,56 @@ export async function registerRoutes(
       }
     }
   });
+
+  // Guide Download Endpoint
+  app.post("/api/guide", async (req, res) => {
+    try {
+      const { name, email, phone } = req.body;
+
+      if (!name || !email) {
+        return res.status(400).json({ success: false, message: "Name and email are required" });
+      }
+
+      const mailOptions = {
+        from: process.env.SMTP_FROM || '"Wanda Estates" <no-reply@wandaestates.com>',
+        to: 'info@wandaestates.com',
+        subject: `¡Nuevo Lead para Guía de Inversión! - ${name}`,
+        text: `Alguien ha solicitado la Guía de Inversión Marbella 2025:\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || 'No proporcionado'}`,
+        html: `
+              <h3>Nuevo Lead - Guía de Inversión 2025</h3>
+              <p>Un usuario acaba de descargarse la guía:</p>
+              <ul>
+                <li><strong>Nombre:</strong> ${name}</li>
+                <li><strong>Email:</strong> <a href="mailto:${email}">${email}</a></li>
+                <li><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</li>
+              </ul>
+              <br/>
+              <p><small>Formulario Lead Magnet - wandaestates.com</small></p>
+            `
+      };
+
+      try {
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+          await transporter.sendMail(mailOptions);
+        } else {
+          console.log("SMTP not configured. Skipping email sending. Action: Guide Download. Payload:", mailOptions);
+        }
+      } catch (emailError) {
+        console.error("Error sending notification email:", emailError);
+      }
+
+      res.json({
+        success: true,
+        message: "Lead processed. Initiating download.",
+        downloadUrl: "/guide/wanda-estates-guia-inversion-2025.pdf" // Placeholder URL for actual file
+      });
+
+    } catch (error) {
+      console.error("Error processing guide download:", error);
+      res.status(500).json({ success: false, message: "Error processing the request." });
+    }
+  });
+
 
   // Get all contact inquiries (for admin purposes)
   app.get("/api/contact", async (req, res) => {

@@ -23,7 +23,11 @@ interface ResalesProperty {
     GpsY?: string;
 }
 
-export default function ResalesPropertyGrid() {
+interface ResalesPropertyGridProps {
+    isNewDevelopment?: boolean;
+}
+
+export default function ResalesPropertyGrid({ isNewDevelopment = false }: ResalesPropertyGridProps) {
     const { t, i18n } = useTranslation();
     const isSpanish = i18n.language === "es";
 
@@ -42,6 +46,7 @@ export default function ResalesPropertyGrid() {
         p_minTerrace: "",
         p_minPlot: "",
         p_sort: "2", // Default to Date Desc (Latest)
+        p_newBuild: isNewDevelopment ? "1" : "",
         shuffle: "false"
     });
 
@@ -62,6 +67,7 @@ export default function ResalesPropertyGrid() {
             // Using common naming conventions if not explicit.
             if (searchFilters.p_minTerrace) params.p_minTerrace = searchFilters.p_minTerrace;
             if (searchFilters.p_minPlot) params.p_minPlot = searchFilters.p_minPlot;
+            if (searchFilters.p_newBuild) params.p_newBuild = searchFilters.p_newBuild;
             if (searchFilters.shuffle === "true") params.shuffle = "true";
 
             const queryParams = new URLSearchParams(params).toString();

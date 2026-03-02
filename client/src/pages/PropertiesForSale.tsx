@@ -181,7 +181,7 @@ export default function PropertiesForSale() {
             {/* Sidebar with Lead Magnet Form */}
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ContactForm variant="minimal" />
+                <ContactForm variant="leadMagnet" />
               </div>
             </div>
           </div>
