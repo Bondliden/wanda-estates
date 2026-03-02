@@ -5,32 +5,63 @@ import { setupChatbotRoutes } from "./chatbot";
 import { insertContactInquirySchema } from "@shared/schema";
 import { z } from "zod";
 
+import { fetchProperties, fetchPropertyDetails } from "./resales";
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Properties search endpoint
+  app.get("/api/properties", async (req, res) => {
+    try {
+      const filters = req.query; // Allow passing overriding filters
+      const properties = await fetchProperties(filters);
+      res.json({ success: true, data: properties });
+    } catch (error) {
+      console.error("Error exposing properties:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error fetching properties"
+      });
+    }
+  });
+
+  // Individual property details endpoint
+  app.get("/api/properties/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const details = await fetchPropertyDetails(id);
+      res.json({ success: true, data: details });
+    } catch (error) {
+      console.error(`Error fetching property details for ${req.params.id}:`, error);
+      res.status(500).json({
+        success: false,
+        message: "Error fetching property details"
+      });
+    }
+  });
   // Contact inquiry endpoint
   app.post("/api/contact", async (req, res) => {
     try {
       const validatedData = insertContactInquirySchema.parse(req.body);
       const inquiry = await storage.createContactInquiry(validatedData);
-      res.status(201).json({ 
-        success: true, 
+      res.status(201).json({
+        success: true,
         message: "Contact inquiry submitted successfully",
-        id: inquiry.id 
+        id: inquiry.id
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ 
-          success: false, 
-          message: "Invalid request data", 
-          errors: error.errors 
+        res.status(400).json({
+          success: false,
+          message: "Invalid request data",
+          errors: error.errors
         });
       } else {
         console.error("Error creating contact inquiry:", error);
-        res.status(500).json({ 
-          success: false, 
-          message: "Internal server error" 
+        res.status(500).json({
+          success: false,
+          message: "Internal server error"
         });
       }
     }
@@ -43,15 +74,15 @@ export async function registerRoutes(
       res.json({ success: true, data: inquiries });
     } catch (error) {
       console.error("Error fetching contact inquiries:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Internal server error" 
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
       });
     }
   });
 
   // Setup chatbot routes
   setupChatbotRoutes(app);
-  
+
   return httpServer;
 }

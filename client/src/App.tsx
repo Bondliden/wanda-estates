@@ -11,6 +11,7 @@ import NewDevelopments from "@/pages/NewDevelopments";
 import Services from "@/pages/Services";
 import AboutUs from "@/pages/AboutUs";
 import ContactUs from "@/pages/ContactUs";
+import PropertyDetail from "@/pages/PropertyDetail";
 import ChatBot from "@/components/ChatBot";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/properties-for-sale" component={PropertiesForSale} />
+      <Route path="/properties/:id" component={PropertyDetail} />
       <Route path="/new-developments" component={NewDevelopments} />
       <Route path="/services" component={Services} />
       <Route path="/about-us" component={AboutUs} />
