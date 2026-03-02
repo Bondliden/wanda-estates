@@ -42,6 +42,30 @@ export async function registerRoutes(
     }
   });
 
+  // Geo Location endpoint for IP segmentation strategy
+  app.get("/api/geo", async (req, res) => {
+    try {
+      // Get optimal user IP considering proxy setups like Railway
+      let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+      if (typeof ip === 'string') {
+        ip = ip.split(',')[0].trim();
+      }
+
+      // For local development, this will be ::1 or 127.0.0.1, preventing geo lookup
+      // So if missing or local, we can use empty string which will make ip-api use our server's IP (Spain) or mock a country.
+      if (ip === '::1' || ip === '127.0.0.1') {
+        ip = ''; // Fallback for local testing (can mock here if needed)
+      }
+
+      const response = await fetch(`http://ip-api.com/json/${ip}`);
+      const data = await response.json();
+      res.json({ success: true, countryCode: data.countryCode || 'ES' });
+    } catch (error) {
+      console.error("Error fetching geo location:", error);
+      res.status(500).json({ success: false, countryCode: 'ES' }); // Fallback to Spain
+    }
+  });
+
   // Configure Nodemailer Transport
   // This uses standard SMTP setup, relying on env variables in Railway
   const transporter = nodemailer.createTransport({
