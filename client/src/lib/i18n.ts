@@ -43,7 +43,7 @@ const resources = {
       "footer.address": "El Rodeo Alto Nº4, Nueva Andalucía, 29660, Marbella, Málaga",
 
       "properties.title": "Properties for Sale",
-      "properties.subtitle": "Discover our exclusive portfolio of luxury properties in Marbella and the Costa del Sol.",
+      "properties.subtitle": "Here you will find your home",
       "properties.forsale": "For Sale",
       "properties.beds": "Beds",
       "properties.baths": "Baths",
