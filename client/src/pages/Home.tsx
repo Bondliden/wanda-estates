@@ -46,31 +46,23 @@ export default function Home() {
                 {/* Exclusive Neighborhoods Section */}
                 <ExclusiveNeighborhoods />
 
-                {/* Our Services Section */}
-                <section className="py-16 bg-[#f9f9f9]">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-wrap items-center mb-12">
-                            <div className="w-full md:w-1/4">
-                                <div className="bg-[#2c3e50] text-white py-3 px-6 text-center uppercase tracking-wider text-sm font-semibold">
-                                    {t("home.services.title")}
-                                </div>
-                            </div>
-                            <div className="w-full md:w-3/4 pl-0 md:pl-4 mt-4 md:mt-0">
-                                <div className="h-px bg-gray-200 w-full"></div>
-                            </div>
-                        </div>
+                {/* Brand Statement Section - Bold, Large, Italic + Coastal Living Image */}
+                <section className="relative py-28 overflow-hidden">
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src="/luxury_coastal_living.png"
+                            alt="Luxury Coastal Living"
+                            className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"></div>
+                    </div>
 
-                        <div className="max-w-4xl mx-auto">
-                            <div className="text-gray-600 space-y-6 text-justify">
-                                <p>
-                                    {t("home.services.desc1")}
-                                </p>
-                                {t("home.services.desc2") && (
-                                    <p>
-                                        {t("home.services.desc2")}
-                                    </p>
-                                )}
-                            </div>
+                    <div className="container mx-auto px-4 relative z-10">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-white text-4xl md:text-6xl font-serif italic font-bold leading-tight mb-8 drop-shadow-2xl">
+                                "{t("home.services.desc1")}"
+                            </h2>
+                            <div className="w-24 h-1 bg-[#C9A961] mx-auto shadow-lg"></div>
                         </div>
                     </div>
                 </section>

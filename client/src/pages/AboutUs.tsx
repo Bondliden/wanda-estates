@@ -31,17 +31,17 @@ export default function AboutUs() {
               <h2 className="text-3xl md:text-4xl font-serif text-[#2c3e50] mb-6 leading-tight">
                 {t("about.story.heading")}
               </h2>
-              <div className="space-y-6 text-gray-600 text-lg font-light leading-relaxed text-justify">
-                <p>
-                  {t("about.story.p1")}
+              <div className="space-y-8 text-gray-700 leading-relaxed">
+                <p className="text-3xl md:text-4xl font-serif italic font-bold text-[#2B5F8C] leading-tight text-center md:text-left border-l-4 border-[#C9A961] pl-6 py-2">
+                  "{t("about.story.p1")}"
                 </p>
                 {t("about.story.p2") && (
-                  <p>
+                  <p className="text-lg font-light text-justify">
                     {t("about.story.p2")}
                   </p>
                 )}
                 {t("about.story.p3") && (
-                  <p>
+                  <p className="text-lg font-light text-justify">
                     {t("about.story.p3")}
                   </p>
                 )}
