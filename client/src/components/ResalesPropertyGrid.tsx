@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import PropertyMap from "./PropertyMap";
 import { Link } from "wouter";
 
-const WHATSAPP_PHONE = "34624377939";
+const WHATSAPP_PHONE = "34641113518";
 
 interface ResalesProperty {
     Id: string;
@@ -354,8 +354,8 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                             key={pageNum}
                                             onClick={() => handlePageChange(pageNum)}
                                             className={`w-10 h-10 text-sm font-bold transition-all ${pageNum === pagination.CurrentPage
-                                                    ? 'bg-[#2B5F8C] text-white'
-                                                    : 'text-[#2B5F8C] hover:bg-gray-100'
+                                                ? 'bg-[#2B5F8C] text-white'
+                                                : 'text-[#2B5F8C] hover:bg-gray-100'
                                                 }`}
                                         >
                                             {pageNum}

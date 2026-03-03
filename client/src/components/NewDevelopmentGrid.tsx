@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
-const WHATSAPP_PHONE = "34624377939";
+const WHATSAPP_PHONE = "34641113518";
 
 interface NewDevelopment {
     Id: string;

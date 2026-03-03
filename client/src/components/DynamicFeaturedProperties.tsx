@@ -51,7 +51,7 @@ export default function DynamicFeaturedProperties() {
     }, [demandProfile]);
 
     const getWhatsAppUrl = (ref: string) => {
-        const phone = "34624377939";
+        const phone = "34641113518";
         const message = encodeURIComponent(`Hola Wanda Estates, me interesa la propiedad con referencia ${ref}. ¿Podrían darme más información?`);
         return `https://wa.me/${phone}?text=${message}`;
     };

@@ -11,7 +11,7 @@ export default function ContactUs() {
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
-      
+
       {/* Header */}
       <div className="bg-[#2c3e50] text-white pt-32 pb-16">
         <div className="container mx-auto px-4 text-center">
@@ -26,7 +26,7 @@ export default function ContactUs() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            
+
             {/* Contact Information */}
             <div>
               <h2 className="text-2xl font-serif text-[#2c3e50] uppercase mb-8">{t("contact.touch.title")}</h2>
@@ -55,9 +55,7 @@ export default function ContactUs() {
                   </div>
                   <div>
                     <h4 className="text-[#2c3e50] font-bold uppercase tracking-wider mb-2">{t("contact.call")}</h4>
-                    <p className="text-gray-600">
-                      +34 952 000 000
-                    </p>
+                    +34 641 113 518
                   </div>
                 </div>
 
@@ -72,7 +70,7 @@ export default function ContactUs() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <div className="w-12 h-12 bg-[#f0f9ff] text-[#2ea3f2] flex items-center justify-center mr-6 flex-shrink-0">
                     <Clock className="w-6 h-6" />
@@ -97,13 +95,13 @@ export default function ContactUs() {
           </div>
         </div>
       </section>
-      
+
       {/* Map Section */}
       <section className="h-[400px] w-full bg-gray-200">
-         {/* Placeholder for Map */}
-         <div className="w-full h-full flex items-center justify-center bg-gray-300">
-            <span className="text-gray-500 font-bold uppercase tracking-widest">Google Map Placeholder</span>
-         </div>
+        {/* Placeholder for Map */}
+        <div className="w-full h-full flex items-center justify-center bg-gray-300">
+          <span className="text-gray-500 font-bold uppercase tracking-widest">Google Map Placeholder</span>
+        </div>
       </section>
 
       <Footer />
