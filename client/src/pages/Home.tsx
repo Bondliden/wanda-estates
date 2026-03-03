@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.jpg";
 import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
+import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
 
 export default function Home() {
     const { t } = useTranslation();
@@ -40,6 +41,9 @@ export default function Home() {
                         <DynamicFeaturedProperties />
                     </div>
                 </section>
+
+                {/* Exclusive Neighborhoods Section */}
+                <ExclusiveNeighborhoods />
 
                 {/* Our Services Section */}
                 <section className="py-16 bg-[#f9f9f9]">

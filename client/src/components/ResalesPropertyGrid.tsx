@@ -29,7 +29,6 @@ interface ResalesPropertyGridProps {
 
 export default function ResalesPropertyGrid({ isNewDevelopment = false }: ResalesPropertyGridProps) {
     const { t, i18n } = useTranslation();
-    const isSpanish = i18n.language === "es";
 
     const [properties, setProperties] = useState<ResalesProperty[]>([]);
     const [loading, setLoading] = useState(true);
@@ -45,7 +44,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
         p_baths: "",
         p_minTerrace: "",
         p_minPlot: "",
-        p_sort: "2", // Default to Date Desc (Latest)
+        p_sort: "commission", // Default to our custom commission sort
         p_newBuild: isNewDevelopment ? "1" : "",
         shuffle: "false"
     });
@@ -63,8 +62,6 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
             if (searchFilters.p_location) params.p_location = searchFilters.p_location;
             if (searchFilters.p_beds) params.p_beds = searchFilters.p_beds;
             if (searchFilters.p_baths) params.p_baths = searchFilters.p_baths;
-            // Note: Terrace and Plot might need specific API parameter names from V6 docs.
-            // Using common naming conventions if not explicit.
             if (searchFilters.p_minTerrace) params.p_minTerrace = searchFilters.p_minTerrace;
             if (searchFilters.p_minPlot) params.p_minPlot = searchFilters.p_minPlot;
             if (searchFilters.p_newBuild) params.p_newBuild = searchFilters.p_newBuild;
@@ -110,13 +107,13 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                 <form onSubmit={handleSearch} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">Municipio</label>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.municipality")}</label>
                             <select
                                 className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
                                 value={filters.p_location}
                                 onChange={(e) => setFilters({ ...filters, p_location: e.target.value })}
                             >
-                                <option value="">Todos los Municipios</option>
+                                <option value="">{t("grid.all_municipalities")}</option>
                                 <option value="Marbella">Marbella</option>
                                 <option value="Benahavis">Benahavís</option>
                                 <option value="Estepona">Estepona</option>
@@ -124,7 +121,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">Precio Mín (€)</label>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.min_price")}</label>
                             <input
                                 type="number"
                                 className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
@@ -134,13 +131,13 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">Dormitorios</label>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.bedrooms")}</label>
                             <select
                                 className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
                                 value={filters.p_beds}
                                 onChange={(e) => setFilters({ ...filters, p_beds: e.target.value })}
                             >
-                                <option value="">Cualquiera</option>
+                                <option value="">{t("grid.any")}</option>
                                 <option value="2">2+</option>
                                 <option value="3">3+</option>
                                 <option value="4">4+</option>
@@ -148,15 +145,16 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">Ordenación</label>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.sort")}</label>
                             <select
                                 className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
                                 value={filters.p_sort}
                                 onChange={(e) => setFilters({ ...filters, p_sort: e.target.value })}
                             >
-                                <option value="2">Más Recientes</option>
-                                <option value="0">Precio: Menor a Mayor</option>
-                                <option value="1">Precio: Mayor a Menor</option>
+                                <option value="commission">{t("grid.commission")}</option>
+                                <option value="2">{t("grid.latest")}</option>
+                                <option value="0">{t("grid.price_asc")}</option>
+                                <option value="1">{t("grid.price_desc")}</option>
                             </select>
                         </div>
                     </div>
@@ -168,14 +166,14 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                                 onClick={() => setViewMode('grid')}
                                 className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest font-bold transition-all ${viewMode === 'grid' ? 'bg-[#2B5F8C] text-white' : 'text-gray-400 hover:text-[#2B5F8C]'}`}
                             >
-                                <Grid className="w-4 h-4" /> {isSpanish ? 'Cuadrícula' : 'Grid'}
+                                <Grid className="w-4 h-4" /> {t("grid.view_grid")}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setViewMode('map')}
                                 className={`flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest font-bold transition-all ${viewMode === 'map' ? 'bg-[#2B5F8C] text-white' : 'text-gray-400 hover:text-[#2B5F8C]'}`}
                             >
-                                <MapIcon className="w-4 h-4" /> {isSpanish ? 'Mapa' : 'Map'}
+                                <MapIcon className="w-4 h-4" /> {t("grid.view_map")}
                             </button>
                         </div>
 
@@ -183,7 +181,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                             type="submit"
                             className="bg-[#C9A961] hover:bg-[#a88d51] text-white rounded-none uppercase text-xs tracking-widest font-bold h-12 px-10 shadow-lg"
                         >
-                            <Search className="w-4 h-4 mr-2" /> Buscar Propiedades
+                            <Search className="w-4 h-4 mr-2" /> {t("grid.search")}
                         </Button>
                     </div>
                 </form>
@@ -198,29 +196,16 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
             {error ? (
                 <div className="text-center p-12 bg-red-50 text-red-600 border border-red-100 font-serif">
                     <p>{error}</p>
-                    <Button onClick={() => fetchProperties()} variant="outline" className="mt-4 rounded-none border-[#2B5F8C] text-[#2B5F8C]">Reintentar</Button>
+                    <Button onClick={() => fetchProperties()} variant="outline" className="mt-4 rounded-none border-[#2B5F8C] text-[#2B5F8C]">{t("grid.retry")}</Button>
                 </div>
             ) : loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <div key={i} className="animate-pulse bg-white border border-gray-100 h-[550px]">
-                            <div className="bg-gray-100 h-[300px] w-full" />
-                            <div className="p-8">
-                                <div className="bg-gray-100 h-6 w-1/4 mb-4" />
-                                <div className="bg-gray-100 h-10 w-3/4 mb-4" />
-                                <div className="bg-gray-100 h-4 w-full mb-2" />
-                                <div className="bg-gray-100 h-4 w-2/3 mb-8" />
-                                <div className="flex gap-2">
-                                    <div className="bg-gray-100 h-10 flex-grow" />
-                                    <div className="bg-gray-100 h-10 w-12" />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="flex flex-col items-center justify-center p-20">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C9A961] mb-4"></div>
+                    <p className="text-[#2B5F8C] font-serif italic">{t("grid.loading")}</p>
                 </div>
             ) : properties.length === 0 ? (
                 <div className="text-center p-20 bg-gray-50 border border-gray-100 rounded-sm">
-                    <p className="text-gray-400 text-xl font-serif italic">No se encontraron propiedades de lujo con estos criterios.</p>
+                    <p className="text-gray-400 text-xl font-serif italic">{t("grid.no_results")}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -240,7 +225,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                                         </span>
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <p className="text-white text-xs uppercase tracking-widest font-bold">Ver Detalles</p>
+                                        <p className="text-white text-xs uppercase tracking-widest font-bold">{t("grid.view_details")}</p>
                                     </div>
                                 </div>
                             </Link>
@@ -275,7 +260,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
                                 <div className="mt-8 flex gap-3">
                                     <Link href={`/properties/${property.Id}`} className="flex-grow">
                                         <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
-                                            Ver Ficha
+                                            {t("grid.view_details")}
                                         </Button>
                                     </Link>
                                     <a

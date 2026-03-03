@@ -1,6 +1,8 @@
 import videoSource from "@assets/generated_videos/Dec_11__0958_31s_202512111144_8qsab.mp4";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
+  const { t } = useTranslation();
   return (
     <section className="relative w-full h-screen overflow-hidden" id="hero">
       {/* Background Video */}
@@ -21,9 +23,9 @@ export default function Hero() {
       <div className="relative z-10 container mx-auto h-full flex items-center justify-center px-4">
         <div className="max-w-md overflow-hidden text-center text-white">
           <h2 className="text-xs lg:text-sm font-serif leading-snug tracking-wide">
-            Privacidad, diseño y arquitectura en la Costa del Sol.
+            {t("home.hero.title", "Privacidad, diseño y arquitectura en la Costa del Sol.")}
             <br />
-            Viva donde otros sueñan vacacionar.
+            {t("home.hero.subtitle", "Viva donde otros sueñan vacacionar.")}
           </h2>
         </div>
       </div>

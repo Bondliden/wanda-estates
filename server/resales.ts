@@ -22,8 +22,10 @@ export async function fetchProperties(customFilters: any = {}) {
         p1: p1,
         p2: p2,
         p_output: 'json',
-        p_Agency_FilterId: '1', // Venta
-        p_min: '750000',        // Base lujo
+        p_Agency_FilterId: '1', // For Sale
+        p_PropertyStatus: 'Available',
+        p_MustHavePictures: '1',
+        p_min: '750000',        // Luxury base
         p_location: customFilters.p_location || 'Marbella,Benahavis,Estepona,Sotogrande',
     };
 
@@ -41,7 +43,7 @@ export async function fetchProperties(customFilters: any = {}) {
 
     try {
         const url = `${API_BASE_URL}/SearchProperties?${queryParams.toString()}`;
-        console.log("Fetching Resales API:", url);
+        console.log("Fetching Resales API with quality filters:", url);
 
         const response = await fetch(url);
 
@@ -58,41 +60,77 @@ export async function fetchProperties(customFilters: any = {}) {
             properties = Array.isArray(data.Property) ? data.Property : [data.Property];
         }
 
-        // Priority 1: High Commission. Extract commission percentage / amount and sort descending
-        // Priority 2: "Value for Money" (Price per square meter ascending)
-        properties.sort((a: any, b: any) => {
-            const getCommission = (p: any) => {
-                if (!p) return 0;
-                // Resales Online can expose commission in different field names depending on the agent config
-                return parseFloat(p.Commission) ||
-                    parseFloat(p.CommissionPercent) ||
-                    parseFloat(p.CommissionPercentage) ||
-                    parseFloat(p.AgencyCommission) ||
-                    0;
-            };
+        const SIX_MONTHS_AGO = new Date();
+        SIX_MONTHS_AGO.setMonth(SIX_MONTHS_AGO.getMonth() - 6);
 
-            const getValueForMoney = (p: any) => {
-                if (!p || !p.Price || !p.BuiltArea) return Infinity;
-                const price = parseFloat(p.Price);
-                const area = parseFloat(p.BuiltArea);
-                if (area <= 0) return Infinity;
-                return price / area; // Lower is better
-            };
+        // STRICT TECHNICAL FILTRATION
+        properties = properties.filter((p: any) => {
+            // 1. Availability validation
+            if (p.PropertyStatus !== 'Available') return false;
 
-            const commDiff = getCommission(b) - getCommission(a);
-            if (commDiff !== 0) {
-                return commDiff;
+            // 2. Data Cleanliness: Description and Location
+            if (!p.Description || p.Description.length < 150) return false;
+            if (!p.GpsX || !p.GpsY || p.GpsX === "0" || p.GpsY === "0") return false;
+
+            // 3. Image Quality: Minimum 5 photos
+            const pictureCount = p.PicturesContent?.Picture?.length ||
+                (p.PicturesContent?.Picture ? 1 : 0) || 0;
+            if (pictureCount < 5) return false;
+
+            // 4. No Renders/Planos
+            const mainImg = (p.MainImage || "").toLowerCase();
+            const blacklist = ['render', 'plano', '3d', 'project', 'plan', 'blueprint', 'generic'];
+            if (blacklist.some(word => mainImg.includes(word))) return false;
+
+            // 5. Freshness: Must be updated within last 6 months
+            if (p.LastUpdate) {
+                const lastUpdate = new Date(p.LastUpdate);
+                if (lastUpdate < SIX_MONTHS_AGO) return false;
             }
 
-            // If commission is the same, sort by value for money (lowest price per sqm first)
-            return getValueForMoney(a) - getValueForMoney(b);
+            return true;
         });
 
-        // Apply shuffle if it's a "featured" request, but only shuffle the top highest commission properties to maintain business logic priority
-        if (customFilters.shuffle === 'true' || !customFilters.p_sort) {
-            const topHighCommission = properties.slice(0, 30);
-            const theRest = properties.slice(30);
-            properties = [...shuffleArray(topHighCommission), ...theRest];
+        // MULTI-CRITERIA SORTING
+        properties.sort((a: any, b: any) => {
+            // Priority 1: High Commission
+            const getCommission = (p: any) => {
+                return parseFloat(p.Commission) || parseFloat(p.CommissionPercent) || 0;
+            };
+
+            const commA = getCommission(a);
+            const commB = getCommission(b);
+            if (commB !== commA) return commB - commA;
+
+            // Priority 2: Quality Markers (Featured or HD)
+            const getQualityScore = (p: any) => {
+                let score = 0;
+                if (p.Featured === '1' || p.Featured === true) score += 100;
+                // If has many pictures, it's usually better documented
+                const pics = p.PicturesContent?.Picture?.length || 0;
+                score += Math.min(pics, 20);
+                return score;
+            };
+
+            const qualA = getQualityScore(a);
+            const qualB = getQualityScore(b);
+            if (qualB !== qualA) return qualB - qualA;
+
+            // Priority 3: Value for Money (Lowest price per sqm)
+            const getValue = (p: any) => {
+                const price = parseFloat(p.Price || 0);
+                const area = parseFloat(p.BuiltArea || 0);
+                return area > 0 ? price / area : Infinity;
+            };
+
+            return getValue(a) - getValue(b);
+        });
+
+        // Strategic shuffle for featured properties only (Top 12)
+        if (customFilters.shuffle === 'true') {
+            const topProducts = properties.slice(0, 12);
+            const buffer = properties.slice(12);
+            properties = [...shuffleArray(topProducts), ...buffer];
         }
 
         return {
