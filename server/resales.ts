@@ -58,9 +58,25 @@ export async function fetchProperties(customFilters: any = {}) {
             properties = Array.isArray(data.Property) ? data.Property : [data.Property];
         }
 
-        // Apply shuffle if it's a "featured" request or whenever no explicit sort is provided
+        // Priority 1: High Commission. Extract commission percentage / amount and sort descending
+        properties.sort((a: any, b: any) => {
+            const getCommission = (p: any) => {
+                if (!p) return 0;
+                // Resales Online can expose commission in different field names depending on the agent config
+                return parseFloat(p.Commission) ||
+                    parseFloat(p.CommissionPercent) ||
+                    parseFloat(p.CommissionPercentage) ||
+                    parseFloat(p.AgencyCommission) ||
+                    0;
+            };
+            return getCommission(b) - getCommission(a);
+        });
+
+        // Apply shuffle if it's a "featured" request, but only shuffle the top highest commission properties to maintain business logic priority
         if (customFilters.shuffle === 'true' || !customFilters.p_sort) {
-            properties = shuffleArray(properties);
+            const topHighCommission = properties.slice(0, 30);
+            const theRest = properties.slice(30);
+            properties = [...shuffleArray(topHighCommission), ...theRest];
         }
 
         return {
