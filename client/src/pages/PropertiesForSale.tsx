@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import { ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ResalesPropertyGrid from "@/components/ResalesPropertyGrid";
+import InvestmentGuideBanner from "@/components/InvestmentGuideBanner";
 
 const neighborhoods = [
   {
@@ -112,6 +113,9 @@ export default function PropertiesForSale() {
       {/* Properties Grid */}
       <section id="property-grid-section" className="py-16">
         <div className="container mx-auto px-4">
+          <div className="mb-12">
+            <InvestmentGuideBanner />
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <ResalesPropertyGrid initialLocation={selectedNeighborhood || ""} />

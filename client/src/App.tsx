@@ -12,6 +12,7 @@ import Services from "@/pages/Services";
 import AboutUs from "@/pages/AboutUs";
 import ContactUs from "@/pages/ContactUs";
 import PropertyDetail from "@/pages/PropertyDetail";
+import InvestmentGuide from "@/pages/InvestmentGuide";
 import ChatBot from "@/components/ChatBot";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/services" component={Services} />
       <Route path="/about-us" component={AboutUs} />
       <Route path="/contact-us" component={ContactUs} />
+      <Route path="/investment-guide" component={InvestmentGuide} />
       <Route component={NotFound} />
     </Switch>
   );
