@@ -224,9 +224,9 @@ export async function registerRoutes(
         from: process.env.SMTP_FROM || '"Wanda Estates" <no-reply@wandaestates.com>',
         to: 'info@wandaestates.com',
         subject: `¡Nuevo Lead para Guía de Inversión! - ${name}`,
-        text: `Alguien ha solicitado la Guía de Inversión Marbella 2025:\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || 'No proporcionado'}`,
+        text: `Alguien ha solicitado la Guía de Inversión Marbella 2026:\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || 'No proporcionado'}`,
         html: `
-              <h3>Nuevo Lead - Guía de Inversión 2025</h3>
+              <h3>Nuevo Lead - Guía de Inversión 2026</h3>
               <p>Un usuario acaba de descargarse la guía:</p>
               <ul>
                 <li><strong>Nombre:</strong> ${name}</li>
