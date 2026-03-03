@@ -4,6 +4,3 @@ dist
 *.log
 .git
 .replit
-attached_assets
-*.png
-*.webp
