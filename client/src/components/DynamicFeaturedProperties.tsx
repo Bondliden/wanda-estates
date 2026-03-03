@@ -21,9 +21,9 @@ export default function DynamicFeaturedProperties() {
                 const primaryType = demandProfile.propertyType.split(",")[0] || "";
 
                 const params = new URLSearchParams({
-                    minPrice: "2000000",
+                    p_min: "2000000",
                     p_max: "12000000",
-                    p_location: demandProfile.preferredLocation,
+                    p_location: demandProfile.preferredLocation || 'Marbella,Benahavis,Estepona,Sotogrande',
                     shuffle: "true"
                 });
 
@@ -83,12 +83,12 @@ export default function DynamicFeaturedProperties() {
 
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex touch-pan-y mt-2 mb-2 gap-4">
-                    {properties.map((property) => (
+                    {properties.filter(p => p.MainImage).map((property) => (
                         <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden flex-[0_0_100%] md:flex-[0_0_calc(100%/3-1rem)] min-w-0">
                             <Link href={`/properties/${property.Id}`}>
                                 <div className="relative overflow-hidden aspect-[4/3] cursor-pointer">
                                     <img
-                                        src={property.MainImage || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}
+                                        src={property.MainImage}
                                         alt={property.TypeName}
                                         loading="lazy"
                                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
@@ -99,7 +99,7 @@ export default function DynamicFeaturedProperties() {
                                         </span>
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <p className="text-white text-xs uppercase tracking-widest font-bold">{t("properties.viewDetails")}</p>
+                                        <p className="text-white text-xs uppercase tracking-widest font-bold">{t("grid.view_details")}</p>
                                     </div>
                                 </div>
                             </Link>
@@ -134,7 +134,7 @@ export default function DynamicFeaturedProperties() {
                                 <div className="mt-8 flex gap-3">
                                     <Link href={`/properties/${property.Id}`} className="flex-grow">
                                         <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
-                                            {t("properties.viewDetails")}
+                                            {t("grid.view_details")}
                                         </Button>
                                     </Link>
                                     <a

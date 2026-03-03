@@ -76,9 +76,12 @@ export async function fetchProperties(customFilters: any = {}) {
                 (p.PicturesContent?.Picture ? 1 : 0) || 0;
             if (pictureCount < 5) return false;
 
-            // 4. No Renders/Planos (STRICT)
+            // 4. Image Validation: Must have a valid MainImage URL (STRICT)
+            if (!p.MainImage || p.MainImage.trim() === "") return false;
+
+            // 5. No Renders/Planos (STRICT)
             const mainImg = (p.MainImage || "").toLowerCase();
-            const blacklist = ['render', 'plano', '3d', 'project', 'plan', 'blueprint', 'generic'];
+            const blacklist = ['render', 'plano', '3d', 'project', 'plan', 'blueprint', 'generic', 'unsplash', 'stock'];
             if (blacklist.some(word => mainImg.includes(word))) return false;
 
             // 5. Freshness: Must be updated within last 24 months (RELAXED for luxury)

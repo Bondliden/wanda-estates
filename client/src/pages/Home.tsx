@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.jpg";
 import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
 import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
 

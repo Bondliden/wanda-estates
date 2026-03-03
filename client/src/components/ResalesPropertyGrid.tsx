@@ -216,12 +216,12 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {properties.map((property) => (
+                    {properties.filter(p => p.MainImage).map((property) => (
                         <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden">
                             <Link href={`/properties/${property.Id}`}>
                                 <div className="relative overflow-hidden aspect-[4/3] cursor-pointer">
                                     <img
-                                        src={property.MainImage || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}
+                                        src={property.MainImage}
                                         alt={property.TypeName}
                                         loading="lazy"
                                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
