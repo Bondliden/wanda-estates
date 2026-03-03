@@ -21,6 +21,7 @@ function mapProperty(p: any) {
         PlotArea: parseFloat(p.GardenPlot || p.PlotArea || '0'),
         TerraceArea: parseFloat(p.Terrace || p.TerraceArea || '0'),
         Price: parseFloat(p.Price || '0'),
+        Location: p.Location || p.Area || 'Costa del Sol',
     };
 }
 
