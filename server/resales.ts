@@ -24,12 +24,17 @@ function mapProperty(p: any) {
     };
 }
 
-export async function fetchProperties(customFilters: any = {}) {
-    const p1 = process.env.RESALES_P1;
-    const p2 = process.env.RESALES_P2;
+export async function fetchProperties(customFilters: any = {}) { // HARDCODED FOR EMERGENCY DEBUGGING
+    const p1 = '1022290';
+    const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
+    const agencyFilterId = '1';
+
+    if (typeof fetch === 'undefined') {
+        throw new Error("Global fetch is not defined. Ensure Node.js 18+ is used.");
+    }
 
     if (!p1 || !p2) {
-        throw new Error("Resales Online API credentials (P1/P2) are not set in the environment.");
+        throw new Error("Resales Online API credentials are not configured.");
     }
 
     const pageSize = customFilters.p_PageSize || '18';
