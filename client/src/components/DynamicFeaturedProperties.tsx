@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Bed, Bath, Maximize, MapPin, Search, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
-
 export default function DynamicFeaturedProperties() {
+    const { t } = useTranslation();
     const { demandProfile } = useSEO();
     const [properties, setProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -76,9 +76,9 @@ export default function DynamicFeaturedProperties() {
         <>
             <div className="text-center mb-8">
                 <span className="inline-block bg-[#e09900] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 mb-2">
-                    Trending for {demandProfile.countryCode}
+                    {t("home.featured.title")}
                 </span>
-                <p className="text-gray-500 text-sm">Most demanded: {demandProfile.propertyType.replace(',', ' / ')} in {demandProfile.preferredLocation.replace(',', ' & ')}</p>
+                <p className="text-gray-500 text-sm">{t("home.featured.desc")}</p>
             </div>
 
             <div className="overflow-hidden" ref={emblaRef}>
@@ -99,7 +99,7 @@ export default function DynamicFeaturedProperties() {
                                         </span>
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <p className="text-white text-xs uppercase tracking-widest font-bold">View Details</p>
+                                        <p className="text-white text-xs uppercase tracking-widest font-bold">{t("properties.viewDetails")}</p>
                                     </div>
                                 </div>
                             </Link>
@@ -134,7 +134,7 @@ export default function DynamicFeaturedProperties() {
                                 <div className="mt-8 flex gap-3">
                                     <Link href={`/properties/${property.Id}`} className="flex-grow">
                                         <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
-                                            View Property
+                                            {t("properties.viewDetails")}
                                         </Button>
                                     </Link>
                                     <a
@@ -142,7 +142,7 @@ export default function DynamicFeaturedProperties() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="bg-[#25D366] hover:bg-[#128C7E] text-white px-4 flex items-center justify-center transition-colors"
-                                        title="Contact via WhatsApp"
+                                        title={t("properties.contactWhatsApp") || "Contact via WhatsApp"}
                                     >
                                         <MessageCircle className="w-5 h-5" />
                                     </a>
