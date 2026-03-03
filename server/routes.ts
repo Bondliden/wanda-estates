@@ -22,7 +22,7 @@ export async function registerRoutes(
       console.error("Error exposing properties:", error);
       res.status(500).json({
         success: false,
-        message: "Error fetching properties"
+        message: error instanceof Error ? error.message : "Error fetching properties"
       });
     }
   });
