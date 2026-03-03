@@ -50,7 +50,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
     });
 
     const [filters, setFilters] = useState({
-        minPrice: "750000",
+        minPrice: "450000",
         maxPrice: "50000000",
         p_location: initialLocation,
         p_beds: "",

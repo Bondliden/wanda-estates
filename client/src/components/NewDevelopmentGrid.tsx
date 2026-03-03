@@ -51,7 +51,7 @@ export default function NewDevelopmentGrid() {
 
     const [filters, setFilters] = useState({
         p_location: "",
-        p_min: "",
+        p_min: "450000",
         p_max: "",
     });
 
