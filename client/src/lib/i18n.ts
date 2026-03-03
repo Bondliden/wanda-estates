@@ -26,8 +26,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Our Services",
-      "home.services.desc1": "Wanda Estates is a dynamic new real estate agency with a refreshing approach. Established by José Maria Esquerdo, Wanda Estates combines expertise from the real estate and financial sectors to help you make wise investments in real estate in Marbella and achieve maximum value from the property market.",
-      "home.services.desc2": "We have a track record for delivering ambitious luxury resorts around the world for more than 20 years in hotel and real estate development, and significant experience tailoring investments to generate rapid profits for clients.",
+      "home.services.desc1": "We tailor every detail of your home to your exact wishes, ensuring a result that is uniquely yours.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Name",
@@ -109,8 +109,8 @@ const resources = {
       "about.subtitle": "A dynamic real estate agency with a refreshing approach to luxury property in Marbella.",
       "about.story.title": "Our Story",
       "about.story.heading": "Established by José Maria Esquerdo",
-      "about.story.p1": "Wanda Estates is a dynamic new real estate agency with a refreshing approach. Established by José Maria Esquerdo, Wanda Estates combines expertise from the real estate and financial sectors to help you make wise investments in real estate in Marbella and achieve maximum value from the property market.",
-      "about.story.p2": "We have a track record for delivering ambitious luxury resorts around the world for more than 20 years in hotel and real estate development, and significant experience tailoring investments to generate rapid profits for clients.",
+      "about.story.p1": "We tailor every detail of your home to your exact wishes, ensuring a result that is uniquely yours.",
+      "about.story.p2": "",
       "about.story.p3": "Our mission is to provide a bespoke service that goes beyond the transaction. We aim to build long-lasting relationships with our clients, becoming their trusted advisors for all their real estate needs in Southern Spain.",
       "about.founder": "José Maria Esquerdo, Founder",
 
@@ -180,8 +180,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Nuestros Servicios",
-      "home.services.desc1": "Wanda Estates es una nueva agencia inmobiliaria dinámica con un enfoque refrescante. Establecido por José María Esquerdo, Wanda Estates combina la experiencia de los sectores inmobiliario y financiero para ayudarle a realizar inversiones inteligentes en bienes raíces en Marbella y lograr el máximo valor del mercado inmobiliario.",
-      "home.services.desc2": "Tenemos un historial de entrega de ambiciosos complejos de lujo en todo el mundo durante más de 20 años en el desarrollo hotelero e inmobiliario, y una experiencia significativa adaptando inversiones para generar beneficios rápidos para los clientes.",
+      "home.services.desc1": "Adaptamos cada detalle de su hogar a sus deseos exactos, asegurando un resultado que es únicamente suyo.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Nombre",
@@ -277,8 +277,8 @@ const resources = {
       "about.subtitle": "Una agencia inmobiliaria dinámica con un enfoque refrescante para la propiedad de lujo en Marbella.",
       "about.story.title": "Nuestra Historia",
       "about.story.heading": "Establecido por José María Esquerdo",
-      "about.story.p1": "Wanda Estates es una nueva agencia inmobiliaria dinámica con un enfoque refrescante. Establecido por José María Esquerdo, Wanda Estates combina la experiencia de los sectores inmobiliario y financiero para ayudarle a realizar inversiones inteligentes en bienes raíces en Marbella y lograr el máximo valor del mercado inmobiliario.",
-      "about.story.p2": "Tenemos un historial de entrega de ambiciosos complejos de lujo en todo el mundo durante más de 20 años en el desarrollo hotelero e inmobiliario, y una experiencia significativa adaptando inversiones para generar beneficios rápidos para los clientes.",
+      "about.story.p1": "Adaptamos cada detalle de su hogar a sus deseos exactos, asegurando un resultado que es únicamente suyo.",
+      "about.story.p2": "",
       "about.story.p3": "Nuestra misión es proporcionar un servicio a medida que va más allá de la transacción. Nuestro objetivo es construir relaciones duraderas con nuestros clientes, convirtiéndonos en sus asesores de confianza para todas sus necesidades inmobiliarias en el sur de España.",
       "about.founder": "José María Esquerdo, Fundador",
 
@@ -337,8 +337,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Onze Diensten",
-      "home.services.desc1": "Wanda Estates is een dynamisch nieuw makelaarskantoor met een verfrissende aanpak. Opgericht door José Maria Esquerdo, combineert Wanda Estates expertise uit de vastgoed- en financiële sectoren om u te helpen verstandig te investeren in onroerend goed in Marbella en maximale waarde uit de vastgoedmarkt te halen.",
-      "home.services.desc2": "We hebben een staat van dienst in het leveren van ambitieuze luxe resorts over de hele wereld gedurende meer dan 20 jaar in hotel- en vastgoedontwikkeling, en aanzienlijke ervaring in het op maat maken van investeringen om snelle winsten voor klanten te genereren.",
+      "home.services.desc1": "We stemmen elk detail van uw huis af op uw exacte wensen, zodat het resultaat uniek van u is.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Naam",
@@ -420,8 +420,8 @@ const resources = {
       "about.subtitle": "Een dynamisch makelaarskantoor met een verfrissende aanpak van luxe vastgoed in Marbella.",
       "about.story.title": "Ons Verhaal",
       "about.story.heading": "Opgericht door José Maria Esquerdo",
-      "about.story.p1": "Wanda Estates is een dynamisch nieuw makelaarskantoor met een verfrissende aanpak. Opgericht door José Maria Esquerdo, combineert Wanda Estates expertise uit de vastgoed- en financiële sectoren om u te helpen verstandig te investeren in onroerend goed in Marbella en maximale waarde uit de vastgoedmarkt te halen.",
-      "about.story.p2": "We hebben een staat van dienst in het leveren van ambitieuze luxe resorts over de hele wereld gedurende meer dan 20 jaar in hotel- en vastgoedontwikkeling, en aanzienlijke ervaring in het op maat maken van investeringen om snelle winsten voor klanten te genereren.",
+      "about.story.p1": "We stemmen elk detail van uw huis af op uw exacte wensen, zodat het resultaat uniek van u is.",
+      "about.story.p2": "",
       "about.story.p3": "Onze missie is om een service op maat te bieden die verder gaat dan de transactie. We streven ernaar langdurige relaties met onze klanten op te bouwen en hun vertrouwde adviseurs te worden voor al hun vastgoedbehoeften in Zuid-Spanje.",
       "about.founder": "José Maria Esquerdo, Oprichter",
 
@@ -486,8 +486,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Våra Tjänster",
-      "home.services.desc1": "Wanda Estates är en dynamisk ny fastighetsbyrå med ett uppfriskande tillvägagångssätt. Grundat av José Maria Esquerdo, kombinerar Wanda Estates expertis från fastighets- och finanssektorerna för att hjälpa dig göra kloka investeringar i fastigheter i Marbella och uppnå maximalt värde från fastighetsmarknaden.",
-      "home.services.desc2": "Vi har en historia av att leverera ambitiösa lyxresorter runt om i världen i över 20 år inom hotell- och fastighetsutveckling, och betydande erfarenhet av att skräddarsy investeringar för att generera snabba vinster för kunder.",
+      "home.services.desc1": "Vi skräddarsyr varje detalj i ditt hem efter dina exakta önskemål, vilket säkerställer ett resultat som är helt ditt eget.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Namn",
@@ -569,8 +569,8 @@ const resources = {
       "about.subtitle": "En dynamisk fastighetsbyrå med ett uppfriskande tillvägagångssätt för lyxfastigheter i Marbella.",
       "about.story.title": "Vår Historia",
       "about.story.heading": "Grundat av José Maria Esquerdo",
-      "about.story.p1": "Wanda Estates är en dynamisk ny fastighetsbyrå med ett uppfriskande tillvägagångssätt. Grundat av José Maria Esquerdo, kombinerar Wanda Estates expertis från fastighets- och finanssektorerna för att hjälpa dig göra kloka investeringar i fastigheter i Marbella och uppnå maximalt värde från fastighetsmarknaden.",
-      "about.story.p2": "Vi har en historia av att leverera ambitiösa lyxresorter runt om i världen i över 20 år inom hotell- och fastighetsutveckling, och betydande erfarenhet av att skräddarsy investeringar för att generera snabba vinster för kunder.",
+      "about.story.p1": "Vi skräddarsyr varje detalj i ditt hem efter dina exakta önskemål, vilket säkerställer ett resultat som är helt ditt eget.",
+      "about.story.p2": "",
       "about.story.p3": "Vårt uppdrag är att erbjuda en skräddarsydd tjänst som går utöver transaktionen. Vi strävar efter att bygga långvariga relationer med våra kunder och bli deras pålitliga rådgivare för alla deras fastighetsbehov i södra Spanien.",
       "about.founder": "José Maria Esquerdo, Grundare",
 
@@ -640,8 +640,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Nasze Usługi",
-      "home.services.desc1": "Wanda Estates to dynamiczna nowa agencja nieruchomości ze świeżym podejściem. Założona przez José Marię Esquerdo, Wanda Estates łączy wiedzę z sektorów nieruchomości i finansów, aby pomóc Ci mądrze inwestować w nieruchomości w Marbelli i osiągnąć maksymalną wartość z rynku nieruchomości.",
-      "home.services.desc2": "Mamy udokumentowane doświadczenie w realizacji ambitnych luksusowych kurortów na całym świecie od ponad 20 lat w branży hotelarskiej i deweloperskiej, a także znaczące doświadczenie w dostosowywaniu inwestycji w celu generowania szybkich zysków dla klientów.",
+      "home.services.desc1": "Dostosowujemy każdy szczegół Twojego domu do Twoich dokładnych potrzeb, zapewniając efekt, który jest wyłącznie Twój.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Imię",
@@ -723,8 +723,8 @@ const resources = {
       "about.subtitle": "Dynamiczna agencja nieruchomości ze świeżym podejściem do luksusowych nieruchomości w Marbelli.",
       "about.story.title": "Nasza Historia",
       "about.story.heading": "Założona przez José Marię Esquerdo",
-      "about.story.p1": "Wanda Estates to dynamiczna nowa agencja nieruchomości ze świeżym podejściem. Założona przez José Marię Esquerdo, Wanda Estates łączy wiedzę z sektorów nieruchomości i finansów, aby pomóc Ci mądrze inwestować w nieruchomości w Marbelli i osiągnąć maksymalną wartość z rynku nieruchomości.",
-      "about.story.p2": "Mamy udokumentowane doświadczenie w realizacji ambitnych luksusowych kurortów na całym świecie od ponad 20 lat w branży hotelarskiej i deweloperskiej, a także znaczące doświadczenie w dostosowywaniu inwestycji w celu generowania szybkich zysków dla klientów.",
+      "about.story.p1": "Dostosowujemy każdy szczegół Twojego domu do Twoich dokładnych potrzeb, zapewniając efekt, który jest wyłącznie Twój.",
+      "about.story.p2": "",
       "about.story.p3": "Naszą misją jest świadczenie usług na miarę, które wykraczają poza transakcję. Dążymy do budowania długotrwałych relacji z naszymi klientami, stając się ich zaufanymi doradcami we wszystkich potrzebach związanych z nieruchomościami w południowej Hiszpanii.",
       "about.founder": "José Maria Esquerdo, Założyciel",
 
@@ -794,8 +794,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Nos Services",
-      "home.services.desc1": "Wanda Estates est une nouvelle agence immobilière dynamique avec une approche rafraîchissante. Fondée par José Maria Esquerdo, Wanda Estates combine l'expertise des secteurs immobilier et financier pour vous aider à investir judicieusement dans l'immobilier à Marbella et à obtenir une valeur maximale du marché immobilier.",
-      "home.services.desc2": "Nous avons fait nos preuves dans la réalisation de complexes de luxe ambitieux dans le monde entier depuis plus de 20 ans dans le développement hôtelier et immobilier, et une expérience significative dans l'adaptation des investissements pour générer des profits rapides pour les clients.",
+      "home.services.desc1": "Nous adaptons chaque détail de votre maison à vos souhaits exacts, garantissant un résultat qui vous est propre.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Nom",
@@ -877,8 +877,8 @@ const resources = {
       "about.subtitle": "Une agence immobilière dynamique avec une approche rafraîchissante de l'immobilier de luxe à Marbella.",
       "about.story.title": "Notre Histoire",
       "about.story.heading": "Fondée par José Maria Esquerdo",
-      "about.story.p1": "Wanda Estates est une nouvelle agence immobilière dynamique avec une approche rafraîchissante. Fondée par José Maria Esquerdo, Wanda Estates combine l'expertise des secteurs immobilier et financier pour vous aider à investir judicieusement dans l'immobilier à Marbella et à obtenir une valeur maximale du marché immobilier.",
-      "about.story.p2": "Nous avons fait nos preuves dans la réalisation de complexes de luxe ambitieux dans le monde entier depuis plus de 20 ans dans le développement hôtelier et immobilier, et une expérience significative dans l'adaptation des investissements pour générer des profits rapides pour les clients.",
+      "about.story.p1": "Nous adaptons chaque détail de votre maison à vos souhaits exacts, garantissant un résultat qui vous est propre.",
+      "about.story.p2": "",
       "about.story.p3": "Notre mission est de fournir un service sur mesure qui va au-delà de la transaction. Nous visons à construire des relations durables avec nos clients, devenant leurs conseillers de confiance pour tous leurs besoins immobiliers dans le sud de l'Espagne.",
       "about.founder": "José Maria Esquerdo, Fondateur",
 
@@ -948,8 +948,8 @@ const resources = {
       "home.featured.quote.author": "— Oscar Wilde",
 
       "home.services.title": "Unsere Dienstleistungen",
-      "home.services.desc1": "Wanda Estates ist eine dynamische neue Immobilienagentur mit einem erfrischenden Ansatz. Gegründet von José Maria Esquerdo, kombiniert Wanda Estates Expertise aus dem Immobilien- und Finanzsektor, um Ihnen zu helfen, klug in Immobilien in Marbella zu investieren und den maximalen Wert aus dem Immobilienmarkt zu erzielen.",
-      "home.services.desc2": "Wir haben eine Erfolgsbilanz bei der Lieferung ehrgeiziger Luxusresorts auf der ganzen Welt seit mehr als 20 Jahren in der Hotel- und Immobilienentwicklung und bedeutende Erfahrung bei der Anpassung von Investitionen, um schnelle Gewinne für Kunden zu erzielen.",
+      "home.services.desc1": "Wir passen jedes Detail Ihres Hauses genau an Ihre Wünsche an und sorgen für ein Ergebnis, das ganz Ihr eigenes ist.",
+      "home.services.desc2": "",
 
       "home.contact.title": "Wanda Estates",
       "form.name": "Name",
@@ -1031,8 +1031,8 @@ const resources = {
       "about.subtitle": "Eine dynamische Immobilienagentur mit einem erfrischenden Ansatz für Luxusimmobilien in Marbella.",
       "about.story.title": "Unsere Geschichte",
       "about.story.heading": "Gegründet von José Maria Esquerdo",
-      "about.story.p1": "Wanda Estates ist eine dynamische neue Immobilienagentur mit einem erfrischenden Ansatz. Gegründet von José Maria Esquerdo, kombiniert Wanda Estates Expertise aus dem Immobilien- und Finanzsektor, um Ihnen zu helfen, klug in Immobilien in Marbella zu investieren und den maximalen Wert aus dem Immobilienmarkt zu erzielen.",
-      "about.story.p2": "Wir haben eine Erfolgsbilanz bei der Lieferung ehrgeiziger Luxusresorts auf der ganzen Welt seit mehr als 20 Jahren in der Hotel- und Immobilienentwicklung und bedeutende Erfahrung bei der Anpassung von Investitionen, um schnelle Gewinne für Kunden zu erzielen.",
+      "about.story.p1": "Wir passen jedes Detail Ihres Hauses genau an Ihre Wünsche an und sorgen für ein Ergebnis, das ganz Ihr eigenes ist.",
+      "about.story.p2": "",
       "about.story.p3": "Unsere Mission ist es, einen maßgeschneiderten Service zu bieten, der über die Transaktion hinausgeht. Wir streben danach, langfristige Beziehungen zu unseren Kunden aufzubauen und ihre vertrauenswürdigen Berater für alle ihre Immobilienbedürfnisse in Südspanien zu werden.",
       "about.founder": "José Maria Esquerdo, Gründer",
 

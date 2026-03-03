@@ -64,9 +64,11 @@ export default function Home() {
                                 <p>
                                     {t("home.services.desc1")}
                                 </p>
-                                <p>
-                                    {t("home.services.desc2")}
-                                </p>
+                                {t("home.services.desc2") && (
+                                    <p>
+                                        {t("home.services.desc2")}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
