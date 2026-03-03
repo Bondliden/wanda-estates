@@ -38,6 +38,7 @@ interface ResalesPropertyGridProps {
 }
 
 export default function ResalesPropertyGrid({ isNewDevelopment = false, initialLocation = "" }: ResalesPropertyGridProps) {
+    console.log("[ResalesPropertyGrid] Rendering start", { isNewDevelopment, initialLocation });
     const { t } = useTranslation();
 
     const [properties, setProperties] = useState<ResalesProperty[]>([]);
@@ -67,6 +68,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
     }, [initialLocation]);
 
     const fetchProperties = useCallback(async (searchFilters = filters, page = 1) => {
+        console.log("[ResalesPropertyGrid] fetchProperties start", { searchFilters, page });
         setLoading(true);
         setError(null);
         try {
@@ -227,11 +229,17 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 </form>
             </div>
 
-            {/* {viewMode === 'map' ? (
+            {viewMode === 'map' ? (
                 <div className="mb-16">
-                    <PropertyMap properties={properties} />
+                    {/* Assuming PropertyMap is available and accepts properties */}
+                    {/* <PropertyMap properties={properties} /> */}
+                    {/* If you intended to render ResalesPropertyGrid recursively, ensure it's handled correctly to avoid infinite loops or unexpected behavior. */}
+                    {/* <ResalesPropertyGrid initialLocation={selectedNeighborhood || ""} /> */}
+                    <div className="text-center p-12 bg-gray-50 text-gray-600 border border-gray-100 font-serif">
+                        <p>Map view is under development.</p>
+                    </div>
                 </div>
-            ) : null} */}
+            ) : null}
 
             {error ? (
                 <div className="text-center p-12 bg-red-50 text-red-600 border border-red-100 font-serif">

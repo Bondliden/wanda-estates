@@ -39,6 +39,7 @@ const neighborhoods = [
 ];
 
 export default function PropertiesForSale() {
+  console.log("[PropertiesForSale] Rendering start");
   const { t, i18n } = useTranslation();
   const isSpanish = i18n.language === "es";
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string | null>(null);
