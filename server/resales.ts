@@ -151,8 +151,8 @@ export async function fetchProperties(customFilters: any = {}) {
 }
 
 export async function fetchPropertyDetails(propertyId: string) {
-    const p1 = process.env.RESALES_P1;
-    const p2 = process.env.RESALES_P2;
+    const p1 = '1022290';
+    const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
 
     if (!p1 || !p2) {
         throw new Error("Resales Online API credentials (P1/P2) are not set in the environment.");
@@ -165,7 +165,7 @@ export async function fetchPropertyDetails(propertyId: string) {
         p2: p2,
         p_output: 'json',
         p_Agency_FilterId: '1',
-        p_RefId: propertyId
+        p_Reference: propertyId
     });
 
     try {
