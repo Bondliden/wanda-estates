@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
+import { Link } from "wouter";
 
 interface ContactFormProps {
   showMessage?: boolean;
