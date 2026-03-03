@@ -254,7 +254,7 @@ export async function registerRoutes(
       res.json({
         success: true,
         message: "Lead processed. Initiating download.",
-        downloadUrl: "/guide/wanda-estates-guia-inversion-2025.pdf" // Placeholder URL for actual file
+        downloadUrl: "/guide/wanda-estates-guia-inversion-2026.pdf" // Placeholder URL for actual file
       });
 
     } catch (error) {

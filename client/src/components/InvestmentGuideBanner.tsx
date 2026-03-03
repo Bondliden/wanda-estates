@@ -27,12 +27,12 @@ export default function InvestmentGuideBanner() {
                         />
                         <span className="hidden md:block w-px h-6 bg-white/20"></span>
                         <h2 className="text-2xl md:text-3xl font-serif text-white uppercase tracking-wider">
-                            Marbella <span className="text-[#C9A961]">Investment Guide</span> 2025
+                            Marbella <span className="text-[#C9A961]">Investment Guide</span> 2026
                         </h2>
                     </div>
 
                     <p className="text-gray-200 text-lg font-light leading-relaxed mb-6 max-w-2xl">
-                        Exclusive insights on tax advantages, prime locations, and ROI projections for luxury real estate. Discover why Andalusia is the 2025 premier destination for capital preservation.
+                        Exclusive insights on tax advantages, prime locations, and ROI projections for luxury real estate. Discover why Andalusia is the 2026 premier destination for capital preservation.
                     </p>
 
                     <div className="flex flex-wrap justify-center md:justify-start gap-6 mb-8 mt-2">

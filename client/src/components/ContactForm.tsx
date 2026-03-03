@@ -82,7 +82,7 @@ export default function ContactForm({ showMessage = false, className = "", varia
         <div className="bg-gradient-to-r from-[#2B5F8C] to-[#1a3a54] p-6 rounded-sm mb-6">
           <div className="flex items-center gap-3 mb-3">
             <Download className="w-8 h-8 text-[#C9A961]" />
-            <h3 className="text-white font-serif text-lg">{t("leadmagnet.title") || "Guía de Inversión Marbella 2025"}</h3>
+            <h3 className="text-white font-serif text-lg">{t("leadmagnet.title") || "Guía de Inversión Marbella 2026"}</h3>
           </div>
           <p className="text-gray-300 text-sm mb-4">{t("leadmagnet.desc") || "Descarga gratis nuestra guía exclusiva con las mejores zonas y oportunidades."}</p>
         </div>

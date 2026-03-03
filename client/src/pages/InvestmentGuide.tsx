@@ -42,7 +42,7 @@ export default function InvestmentGuide() {
                         <img src="/wanda_logo_horizontal.png" alt="Wanda Estates" className="h-10 md:h-12" />
                         <div className="text-right">
                             <p className="text-[#C9A961] font-serif uppercase tracking-widest text-sm">Exclusive Market Report</p>
-                            <p className="text-gray-400 text-xs">Issue: Spring 2025</p>
+                            <p className="text-gray-400 text-xs">Issue: Spring 2026</p>
                         </div>
                     </div>
 
@@ -50,7 +50,7 @@ export default function InvestmentGuide() {
                     <div className="mb-12 border-b border-gray-100 pb-8">
                         <h1 className="text-4xl md:text-5xl font-serif text-[#2B5F8C] uppercase tracking-tighter leading-tight mb-4">
                             Marbella <br />
-                            <span className="text-[#C9A961]">Investment Guide</span> 2025
+                            <span className="text-[#C9A961]">Investment Guide</span> 2026
                         </h1>
                         <p className="text-gray-600 text-xl font-light italic">
                             "Exclusive insights on tax advantages, prime locations, and ROI projections for luxury real estate."
@@ -81,7 +81,7 @@ export default function InvestmentGuide() {
                         <section>
                             <h2 className="text-xl font-serif text-[#2B5F8C] uppercase tracking-wider mb-4 border-l-4 border-[#C9A961] pl-4">Market Overview</h2>
                             <p>
-                                The Marbella real estate market enters 2025 with unprecedented momentum. Driven by a supply-demand imbalance in the ultra-luxury segment and significant tax incentives in the Andalusia region, Costa del Sol remains the premier destination for international wealth preservation and ROI.
+                                The Marbella real estate market enters 2026 with unprecedented momentum. Driven by a supply-demand imbalance in the ultra-luxury segment and significant tax incentives in the Andalusia region, Costa del Sol remains the premier destination for international wealth preservation and ROI.
                             </p>
                         </section>
 
@@ -96,7 +96,7 @@ export default function InvestmentGuide() {
 
                         <section>
                             <h2 className="text-xl font-serif text-[#2B5F8C] uppercase tracking-wider mb-4 border-l-4 border-[#C9A961] pl-4">Prime Investment Locations</h2>
-                            <p className="mb-4">For 2025, capital allocation should focus on areas with proven resilience and high rental demand:</p>
+                            <p className="mb-4">For 2026, capital allocation should focus on areas with proven resilience and high rental demand:</p>
                             <ul className="list-disc pl-6 space-y-2">
                                 <li><strong>The Golden Mile:</strong> The heart of luxury. Limited supply makes this area inflation-proof.</li>
                                 <li><strong>Sierra Blanca & Zagaleta:</strong> The summit of privacy. 9% value increase in last 12 months.</li>
@@ -107,7 +107,7 @@ export default function InvestmentGuide() {
                         <section>
                             <h2 className="text-xl font-serif text-[#2B5F8C] uppercase tracking-wider mb-4 border-l-4 border-[#C9A961] pl-4">ROI Projections</h2>
                             <p>
-                                Capital appreciation is projected to reach 4-6% in 2025. Investors seeking yield should focus on high-amenity villas where short-term summer yields often break the 10% barrier.
+                                Capital appreciation is projected to reach 4-6% in 2026. Investors seeking yield should focus on high-amenity villas where short-term summer yields often break the 10% barrier.
                             </p>
                         </section>
                     </div>
@@ -116,7 +116,7 @@ export default function InvestmentGuide() {
                     <div className="mt-24 pt-12 border-t border-gray-100 flex justify-between items-center gap-4">
                         <div className="flex-grow">
                             <p className="font-serif text-[#2B5F8C]">Tailoring Every Detail</p>
-                            <p className="text-sm text-gray-400">© 2025 Wanda Estates | Luxury Real Estate Marbella</p>
+                            <p className="text-sm text-gray-400">© 2026 Wanda Estates | Luxury Real Estate Marbella</p>
                         </div>
                         <img src="/wanda_logo_horizontal.png" alt="Logo" className="h-6 opacity-30 grayscale" />
                     </div>

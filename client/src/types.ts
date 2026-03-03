@@ -4,7 +4,7 @@ export interface AuditItem {
   currentStatus: string;
   gapAnalysis: string;
   strategicAction: string;
-  impact2025: string;
+  impact2026: string;
 }
 
 export interface AuditData {

@@ -138,7 +138,7 @@ const resources = {
       "contact.form.send": "Send Message",
 
       "form.cta": "Request Private Dossier",
-      "leadmagnet.title": "Marbella Investment Guide 2025",
+      "leadmagnet.title": "Marbella Investment Guide 2026",
       "leadmagnet.desc": "Exclusive insights on tax advantages, prime locations, and ROI projections for luxury real estate.",
       "leadmagnet.cta": "Download Free Guide",
       "leadmagnet.privacy": "Your data is protected. We respect your privacy.",
@@ -198,7 +198,7 @@ const resources = {
       "footer.address": "El Rodeo Alto Nº4, Nueva Andalucía, 29660, Marbella, Málaga",
 
       "form.cta": "Solicitar Dossier Privado",
-      "leadmagnet.title": "Guía de Inversión Marbella 2025",
+      "leadmagnet.title": "Guía de Inversión Marbella 2026",
       "leadmagnet.desc": "Información exclusiva sobre ventajas fiscales, ubicaciones premium y proyecciones de ROI para inmuebles de lujo.",
       "leadmagnet.cta": "Descargar Guía Gratuita",
       "leadmagnet.privacy": "Sus datos están protegidos. Respetamos su privacidad.",
@@ -449,7 +449,7 @@ const resources = {
       "contact.form.send": "Verstuur bericht",
 
       "form.cta": "Privé Dossier Aanvragen",
-      "leadmagnet.title": "Marbella Investeringsgids 2025",
+      "leadmagnet.title": "Marbella Investeringsgids 2026",
       "leadmagnet.desc": "Exclusieve inzichten over belastingvoordelen, toplocaties en ROI-projecties voor luxe vastgoed.",
       "leadmagnet.cta": "Gratis Gids Downloaden",
       "leadmagnet.privacy": "Uw gegevens zijn beschermd. Wij respecteren uw privacy.",
@@ -598,7 +598,7 @@ const resources = {
       "contact.form.send": "Skicka Meddelande",
 
       "form.cta": "Begär Privat Dossier",
-      "leadmagnet.title": "Marbella Investeringsguide 2025",
+      "leadmagnet.title": "Marbella Investeringsguide 2026",
       "leadmagnet.desc": "Exklusiva insikter om skattefördelar, premiumlägen och ROI-projektioner för lyxfastigheter.",
       "leadmagnet.cta": "Ladda Ner Gratis Guide",
       "leadmagnet.privacy": "Din data är skyddad. Vi respekterar din integritet.",
@@ -752,7 +752,7 @@ const resources = {
       "contact.form.send": "Wyślij Wiadomość",
 
       "form.cta": "Poproś o Prywatne Dossier",
-      "leadmagnet.title": "Przewodnik Inwestycyjny Marbella 2025",
+      "leadmagnet.title": "Przewodnik Inwestycyjny Marbella 2026",
       "leadmagnet.desc": "Ekskluzywne informacje o korzyściach podatkowych, lokalizacjach premium i prognozach ROI dla luksusowych nieruchomości.",
       "leadmagnet.cta": "Pobierz Darmowy Przewodnik",
       "leadmagnet.privacy": "Twoje dane są chronione. Szanujemy Twoją prywatność.",
@@ -906,7 +906,7 @@ const resources = {
       "contact.form.send": "Envoyer Message",
 
       "form.cta": "Demander Dossier Privé",
-      "leadmagnet.title": "Guide d'Investissement Marbella 2025",
+      "leadmagnet.title": "Guide d'Investissement Marbella 2026",
       "leadmagnet.desc": "Informations exclusives sur les avantages fiscaux, les emplacements premium et les projections de ROI pour l'immobilier de luxe.",
       "leadmagnet.cta": "Télécharger Guide Gratuit",
       "leadmagnet.privacy": "Vos données sont protégées. Nous respectons votre vie privée.",
@@ -1060,7 +1060,7 @@ const resources = {
       "contact.form.send": "Nachricht Senden",
 
       "form.cta": "Privates Dossier Anfordern",
-      "leadmagnet.title": "Marbella Investmentguide 2025",
+      "leadmagnet.title": "Marbella Investmentguide 2026",
       "leadmagnet.desc": "Exklusive Einblicke in Steuervorteile, Premium-Standorte und ROI-Projektionen für Luxusimmobilien.",
       "leadmagnet.cta": "Kostenlosen Guide Herunterladen",
       "leadmagnet.privacy": "Ihre Daten sind geschützt. Wir respektieren Ihre Privatsphäre.",

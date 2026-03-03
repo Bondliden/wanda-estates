@@ -40,7 +40,7 @@ export default function AuditTable() {
               <th className="p-4 font-semibold">Strategic Pillar</th>
               <th className="p-4 font-semibold">Current Status</th>
               <th className="p-4 font-semibold">Gap Analysis</th>
-              <th className="p-4 font-semibold">Strategic Action 2025</th>
+              <th className="p-4 font-semibold">Strategic Action 2026</th>
               <th className="p-4 font-semibold">Projected Impact</th>
               <th className="p-4 font-semibold text-center">Actions</th>
             </tr>
@@ -52,20 +52,20 @@ export default function AuditTable() {
                 <td className="p-4 align-top">{item.currentStatus}</td>
                 <td className="p-4 text-red-500 align-top italic">{item.gapAnalysis}</td>
                 <td className="p-4 font-medium text-[#2c3e50] align-top">{item.strategicAction}</td>
-                <td className="p-4 text-[#e09900] font-semibold align-top">{item.impact2025}</td>
+                <td className="p-4 text-[#e09900] font-semibold align-top">{item.impact2026}</td>
                 <td className="p-4 align-top">
                   <div className="flex flex-col gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleOpenVideo(item.pillar)}
                       className="w-full flex items-center gap-2 text-xs uppercase tracking-wider hover:bg-[#2ea3f2] hover:text-white transition-all border-gray-200"
                     >
                       <Play className="w-3 h-3" /> Watch Video
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleOpenInsight(item.strategicAction)}
                       className="w-full flex items-center gap-2 text-xs uppercase tracking-wider text-[#e09900] hover:bg-[#e09900]/10 hover:text-[#e09900]"
                     >
@@ -82,16 +82,16 @@ export default function AuditTable() {
       {/* Video Modal */}
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogContent className="max-w-4xl p-0 bg-black overflow-hidden border-none">
-             <div className="relative aspect-video">
-                {selectedVideo && (
-                    <video 
-                        src="/attached_assets/generated_videos/Dec_11__0958_31s_202512111144_8qsab.mp4" 
-                        controls 
-                        autoPlay 
-                        className="w-full h-full object-cover"
-                    />
-                )}
-             </div>
+          <div className="relative aspect-video">
+            {selectedVideo && (
+              <video
+                src="/attached_assets/generated_videos/Dec_11__0958_31s_202512111144_8qsab.mp4"
+                controls
+                autoPlay
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -100,20 +100,20 @@ export default function AuditTable() {
         <DialogContent className="sm:max-w-md bg-white border-none">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-[#2c3e50] font-serif uppercase tracking-wider">
-                <Sparkles className="w-5 h-5 text-[#e09900]" />
-                Veo AI Strategic Insight
+              <Sparkles className="w-5 h-5 text-[#e09900]" />
+              Veo AI Strategic Insight
             </DialogTitle>
           </DialogHeader>
           <div className="p-4 bg-gray-50 rounded-md border border-gray-100 min-h-[150px] flex items-center justify-center">
             {isLoading ? (
-                <div className="flex flex-col items-center gap-2 text-gray-400">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#2ea3f2]" />
-                    <span className="text-xs uppercase tracking-widest">Processing Data...</span>
-                </div>
+              <div className="flex flex-col items-center gap-2 text-gray-400">
+                <Loader2 className="w-8 h-8 animate-spin text-[#2ea3f2]" />
+                <span className="text-xs uppercase tracking-widest">Processing Data...</span>
+              </div>
             ) : (
-                <p className="text-gray-600 whitespace-pre-line leading-relaxed text-sm">
-                    {insightContent}
-                </p>
+              <p className="text-gray-600 whitespace-pre-line leading-relaxed text-sm">
+                {insightContent}
+              </p>
             )}
           </div>
         </DialogContent>

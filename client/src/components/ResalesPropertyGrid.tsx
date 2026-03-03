@@ -97,10 +97,11 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 }
             } else {
                 setProperties([]);
+                setError(data.error || "No properties found matching your criteria.");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Failed to load properties:", err);
-            setError("Unable to load properties. Please try again later.");
+            setError(err.message || "Unable to load properties. Please try again later.");
         } finally {
             setLoading(false);
         }
