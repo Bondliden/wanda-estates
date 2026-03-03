@@ -76,15 +76,26 @@ export default function ContactForm({ showMessage = false, className = "", varia
 
 
   if (variant === "leadMagnet") {
+    const isSpanish = i18n.language === 'es';
     return (
       <div className={className}>
         {/* Lead Magnet Banner */}
         <div className="bg-gradient-to-r from-[#2B5F8C] to-[#1a3a54] p-6 rounded-sm mb-6">
-          <div className="flex items-center gap-3 mb-3">
-            <Download className="w-8 h-8 text-[#C9A961]" />
-            <h3 className="text-white font-serif text-lg">{t("leadmagnet.title") || "Guía de Inversión Marbella 2026"}</h3>
+          <div className="bg-[#fcfcfc] p-8 border-l-4 border-[#C9A961] shadow-sm">
+            <h4 className="text-[#003366] font-serif text-xl mb-3">
+              {isSpanish ? "Guía de Inversión 2026" : "2026 Investment Guide"}
+            </h4>
+            <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+              {isSpanish
+                ? "Descubra las oportunidades exclusivas del mercado inmobiliario en la Costa del Sol para este año."
+                : "Discover exclusive real estate market opportunities in the Costa del Sol for this year."}
+            </p>
+            <Link href="/investment-guide">
+              <Button variant="outline" className="w-full rounded-none border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white transition-all uppercase text-[10px] font-bold tracking-widest">
+                {isSpanish ? "Ver Análisis Estratégico" : "View Strategic Analysis"}
+              </Button>
+            </Link>
           </div>
-          <p className="text-gray-300 text-sm mb-4">{t("leadmagnet.desc") || "Descarga gratis nuestra guía exclusiva con las mejores zonas y oportunidades."}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4" data-testid="contact-form-leadmagnet">
