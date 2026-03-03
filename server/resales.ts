@@ -158,14 +158,14 @@ export async function fetchPropertyDetails(propertyId: string) {
         throw new Error("Resales Online API credentials (P1/P2) are not set in the environment.");
     }
 
-    // PropertyDetails endpoint is restricted for some V6 accounts.
-    // Using SearchProperties with p_Reference filter as a stable alternative.
+    // V6 documentation suggests PropertyDetails for specific items, or SearchProperties with p_RefId
+    // We try SearchProperties first with p_RefId as it's more flexible with some account types
     const queryParams = new URLSearchParams({
         p1: p1,
         p2: p2,
         p_output: 'json',
         p_Agency_FilterId: '1',
-        p_Reference: propertyId
+        p_RefId: propertyId.replace(/\D/g, '') // Extract numeric part for p_RefId
     });
 
     try {
@@ -177,13 +177,26 @@ export async function fetchPropertyDetails(propertyId: string) {
         }
 
         const data = await response.json();
-        console.log(`[Resales API] Property details response for ${propertyId}:`, JSON.stringify(data.transaction || data));
+        console.log(`[Resales API] Detail fetch (Search) for ${propertyId}:`, data.transaction?.status || "unknown");
 
         if (data.Property) {
             const prop = Array.isArray(data.Property) ? data.Property[0] : data.Property;
-            const mapped = mapProperty(prop);
-            return mapped;
+            // Strict check: verify reference matches
+            if (prop.Reference === propertyId || prop.Id === propertyId) {
+                return mapProperty(prop);
+            }
         }
+
+        // Second attempt: try the specific PropertyDetails endpoint
+        const detailsUrl = `${API_BASE_URL}/PropertyDetails?p1=${p1}&p2=${p2}&p_output=json&p_RefId=${propertyId}`;
+        const detailsResp = await fetch(detailsUrl);
+        if (detailsResp.ok) {
+            const detailsData = await detailsResp.json();
+            if (detailsData.Property) {
+                return mapProperty(Array.isArray(detailsData.Property) ? detailsData.Property[0] : detailsData.Property);
+            }
+        }
+
         return data;
     } catch (error) {
         console.error("Error fetching property details:", error);
