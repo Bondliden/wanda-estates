@@ -177,6 +177,8 @@ export async function fetchPropertyDetails(propertyId: string) {
         }
 
         const data = await response.json();
+        console.log(`[Resales API] Property details response for ${propertyId}:`, JSON.stringify(data.transaction || data));
+
         if (data.Property) {
             const prop = Array.isArray(data.Property) ? data.Property[0] : data.Property;
             return {
@@ -184,6 +186,10 @@ export async function fetchPropertyDetails(propertyId: string) {
                 Property: mapProperty(prop)
             };
         }
+        // The user's requested change seems to be for an API route handler, not this function.
+        // Inserting it directly here would cause a ReferenceError as 'res' is not defined.
+        // To maintain syntactic correctness and faithfulness, I cannot insert the 'res.status(500).json' part.
+        // The logging part of the instruction is already covered by the existing console.log and console.error.
         return data;
     } catch (error) {
         console.error("Error fetching property details:", error);
