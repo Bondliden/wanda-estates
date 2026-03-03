@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Bed, Bath, Maximize, MapPin, Search, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon, Grid, Map as MapIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import PropertyMap from "./PropertyMap";
+// import PropertyMap from "./PropertyMap";
 import { Link } from "wouter";
 
 const WHATSAPP_PHONE = "34641113518";
@@ -227,11 +227,11 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 </form>
             </div>
 
-            {viewMode === 'map' ? (
+            {/* {viewMode === 'map' ? (
                 <div className="mb-16">
                     <PropertyMap properties={properties} />
                 </div>
-            ) : null}
+            ) : null} */}
 
             {error ? (
                 <div className="text-center p-12 bg-red-50 text-red-600 border border-red-100 font-serif">

@@ -43,12 +43,16 @@ export async function registerRoutes(
     try {
       const { id } = req.params;
       const details = await fetchPropertyDetails(id);
+      if (!details) {
+        return res.status(404).json({ success: false, message: "Property not found" });
+      }
       res.json({ success: true, data: details });
     } catch (error) {
       console.error(`Error fetching property details for ${req.params.id}:`, error);
-      res.status(500).json({
+      res.status(200).json({
         success: false,
-        message: "Error fetching property details"
+        message: error instanceof Error ? error.message : "Error fetching property details",
+        data: null
       });
     }
   });
@@ -130,17 +134,17 @@ export async function registerRoutes(
       }
 
       // For local development, this will be ::1 or 127.0.0.1, preventing geo lookup
-      // So if missing or local, we can use empty string which will make ip-api use our server's IP (Spain) or mock a country.
-      if (ip === '::1' || ip === '127.0.0.1') {
-        ip = ''; // Fallback for local testing (can mock here if needed)
+      if (ip === '::1' || ip === '127.0.0.1' || !ip) {
+        return res.json({ success: true, countryCode: 'ES' });
       }
 
       const response = await fetch(`http://ip-api.com/json/${ip}`);
+      if (!response.ok) throw new Error("Geo lookup failed");
       const data = await response.json();
       res.json({ success: true, countryCode: data.countryCode || 'ES' });
     } catch (error) {
       console.error("Error fetching geo location:", error);
-      res.status(500).json({ success: false, countryCode: 'ES' }); // Fallback to Spain
+      res.json({ success: true, countryCode: 'ES' }); // Always return success for the client
     }
   });
 
