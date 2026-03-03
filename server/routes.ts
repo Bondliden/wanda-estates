@@ -12,6 +12,17 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Endpoint to check server IP for whitelisting
+  app.get("/api/my-ip", async (_req, res) => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      res.json({ success: true, ip: data.ip });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Error fetching IP" });
+    }
+  });
+
   // Properties search endpoint
   app.get("/api/properties", async (req, res) => {
     try {
