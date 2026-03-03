@@ -2,8 +2,33 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import ContactForm from "@/components/ContactForm";
 
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Download } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
+const COMPANY_VCARD = `BEGIN:VCARD
+VERSION:3.0
+FN:Wanda Estates
+ORG:Wanda Estates
+TITLE:Luxury Real Estate
+TEL;TYPE=CELL:+34 641 113 518
+TEL;TYPE=WHATSAPP:+34 641 113 518
+EMAIL:info@wandaestates.com
+URL:https://www.wandaestates.com
+ADR;TYPE=OFFICE:;;El Rodeo Alto Nº4;Nueva Andalucía;Marbella;29660;Spain
+NOTE:Luxury real estate agency specializing in Marbella and Costa del Sol properties.
+END:VCARD`;
+
+function downloadVCard() {
+  const blob = new Blob([COMPANY_VCARD], { type: "text/vcard;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Wanda-Estates-Contact.vcf";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 export default function ContactUs() {
   const { t } = useTranslation();
@@ -84,6 +109,14 @@ export default function ContactUs() {
                     </p>
                   </div>
                 </div>
+
+                <button
+                  onClick={downloadVCard}
+                  className="mt-8 flex items-center justify-center gap-2 bg-[#2B5F8C] hover:bg-[#1a3a54] text-white px-6 py-3 rounded-none uppercase tracking-widest font-bold transition-colors w-full sm:w-auto"
+                >
+                  <Download className="w-5 h-5" />
+                  {t("contact.download_vcard") || "Download Contact"}
+                </button>
               </div>
             </div>
 

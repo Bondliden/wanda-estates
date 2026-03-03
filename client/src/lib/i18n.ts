@@ -136,6 +136,7 @@ const resources = {
       "contact.hours.week": "Monday - Friday: 9:00 - 18:00",
       "contact.hours.sat": "Saturday: By Appointment",
       "contact.hours.sun": "Sunday: Closed",
+      "contact.download_vcard": "Download Contact",
       "contact.form.title": "Send a Message",
       "contact.form.send": "Send Message",
 
@@ -304,6 +305,7 @@ const resources = {
       "contact.hours.week": "Lunes - Viernes: 9:00 - 18:00",
       "contact.hours.sat": "Sábado: Con Cita Previa",
       "contact.hours.sun": "Domingo: Cerrado",
+      "contact.download_vcard": "Descargar Contacto",
       "contact.form.title": "Enviar un Mensaje",
       "contact.form.send": "Enviar Mensaje",
       "properties.cta": "Solicitar Dossier Privado",
@@ -447,6 +449,7 @@ const resources = {
       "contact.hours.week": "Maandag - Vrijdag: 9:00 - 18:00",
       "contact.hours.sat": "Zaterdag: Op afspraak",
       "contact.hours.sun": "Zondag: Gesloten",
+      "contact.download_vcard": "Contact Downloaden",
       "contact.form.title": "Stuur een bericht",
       "contact.form.send": "Verstuur bericht",
 
@@ -596,6 +599,7 @@ const resources = {
       "contact.hours.week": "Måndag - Fredag: 9:00 - 18:00",
       "contact.hours.sat": "Lördag: Enligt överenskommelse",
       "contact.hours.sun": "Söndag: Stängt",
+      "contact.download_vcard": "Ladda Ner Kontakt",
       "contact.form.title": "Skicka ett meddelande",
       "contact.form.send": "Skicka Meddelande",
 
@@ -750,6 +754,7 @@ const resources = {
       "contact.hours.week": "Poniedziałek - Piątek: 9:00 - 18:00",
       "contact.hours.sat": "Sobota: Po umówieniu",
       "contact.hours.sun": "Niedziela: Zamknięte",
+      "contact.download_vcard": "Pobierz Kontakt",
       "contact.form.title": "Wyślij Wiadomość",
       "contact.form.send": "Wyślij Wiadomość",
 
@@ -904,6 +909,7 @@ const resources = {
       "contact.hours.week": "Lundi - Vendredi : 9h00 - 18h00",
       "contact.hours.sat": "Samedi : Sur rendez-vous",
       "contact.hours.sun": "Dimanche : Fermé",
+      "contact.download_vcard": "Télécharger Contact",
       "contact.form.title": "Envoyer un Message",
       "contact.form.send": "Envoyer Message",
 
@@ -1058,6 +1064,7 @@ const resources = {
       "contact.hours.week": "Montag - Freitag: 9:00 - 18:00",
       "contact.hours.sat": "Samstag: Nach Terminvereinbarung",
       "contact.hours.sun": "Sonntag: Geschlossen",
+      "contact.download_vcard": "Kontakt Herunterladen",
       "contact.form.title": "Nachricht Senden",
       "contact.form.send": "Nachricht Senden",
 
