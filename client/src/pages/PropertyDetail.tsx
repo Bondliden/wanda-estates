@@ -89,29 +89,52 @@ export default function PropertyDetail() {
 
     // Parse V6 images
     const getImages = (): string[] => {
-        if (!property) return [];
+        if (!property) {
+            console.log("[PropertyDetail] No property data");
+            return [];
+        }
         const pics = property.PicturesContent?.Picture;
-        if (!pics) return property.MainImage ? [property.MainImage] : [];
+        if (!pics) {
+            console.log("[PropertyDetail] No PicturesContent, using MainImage only:", property.MainImage);
+            return property.MainImage ? [property.MainImage] : [];
+        }
 
         const picArray = Array.isArray(pics) ? pics : [pics];
-        const urls = picArray.map((p: any) => p.HighResURL || p.PictureURL).filter(Boolean);
+        const urls = picArray.map((p: any) => {
+            const url = p.HighResURL || p.PictureURL;
+            console.log("[PropertyDetail] Processing image:", { hasHighRes: !!p.HighResURL, url });
+            return url;
+        }).filter(Boolean);
+        
         // Ensure MainImage is first
         if (property.MainImage && !urls.includes(property.MainImage)) {
             urls.unshift(property.MainImage);
+            console.log("[PropertyDetail] Added MainImage to front");
         }
+        
         console.log(`[PropertyDetail] Property ${property.Reference} has ${urls.length} images`);
         return urls;
     };
 
     const images = getImages();
     
+    console.log("[PropertyDetail] Images loaded:", images.length);
+    console.log("[PropertyDetail] Property data:", {
+        reference: property?.Reference,
+        hasMainImage: !!property?.MainImage,
+        images: images,
+        hasLocation: !!(property?.Latitude && property?.Longitude)
+    });
+    
     // Generate map URL
     const getMapUrl = () => {
         if (!property || (!property.Latitude && !property.Longitude)) {
+            console.log("[PropertyDetail] Using fallback map (no coords)");
             return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=Nueva Andalucía, Marbella&zoom=13`;
         }
         const lat = property.Latitude;
         const lng = property.Longitude;
+        console.log("[PropertyDetail] Using coords map:", { lat, lng });
         return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=${lat},${lng}&zoom=16&maptype=satellite`;
     };
 

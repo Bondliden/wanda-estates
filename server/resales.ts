@@ -13,13 +13,21 @@ function mapProperty(p: any) {
     let images: string[] = [];
     if (pics) {
         const picArray = Array.isArray(pics) ? pics : [pics];
-        images = picArray.map((pic: any) => pic.HighResURL || pic.PictureURL).filter(Boolean);
+        images = picArray.map((pic: any) => {
+            console.log(`[mapProperty] Image data:`, {
+                hasHighRes: !!pic.HighResURL,
+                hasNormal: !!pic.PictureURL,
+                highRes: pic.HighResURL?.substring(0, 50),
+                normal: pic.PictureURL?.substring(0, 50)
+            });
+            return pic.HighResURL || pic.PictureURL;
+        }).filter(Boolean);
     }
     if (p.MainImage && !images.includes(p.MainImage)) {
         images.unshift(p.MainImage);
     }
     
-    console.log(`[mapProperty] Property ${p.Reference} has ${images.length} images`);
+    console.log(`[mapProperty] Property ${p.Reference} has ${images.length} images:`, images.slice(0, 2));
     
     return {
         ...p,
