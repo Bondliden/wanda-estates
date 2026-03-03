@@ -101,6 +101,9 @@ export async function registerRoutes(
           <p><strong>Mensaje:</strong></p>
           <p>${validatedData.message?.replace(/\n/g, '<br/>') || 'No se adjuntó mensaje adjunto.'}</p>
           <br/>
+          <p><strong>¿Quieres agendar una llamada rápida para atender esta solicitud?</strong></p>
+          <p>Puedes compartir tu calendario o invitar a agendar aquí: <a href="https://calendly.com/wandaestates">https://calendly.com/wandaestates</a></p>
+          <br/>
           <p><small>Este correo fue generado automáticamente desde la web.</small></p>
         `
       };
@@ -162,6 +165,9 @@ export async function registerRoutes(
                 <li><strong>Email:</strong> <a href="mailto:${email}">${email}</a></li>
                 <li><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</li>
               </ul>
+              <br/>
+              <p>Contacta a este lead directamente mediante WhatsApp o sugiérele una videollamada.</p>
+              <p>Tu enlace de Calendly para agendar: <a href="https://calendly.com/wandaestates">https://calendly.com/wandaestates</a></p>
               <br/>
               <p><small>Formulario Lead Magnet - wandaestates.com</small></p>
             `
