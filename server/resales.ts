@@ -59,6 +59,7 @@ export async function fetchProperties(customFilters: any = {}) {
         }
 
         // Priority 1: High Commission. Extract commission percentage / amount and sort descending
+        // Priority 2: "Value for Money" (Price per square meter ascending)
         properties.sort((a: any, b: any) => {
             const getCommission = (p: any) => {
                 if (!p) return 0;
@@ -69,7 +70,22 @@ export async function fetchProperties(customFilters: any = {}) {
                     parseFloat(p.AgencyCommission) ||
                     0;
             };
-            return getCommission(b) - getCommission(a);
+
+            const getValueForMoney = (p: any) => {
+                if (!p || !p.Price || !p.BuiltArea) return Infinity;
+                const price = parseFloat(p.Price);
+                const area = parseFloat(p.BuiltArea);
+                if (area <= 0) return Infinity;
+                return price / area; // Lower is better
+            };
+
+            const commDiff = getCommission(b) - getCommission(a);
+            if (commDiff !== 0) {
+                return commDiff;
+            }
+
+            // If commission is the same, sort by value for money (lowest price per sqm first)
+            return getValueForMoney(a) - getValueForMoney(b);
         });
 
         // Apply shuffle if it's a "featured" request, but only shuffle the top highest commission properties to maintain business logic priority
