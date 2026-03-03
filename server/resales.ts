@@ -72,6 +72,11 @@ export async function fetchProperties(customFilters: any = {}) {
 
         const data = await response.json();
 
+        if (data.transaction?.status === 'error') {
+            console.error("Resales API Business Error:", data.transaction?.message);
+            throw new Error(`Resales API Error: ${data.transaction?.message}`);
+        }
+
         let properties: any[] = [];
         if (data.Property) {
             properties = Array.isArray(data.Property) ? data.Property : [data.Property];
@@ -110,9 +115,12 @@ export async function fetchProperties(customFilters: any = {}) {
             const getValue = (p: any) => {
                 const price = parseFloat(p.Price || 0);
                 const area = parseFloat(p.BuiltArea || 0);
-                return area > 0 ? price / area : Infinity;
+                return area > 0 ? price / area : 1000000; // Avoid Infinity
             };
-            return getValue(a) - getValue(b);
+            const valA = getValue(a);
+            const valB = getValue(b);
+            if (valA !== valB) return valA - valB;
+            return 0;
         });
 
         if (customFilters.shuffle === 'true') {
