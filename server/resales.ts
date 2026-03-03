@@ -25,9 +25,9 @@ function mapProperty(p: any) {
 }
 
 export async function fetchProperties(customFilters: any = {}) {
-    const p1 = process.env.RESALES_P1;
-    const p2 = process.env.RESALES_P2;
-    const agencyFilterId = process.env.RESALES_AGENCY_FILTER_ID || '1';
+    const p1 = '1022290';
+    const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
+    const agencyFilterId = '1';
 
     if (typeof fetch === 'undefined') {
         throw new Error("Global fetch is not defined. Ensure Node.js 18+ is used.");
