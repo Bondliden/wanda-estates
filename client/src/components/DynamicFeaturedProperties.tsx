@@ -51,7 +51,7 @@ export default function DynamicFeaturedProperties() {
     }, [demandProfile]);
 
     const getWhatsAppUrl = (ref: string) => {
-        const phone = "34600000000";
+        const phone = "34624377939";
         const message = encodeURIComponent(`Hola Wanda Estates, me interesa la propiedad con referencia ${ref}. ¿Podrían darme más información?`);
         return `https://wa.me/${phone}?text=${message}`;
     };
@@ -106,12 +106,12 @@ export default function DynamicFeaturedProperties() {
 
                             <div className="p-8 flex flex-col flex-grow">
                                 <div className="flex justify-between items-start mb-4">
-                                    <span className="text-[#2B5F8C] font-serif text-2xl font-light">
+                                    <span className="text-[#28a745] font-bold text-2xl font-serif">
                                         €{property.Price?.toLocaleString()}
                                     </span>
                                 </div>
                                 <h3 className="text-lg font-serif text-[#1a1a1a] mb-2 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors">{property.TypeName}</h3>
-                                <div className="flex items-center text-gray-400 text-xs mb-6 uppercase tracking-widest">
+                                <div className="flex items-center text-[#fd7e14] text-xs mb-6 uppercase tracking-widest font-semibold">
                                     <MapPin className="w-3 h-3 mr-2 text-[#C9A961]" />
                                     {property.Location}
                                 </div>

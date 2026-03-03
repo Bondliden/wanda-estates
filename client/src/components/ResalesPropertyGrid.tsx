@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { Bed, Bath, Maximize, MapPin, Search, MessageCircle, ArrowUpDown, Map as MapIcon, Grid } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Bed, Bath, Maximize, MapPin, Search, MessageCircle, ChevronLeft, ChevronRight as ChevronRightIcon, Grid, Map as MapIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import PropertyMap from "./PropertyMap";
 import { Link } from "wouter";
+
+const WHATSAPP_PHONE = "34624377939";
 
 interface ResalesProperty {
     Id: string;
@@ -23,28 +25,36 @@ interface ResalesProperty {
     GpsY?: string;
 }
 
+interface PaginationInfo {
+    CurrentPage: number;
+    PageSize: number;
+    TotalProperties: number;
+    TotalPages: number;
+}
+
 interface ResalesPropertyGridProps {
     isNewDevelopment?: boolean;
     initialLocation?: string;
 }
 
 export default function ResalesPropertyGrid({ isNewDevelopment = false, initialLocation = "" }: ResalesPropertyGridProps) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [properties, setProperties] = useState<ResalesProperty[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+    const [pagination, setPagination] = useState<PaginationInfo>({
+        CurrentPage: 1, PageSize: 18, TotalProperties: 0, TotalPages: 1
+    });
 
-    // Search parameters state based on User Requirements
     const [filters, setFilters] = useState({
         minPrice: "750000",
         maxPrice: "50000000",
         p_location: initialLocation,
         p_beds: "",
         p_baths: "",
-        p_minTerrace: "",
-        p_minPlot: "",
+        p_PropertyTypes: "",
         p_sort: "commission",
         p_newBuild: isNewDevelopment ? "1" : "",
         shuffle: "false"
@@ -56,7 +66,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
         }
     }, [initialLocation]);
 
-    const fetchProperties = async (searchFilters = filters) => {
+    const fetchProperties = useCallback(async (searchFilters = filters, page = 1) => {
         setLoading(true);
         setError(null);
         try {
@@ -64,13 +74,14 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 p_min: searchFilters.minPrice,
                 p_max: searchFilters.maxPrice,
                 p_sort: searchFilters.p_sort,
+                p_PageSize: '18',
+                p_PageIndex: String(page),
             };
 
             if (searchFilters.p_location) params.p_location = searchFilters.p_location;
             if (searchFilters.p_beds) params.p_beds = searchFilters.p_beds;
             if (searchFilters.p_baths) params.p_baths = searchFilters.p_baths;
-            if (searchFilters.p_minTerrace) params.p_minTerrace = searchFilters.p_minTerrace;
-            if (searchFilters.p_minPlot) params.p_minPlot = searchFilters.p_minPlot;
+            if (searchFilters.p_PropertyTypes) params.p_PropertyTypes = searchFilters.p_PropertyTypes;
             if (searchFilters.p_newBuild) params.p_newBuild = searchFilters.p_newBuild;
             if (searchFilters.shuffle === "true") params.shuffle = "true";
 
@@ -81,6 +92,9 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
             if (data.success && data.data) {
                 const propsArray = data.data.Property || [];
                 setProperties(Array.isArray(propsArray) ? propsArray : [propsArray]);
+                if (data.data.Pagination) {
+                    setPagination(data.data.Pagination);
+                }
             } else {
                 setProperties([]);
             }
@@ -90,21 +104,26 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchProperties();
+        fetchProperties(filters, 1);
     }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        fetchProperties(filters);
+        fetchProperties(filters, 1);
+    };
+
+    const handlePageChange = (newPage: number) => {
+        if (newPage < 1 || newPage > pagination.TotalPages) return;
+        fetchProperties(filters, newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const getWhatsAppUrl = (ref: string) => {
-        const phone = "34600000000"; // Placeholder - Wanda Estates Phone
         const message = encodeURIComponent(`Hola Wanda Estates, me interesa la propiedad con referencia ${ref}. ¿Podrían darme más información?`);
-        return `https://wa.me/${phone}?text=${message}`;
+        return `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
     };
 
     return (
@@ -112,7 +131,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
             {/* Advanced Search Bar */}
             <div className="bg-white p-8 shadow-xl border border-gray-100 mb-8 rounded-sm">
                 <form onSubmit={handleSearch} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.municipality")}</label>
                             <select
@@ -138,6 +157,32 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                             />
                         </div>
                         <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.max_price", "Max Price")}</label>
+                            <input
+                                type="number"
+                                className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
+                                value={filters.maxPrice}
+                                step="100000"
+                                onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.property_type", "Type")}</label>
+                            <select
+                                className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
+                                value={filters.p_PropertyTypes}
+                                onChange={(e) => setFilters({ ...filters, p_PropertyTypes: e.target.value })}
+                            >
+                                <option value="">{t("grid.any")}</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Penthouse">Penthouse</option>
+                                <option value="Townhouse">Townhouse</option>
+                                <option value="Finca">Finca / Country House</option>
+                                <option value="Plot">Plot / Land</option>
+                            </select>
+                        </div>
+                        <div>
                             <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.bedrooms")}</label>
                             <select
                                 className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
@@ -149,19 +194,6 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                 <option value="3">3+</option>
                                 <option value="4">4+</option>
                                 <option value="5">5+</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold uppercase tracking-widest text-[#2B5F8C] mb-2">{t("grid.sort")}</label>
-                            <select
-                                className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
-                                value={filters.p_sort}
-                                onChange={(e) => setFilters({ ...filters, p_sort: e.target.value })}
-                            >
-                                <option value="commission">{t("grid.commission")}</option>
-                                <option value="2">{t("grid.latest")}</option>
-                                <option value="0">{t("grid.price_asc")}</option>
-                                <option value="1">{t("grid.price_desc")}</option>
                             </select>
                         </div>
                     </div>
@@ -203,7 +235,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
             {error ? (
                 <div className="text-center p-12 bg-red-50 text-red-600 border border-red-100 font-serif">
                     <p>{error}</p>
-                    <Button onClick={() => fetchProperties()} variant="outline" className="mt-4 rounded-none border-[#2B5F8C] text-[#2B5F8C]">{t("grid.retry")}</Button>
+                    <Button onClick={() => fetchProperties(filters)} variant="outline" className="mt-4 rounded-none border-[#2B5F8C] text-[#2B5F8C]">{t("grid.retry")}</Button>
                 </div>
             ) : loading ? (
                 <div className="flex flex-col items-center justify-center p-20">
@@ -215,75 +247,134 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                     <p className="text-gray-400 text-xl font-serif italic">{t("grid.no_results")}</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {properties.filter(p => p.MainImage).map((property) => (
-                        <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden">
-                            <Link href={`/properties/${property.Id}`}>
-                                <div className="relative overflow-hidden aspect-[4/3] cursor-pointer">
-                                    <img
-                                        src={property.MainImage}
-                                        alt={property.TypeName}
-                                        loading="lazy"
-                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                    />
-                                    <div className="absolute top-6 left-6">
-                                        <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2">
-                                            {property.Reference}
+                <>
+                    {/* Results count */}
+                    <div className="flex justify-between items-center mb-6">
+                        <p className="text-sm text-gray-500">
+                            {t("grid.showing", "Showing")} <span className="font-bold text-[#2B5F8C]">{properties.length}</span> {t("grid.of", "of")} <span className="font-bold text-[#2B5F8C]">{pagination.TotalProperties}</span> {t("grid.properties_label", "properties")}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {properties.filter(p => p.MainImage).map((property) => (
+                            <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden">
+                                <Link href={`/properties/${property.Id}`}>
+                                    <div className="relative overflow-hidden aspect-[16/9] cursor-pointer">
+                                        <img
+                                            src={property.MainImage}
+                                            alt={property.TypeName}
+                                            loading="lazy"
+                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        />
+                                        <div className="absolute top-6 left-6">
+                                            <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2">
+                                                {property.Reference}
+                                            </span>
+                                        </div>
+                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                            <p className="text-white text-xs uppercase tracking-widest font-bold">{t("grid.view_details")}</p>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                <div className="p-8 flex flex-col flex-grow">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className="text-[#28a745] font-bold text-2xl font-serif">
+                                            €{property.Price?.toLocaleString()}
                                         </span>
                                     </div>
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <p className="text-white text-xs uppercase tracking-widest font-bold">{t("grid.view_details")}</p>
+                                    <h3 className="text-lg font-serif text-[#1a1a1a] mb-2 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors">{property.TypeName}</h3>
+                                    <div className="flex items-center text-[#fd7e14] text-xs mb-6 uppercase tracking-widest font-semibold">
+                                        <MapPin className="w-3 h-3 mr-2" />
+                                        {property.Location}
                                     </div>
-                                </div>
-                            </Link>
 
-                            <div className="p-8 flex flex-col flex-grow">
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="text-[#2B5F8C] font-serif text-2xl font-light">
-                                        €{property.Price?.toLocaleString()}
-                                    </span>
-                                </div>
-                                <h3 className="text-lg font-serif text-[#1a1a1a] mb-2 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors">{property.TypeName}</h3>
-                                <div className="flex items-center text-gray-400 text-xs mb-6 uppercase tracking-widest">
-                                    <MapPin className="w-3 h-3 mr-2 text-[#C9A961]" />
-                                    {property.Location}
-                                </div>
+                                    <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                                        <div className="flex items-center gap-2">
+                                            <Bed className="w-4 h-4 text-[#C9A961]" />
+                                            <span>{property.Beds || 0}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Bath className="w-4 h-4 text-[#C9A961]" />
+                                            <span>{property.Baths || 0}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Maximize className="w-4 h-4 text-[#C9A961]" />
+                                            <span>{property.BuiltArea || 0} m²</span>
+                                        </div>
+                                    </div>
 
-                                <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between text-gray-500 text-[10px] font-bold uppercase tracking-widest">
-                                    <div className="flex items-center gap-2">
-                                        <Bed className="w-4 h-4 text-[#C9A961]" />
-                                        <span>{property.Beds || 0}</span>
+                                    <div className="mt-8 flex gap-3">
+                                        <Link href={`/properties/${property.Id}`} className="flex-grow">
+                                            <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
+                                                {t("grid.view_details")}
+                                            </Button>
+                                        </Link>
+                                        <a
+                                            href={getWhatsAppUrl(property.Reference)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="bg-[#25D366] hover:bg-[#128C7E] text-white px-4 flex items-center justify-center transition-colors"
+                                            title="Contactar por WhatsApp"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                        </a>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <Bath className="w-4 h-4 text-[#C9A961]" />
-                                        <span>{property.Baths || 0}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Maximize className="w-4 h-4 text-[#C9A961]" />
-                                        <span>{property.BuiltArea || 0} m²</span>
-                                    </div>
-                                </div>
-
-                                <div className="mt-8 flex gap-3">
-                                    <Link href={`/properties/${property.Id}`} className="flex-grow">
-                                        <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
-                                            {t("grid.view_details")}
-                                        </Button>
-                                    </Link>
-                                    <a
-                                        href={getWhatsAppUrl(property.Reference)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="bg-[#25D366] hover:bg-[#128C7E] text-white px-4 flex items-center justify-center transition-colors"
-                                        title="Contactar por WhatsApp"
-                                    >
-                                        <MessageCircle className="w-5 h-5" />
-                                    </a>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {pagination.TotalPages > 1 && (
+                        <div className="flex justify-center items-center gap-4 mt-16 pb-4">
+                            <Button
+                                variant="outline"
+                                onClick={() => handlePageChange(pagination.CurrentPage - 1)}
+                                disabled={pagination.CurrentPage <= 1}
+                                className="rounded-none border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white disabled:opacity-30 h-12 px-6"
+                            >
+                                <ChevronLeft className="w-4 h-4 mr-2" /> {t("grid.prev", "Previous")}
+                            </Button>
+
+                            <div className="flex items-center gap-2">
+                                {Array.from({ length: Math.min(pagination.TotalPages, 7) }, (_, i) => {
+                                    let pageNum: number;
+                                    if (pagination.TotalPages <= 7) {
+                                        pageNum = i + 1;
+                                    } else if (pagination.CurrentPage <= 4) {
+                                        pageNum = i + 1;
+                                    } else if (pagination.CurrentPage >= pagination.TotalPages - 3) {
+                                        pageNum = pagination.TotalPages - 6 + i;
+                                    } else {
+                                        pageNum = pagination.CurrentPage - 3 + i;
+                                    }
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => handlePageChange(pageNum)}
+                                            className={`w-10 h-10 text-sm font-bold transition-all ${pageNum === pagination.CurrentPage
+                                                    ? 'bg-[#2B5F8C] text-white'
+                                                    : 'text-[#2B5F8C] hover:bg-gray-100'
+                                                }`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                onClick={() => handlePageChange(pagination.CurrentPage + 1)}
+                                disabled={pagination.CurrentPage >= pagination.TotalPages}
+                                className="rounded-none border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white disabled:opacity-30 h-12 px-6"
+                            >
+                                {t("grid.next", "Next")} <ChevronRightIcon className="w-4 h-4 ml-2" />
+                            </Button>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </>
             )}
         </div>
     );

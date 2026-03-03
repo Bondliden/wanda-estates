@@ -6,7 +6,7 @@ import { setupChatbotRoutes } from "./chatbot";
 import { insertContactInquirySchema } from "@shared/schema";
 import { z } from "zod";
 
-import { fetchProperties, fetchPropertyDetails } from "./resales";
+import { fetchProperties, fetchPropertyDetails, fetchNewDevelopments } from "./resales";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -39,6 +39,73 @@ export async function registerRoutes(
         success: false,
         message: "Error fetching property details"
       });
+    }
+  });
+
+  // New Developments endpoint
+  app.get("/api/new-developments", async (req, res) => {
+    try {
+      const filters = req.query;
+      const developments = await fetchNewDevelopments(filters);
+      res.json({ success: true, data: developments });
+    } catch (error) {
+      console.error("Error fetching new developments:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error fetching new developments"
+      });
+    }
+  });
+
+  // Property-specific inquiry endpoint
+  app.post("/api/property-inquiry", async (req, res) => {
+    try {
+      const { name, email, phone, message, propertyRef, propertyTitle } = req.body;
+
+      if (!name || !email) {
+        return res.status(400).json({ success: false, message: "Name and email are required" });
+      }
+
+      const mailOptions = {
+        from: process.env.SMTP_FROM || '"Wanda Estates" <no-reply@wandaestates.com>',
+        to: 'info@wandaestates.com',
+        replyTo: email,
+        subject: `Solicitud de información: ${propertyRef || 'Propiedad'} - ${name}`,
+        text: `Nueva solicitud de información sobre una propiedad:\n\nPropiedad: ${propertyTitle || propertyRef || 'N/A'}\nReferencia: ${propertyRef || 'N/A'}\n\nCliente:\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || 'No proporcionado'}\nMensaje: ${message || 'Sin mensaje adicional'}`,
+        html: `
+          <h3>Nueva Solicitud de Información - Propiedad</h3>
+          <div style="background: #f5f5f5; padding: 16px; margin-bottom: 16px; border-left: 4px solid #C9A961;">
+            <p style="margin: 0;"><strong>Propiedad:</strong> ${propertyTitle || propertyRef || 'N/A'}</p>
+            <p style="margin: 4px 0 0;"><strong>Referencia:</strong> ${propertyRef || 'N/A'}</p>
+          </div>
+          <h4>Datos del Cliente</h4>
+          <p><strong>Nombre:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <p><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</p>
+          <hr/>
+          <p><strong>Mensaje:</strong></p>
+          <p>${(message || 'Sin mensaje adicional').replace(/\n/g, '<br/>')}</p>
+          <br/>
+          <p><strong>Responde directamente a este correo para contactar al cliente.</strong></p>
+          <p><small>Formulario de solicitud de propiedad - wandaestates.com</small></p>
+        `
+      };
+
+      try {
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+          await transporter.sendMail(mailOptions);
+          console.log("Property inquiry email sent to info@wandaestates.com");
+        } else {
+          console.log("SMTP not configured. Skipping email. Payload:", mailOptions);
+        }
+      } catch (emailError) {
+        console.error("Error sending property inquiry email:", emailError);
+      }
+
+      res.json({ success: true, message: "Inquiry submitted successfully" });
+    } catch (error) {
+      console.error("Error processing property inquiry:", error);
+      res.status(500).json({ success: false, message: "Error processing inquiry" });
     }
   });
 
@@ -90,6 +157,7 @@ export async function registerRoutes(
       const mailOptions = {
         from: process.env.SMTP_FROM || '"Wanda Estates" <no-reply@wandaestates.com>',
         to: 'info@wandaestates.com',
+        replyTo: validatedData.email,
         subject: `Nuevo mensaje de contacto: ${validatedData.name}`,
         text: `Has recibido un nuevo mensaje de contacto:\n\nNombre: ${validatedData.name}\nEmail: ${validatedData.email}\nTeléfono: ${validatedData.phone || 'No proporcionado'}\nMensaje:\n${validatedData.message}\n\nIdioma preferido: ${req.body.language || 'es'}`,
         html: `

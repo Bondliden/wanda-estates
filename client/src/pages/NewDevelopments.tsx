@@ -1,7 +1,8 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ContactForm from "@/components/ContactForm";
 import { useTranslation } from "react-i18next";
-import ResalesPropertyGrid from "@/components/ResalesPropertyGrid";
+import NewDevelopmentGrid from "@/components/NewDevelopmentGrid";
 
 export default function NewDevelopments() {
   const { t } = useTranslation();
@@ -23,7 +24,16 @@ export default function NewDevelopments() {
       {/* Developments List */}
       <section className="py-16 flex-grow">
         <div className="container mx-auto px-4">
-          <ResalesPropertyGrid isNewDevelopment={true} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <NewDevelopmentGrid />
+            </div>
+            <div className="lg:col-span-1">
+              <div className="sticky top-24">
+                <ContactForm variant="leadMagnet" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
