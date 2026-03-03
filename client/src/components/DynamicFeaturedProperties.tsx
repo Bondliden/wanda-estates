@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
+import useEmblaCarousel from "embla-carousel-react";
 import { useTranslation } from "react-i18next";
 import { Bed, Bath, Maximize, MapPin, Search, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ export default function DynamicFeaturedProperties() {
     const { demandProfile } = useSEO();
     const [properties, setProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
 
     // We fetch a few properties based on the demanded property type
     useEffect(() => {
@@ -19,7 +21,8 @@ export default function DynamicFeaturedProperties() {
                 const primaryType = demandProfile.propertyType.split(",")[0] || "";
 
                 const params = new URLSearchParams({
-                    minPrice: demandProfile.minPrice,
+                    minPrice: "2000000",
+                    p_max: "12000000",
                     p_location: demandProfile.preferredLocation,
                     shuffle: "true"
                 });
@@ -32,8 +35,8 @@ export default function DynamicFeaturedProperties() {
 
                 if (data.success && data.data && data.data.Property) {
                     const propsArray = Array.isArray(data.data.Property) ? data.data.Property : [data.data.Property];
-                    // Take top 3
-                    setProperties(propsArray.slice(0, 3));
+                    // Take top 9 for the carousel to be populated
+                    setProperties(propsArray.slice(0, 9));
                 } else {
                     setProperties([]);
                 }
@@ -78,74 +81,81 @@ export default function DynamicFeaturedProperties() {
                 <p className="text-gray-500 text-sm">Most demanded: {demandProfile.propertyType.replace(',', ' / ')} in {demandProfile.preferredLocation.replace(',', ' & ')}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                {properties.map((property) => (
-                    <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden">
-                        <Link href={`/properties/${property.Id}`}>
-                            <div className="relative overflow-hidden aspect-[4/3] cursor-pointer">
-                                <img
-                                    src={property.MainImage || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}
-                                    alt={property.TypeName}
-                                    loading="lazy"
-                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                />
-                                <div className="absolute top-6 left-6">
-                                    <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2">
-                                        {property.Reference}
+            <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex touch-pan-y mt-2 mb-2 gap-4">
+                    {properties.map((property) => (
+                        <div key={property.Id} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden flex-[0_0_100%] md:flex-[0_0_calc(100%/3-1rem)] min-w-0">
+                            <Link href={`/properties/${property.Id}`}>
+                                <div className="relative overflow-hidden aspect-[4/3] cursor-pointer">
+                                    <img
+                                        src={property.MainImage || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}
+                                        alt={property.TypeName}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                    />
+                                    <div className="absolute top-6 left-6">
+                                        <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2">
+                                            {property.Reference}
+                                        </span>
+                                    </div>
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                        <p className="text-white text-xs uppercase tracking-widest font-bold">View Details</p>
+                                    </div>
+                                </div>
+                            </Link>
+
+                            <div className="p-8 flex flex-col flex-grow">
+                                <div className="flex justify-between items-start mb-4">
+                                    <span className="text-[#2B5F8C] font-serif text-2xl font-light">
+                                        €{property.Price?.toLocaleString()}
                                     </span>
                                 </div>
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    <p className="text-white text-xs uppercase tracking-widest font-bold">Ver Detalles</p>
+                                <h3 className="text-lg font-serif text-[#1a1a1a] mb-2 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors">{property.TypeName}</h3>
+                                <div className="flex items-center text-gray-400 text-xs mb-6 uppercase tracking-widest">
+                                    <MapPin className="w-3 h-3 mr-2 text-[#C9A961]" />
+                                    {property.Location}
                                 </div>
-                            </div>
-                        </Link>
 
-                        <div className="p-8 flex flex-col flex-grow">
-                            <div className="flex justify-between items-start mb-4">
-                                <span className="text-[#2B5F8C] font-serif text-2xl font-light">
-                                    €{property.Price?.toLocaleString()}
-                                </span>
-                            </div>
-                            <h3 className="text-lg font-serif text-[#1a1a1a] mb-2 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors">{property.TypeName}</h3>
-                            <div className="flex items-center text-gray-400 text-xs mb-6 uppercase tracking-widest">
-                                <MapPin className="w-3 h-3 mr-2 text-[#C9A961]" />
-                                {property.Location}
-                            </div>
+                                <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                                    <div className="flex items-center gap-2">
+                                        <Bed className="w-4 h-4 text-[#C9A961]" />
+                                        <span>{property.Beds || 0}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Bath className="w-4 h-4 text-[#C9A961]" />
+                                        <span>{property.Baths || 0}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Maximize className="w-4 h-4 text-[#C9A961]" />
+                                        <span>{property.BuiltArea || 0} m²</span>
+                                    </div>
+                                </div>
 
-                            <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between text-gray-500 text-[10px] font-bold uppercase tracking-widest">
-                                <div className="flex items-center gap-2">
-                                    <Bed className="w-4 h-4 text-[#C9A961]" />
-                                    <span>{property.Beds || 0}</span>
+                                <div className="mt-8 flex gap-3">
+                                    <Link href={`/properties/${property.Id}`} className="flex-grow">
+                                        <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
+                                            View Property
+                                        </Button>
+                                    </Link>
+                                    <a
+                                        href={getWhatsAppUrl(property.Reference)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="bg-[#25D366] hover:bg-[#128C7E] text-white px-4 flex items-center justify-center transition-colors"
+                                        title="Contact via WhatsApp"
+                                    >
+                                        <MessageCircle className="w-5 h-5" />
+                                    </a>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Bath className="w-4 h-4 text-[#C9A961]" />
-                                    <span>{property.Baths || 0}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Maximize className="w-4 h-4 text-[#C9A961]" />
-                                    <span>{property.BuiltArea || 0} m²</span>
-                                </div>
-                            </div>
-
-                            <div className="mt-8 flex gap-3">
-                                <Link href={`/properties/${property.Id}`} className="flex-grow">
-                                    <Button className="w-full bg-transparent border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-none uppercase text-[10px] tracking-[0.2em] font-bold h-12 transition-all">
-                                        Ver Ficha
-                                    </Button>
-                                </Link>
-                                <a
-                                    href={getWhatsAppUrl(property.Reference)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="bg-[#25D366] hover:bg-[#128C7E] text-white px-4 flex items-center justify-center transition-colors"
-                                    title="Contactar por WhatsApp"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                </a>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex justify-center mt-6 gap-2">
+                <Button variant="outline" size="sm" onClick={() => emblaApi?.scrollPrev()} className="rounded-none border-[#2c3e50] text-[#2c3e50] border">Prev</Button>
+                <Button variant="outline" size="sm" onClick={() => emblaApi?.scrollNext()} className="rounded-none border-[#2c3e50] text-[#2c3e50] border">Next</Button>
             </div>
         </>
     );
