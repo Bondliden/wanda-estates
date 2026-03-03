@@ -181,15 +181,9 @@ export async function fetchPropertyDetails(propertyId: string) {
 
         if (data.Property) {
             const prop = Array.isArray(data.Property) ? data.Property[0] : data.Property;
-            return {
-                ...data,
-                Property: mapProperty(prop)
-            };
+            const mapped = mapProperty(prop);
+            return mapped;
         }
-        // The user's requested change seems to be for an API route handler, not this function.
-        // Inserting it directly here would cause a ReferenceError as 'res' is not defined.
-        // To maintain syntactic correctness and faithfulness, I cannot insert the 'res.status(500).json' part.
-        // The logging part of the instruction is already covered by the existing console.log and console.error.
         return data;
     } catch (error) {
         console.error("Error fetching property details:", error);
