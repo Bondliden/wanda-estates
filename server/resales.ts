@@ -12,11 +12,11 @@ function mapProperty(p: any) {
     return {
         ...p,
         Id: p.Id || p.Reference,
-        MainImage: p.MainImage || p.Pictures?.Picture?.[0]?.PictureURL || '',
+        MainImage: p.MainImage || p.Pictures?.Picture?.[0]?.PictureURL || (p.PicturesContent?.Picture?.length > 0 ? p.PicturesContent.Picture[0].PictureURL : ''),
         Beds: parseInt(p.Bedrooms || p.Beds || '0'),
         Baths: parseInt(p.Bathrooms || p.Baths || '0'),
         TypeName: p.PropertyType?.NameType || (typeof p.PropertyType === 'string' ? p.PropertyType : '') || p.TypeName || '',
-        Description: p.Description?.en || (typeof p.Description === 'string' ? p.Description : '') || '',
+        Description: p.Description?.en || (typeof p.Description === 'string' ? p.Description : '') || p.Description || '',
         BuiltArea: parseFloat(p.Built || p.BuiltArea || '0'),
         PlotArea: parseFloat(p.GardenPlot || p.PlotArea || '0'),
         TerraceArea: parseFloat(p.Terrace || p.TerraceArea || '0'),
