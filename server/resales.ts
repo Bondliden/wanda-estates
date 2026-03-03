@@ -9,10 +9,22 @@ function shuffleArray(array: any[]) {
 }
 
 function mapProperty(p: any) {
+    const pics = p.PicturesContent?.Picture;
+    let images: string[] = [];
+    if (pics) {
+        const picArray = Array.isArray(pics) ? pics : [pics];
+        images = picArray.map((pic: any) => pic.HighResURL || pic.PictureURL).filter(Boolean);
+    }
+    if (p.MainImage && !images.includes(p.MainImage)) {
+        images.unshift(p.MainImage);
+    }
+    
+    console.log(`[mapProperty] Property ${p.Reference} has ${images.length} images`);
+    
     return {
         ...p,
         Id: p.Id || p.Reference,
-        MainImage: p.MainImage || p.Pictures?.Picture?.[0]?.PictureURL || (p.PicturesContent?.Picture?.length > 0 ? p.PicturesContent.Picture[0].PictureURL : ''),
+        MainImage: p.MainImage || images[0] || '',
         Beds: parseInt(p.Bedrooms || p.Beds || '0'),
         Baths: parseInt(p.Bathrooms || p.Baths || '0'),
         TypeName: p.PropertyType?.NameType || (typeof p.PropertyType === 'string' ? p.PropertyType : '') || p.TypeName || '',
@@ -22,6 +34,8 @@ function mapProperty(p: any) {
         TerraceArea: parseFloat(p.Terrace || p.TerraceArea || '0'),
         Price: parseFloat(p.Price || '0'),
         Location: p.Location || p.Area || 'Costa del Sol',
+        Latitude: p.Latitude || p.Coordinates?.lat || '',
+        Longitude: p.Longitude || p.Coordinates?.lng || '',
     };
 }
 

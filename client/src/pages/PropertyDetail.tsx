@@ -32,6 +32,8 @@ interface PropertyDetails {
     PicturesContent?: {
         Picture: PropertyImage | PropertyImage[];
     };
+    Latitude?: number | string;
+    Longitude?: number | string;
     Features?: any;
     HasPool?: string;
     HasGarden?: string;
@@ -92,15 +94,26 @@ export default function PropertyDetail() {
         if (!pics) return property.MainImage ? [property.MainImage] : [];
 
         const picArray = Array.isArray(pics) ? pics : [pics];
-        const urls = picArray.map(p => p.HighResURL || p.PictureURL).filter(Boolean);
+        const urls = picArray.map((p: any) => p.HighResURL || p.PictureURL).filter(Boolean);
         // Ensure MainImage is first
         if (property.MainImage && !urls.includes(property.MainImage)) {
             urls.unshift(property.MainImage);
         }
+        console.log(`[PropertyDetail] Property ${property.Reference} has ${urls.length} images`);
         return urls;
     };
 
     const images = getImages();
+    
+    // Generate map URL
+    const getMapUrl = () => {
+        if (!property || (!property.Latitude && !property.Longitude)) {
+            return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=Nueva Andalucía, Marbella&zoom=13`;
+        }
+        const lat = property.Latitude;
+        const lng = property.Longitude;
+        return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=${lat},${lng}&zoom=16&maptype=satellite`;
+    };
 
     const getWhatsAppUrl = (ref: string) => {
         const message = encodeURIComponent(`Hola Wanda Estates, me interesa la propiedad con referencia ${ref}. ¿Podrían darme más información?`);
@@ -205,6 +218,13 @@ export default function PropertyDetail() {
                             ))}
                         </div>
                     </div>
+                    
+                    {/* Image Counter */}
+                    <div className="text-center mt-4 text-sm text-gray-500">
+                        {images.length > 1 && (
+                            <span>{images.length} {isSpanish ? 'fotos' : 'photos'} • Click to view all</span>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -261,6 +281,23 @@ export default function PropertyDetail() {
                                 className="prose prose-lg max-w-none text-gray-600 font-light leading-relaxed whitespace-pre-line"
                                 dangerouslySetInnerHTML={{ __html: property.Description }}
                             />
+                        </div>
+
+                        {/* Map Section */}
+                        <div className="mt-12">
+                            <h2 className="text-2xl font-serif text-[#1a1a1a] mb-8 uppercase tracking-widest">{isSpanish ? 'Ubicación' : 'Location'}</h2>
+                            <div className="h-[400px] rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                                <iframe
+                                    src={getMapUrl()}
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0 }}
+                                    allowFullScreen={false}
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    className="w-full h-full"
+                                />
+                            </div>
                         </div>
                     </div>
 
