@@ -6,15 +6,26 @@ import { Bed, Bath, Maximize, MapPin, MessageCircle, ChevronRight, ChevronLeft, 
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
-const neighborhoods = [
+interface Neighborhood {
+    id: string;
+    name: string;
+    location: string;
+    query: string;
+    desc: string;
+    count: string;
+    minPrice: string;
+    image: string;
+}
+
+const neighborhoods: Neighborhood[] = [
     {
         id: "la-zagaleta",
         name: "La Zagaleta",
         location: "Benahavis",
-        query: "Zagaleta",
+        query: "La Zagaleta",
         desc: "The most exclusive residential enclave in Europe",
-        count: "45",
-        minPrice: "€8M+",
+        count: "45+",
+        minPrice: "€5M+",
         image: "/la_zagaleta_aerial_1772497357614.png"
     },
     {
@@ -23,8 +34,8 @@ const neighborhoods = [
         location: "Marbella",
         query: "Sierra Blanca",
         desc: "Ultra-luxury villas with panoramic views",
-        count: "32",
-        minPrice: "€5M+",
+        count: "30+",
+        minPrice: "€3M+",
         image: "/sierra_blanca_villa_1772497375486.png"
     },
     {
@@ -33,8 +44,8 @@ const neighborhoods = [
         location: "Marbella",
         query: "Puerto Banus",
         desc: "The heart of Mediterranean glamour",
-        count: "78",
-        minPrice: "€2M+",
+        count: "70+",
+        minPrice: "€1M+",
         image: "/puerto_banus_marina_1772497395674.png"
     },
     {
@@ -43,8 +54,8 @@ const neighborhoods = [
         location: "Marbella",
         query: "Nueva Andalucia",
         desc: "The valley of golf and tranquility",
-        count: "120",
-        minPrice: "€1.5M+",
+        count: "100+",
+        minPrice: "€750k+",
         image: "/nueva_andalucia_golf_1772497410980.png"
     }
 ];
@@ -76,14 +87,17 @@ export default function ExclusiveNeighborhoods() {
         const fetchProps = async () => {
             setLoading(true);
             try {
-                const params = new URLSearchParams({
-                    p_location: activeTab.location,
-                    p_urbanization: activeTab.query,
-                    p_min: activeTab.minPrice.replace(/[^0-9]/g, "") + "000000",
+                const params: Record<string, string> = {
+                    p_location: activeTab.location || "",
+                    p_urbanization: activeTab.query || "",
+                    p_min: activeTab.id === "nueva-andalucia" ? "750000" :
+                        activeTab.id === "puerto-banus" ? "1000000" :
+                            activeTab.id === "sierra-blanca" ? "3000000" : "5000000",
                     shuffle: "true"
-                });
+                };
 
-                const response = await fetch(`/api/properties?${params.toString()}`);
+                const queryStr = new URLSearchParams(params).toString();
+                const response = await fetch(`/api/properties?${queryStr}`);
                 const data = await response.json();
 
                 if (data.success && data.data && data.data.Property) {
@@ -94,12 +108,13 @@ export default function ExclusiveNeighborhoods() {
                 }
             } catch (e) {
                 console.error("Error loading properties", e);
+                setProperties([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        if (isExpanded) {
+        if (isExpanded && activeTab.id) {
             fetchProps();
         }
     }, [activeTab, isExpanded]);

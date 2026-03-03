@@ -8,6 +8,7 @@ import luxuryApartment from "@assets/stock_images/modern_luxury_apartm_b8bb6f32.
 import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
 import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
 
+// Component force refresh: 2026-03-03 01:50
 export default function Home() {
     const { t } = useTranslation();
 

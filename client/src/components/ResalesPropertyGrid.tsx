@@ -25,9 +25,10 @@ interface ResalesProperty {
 
 interface ResalesPropertyGridProps {
     isNewDevelopment?: boolean;
+    initialLocation?: string;
 }
 
-export default function ResalesPropertyGrid({ isNewDevelopment = false }: ResalesPropertyGridProps) {
+export default function ResalesPropertyGrid({ isNewDevelopment = false, initialLocation = "" }: ResalesPropertyGridProps) {
     const { t, i18n } = useTranslation();
 
     const [properties, setProperties] = useState<ResalesProperty[]>([]);
@@ -39,15 +40,21 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false }: Resale
     const [filters, setFilters] = useState({
         minPrice: "750000",
         maxPrice: "50000000",
-        p_location: "",
+        p_location: initialLocation,
         p_beds: "",
         p_baths: "",
         p_minTerrace: "",
         p_minPlot: "",
-        p_sort: "commission", // Default to our custom commission sort
+        p_sort: "commission",
         p_newBuild: isNewDevelopment ? "1" : "",
         shuffle: "false"
     });
+
+    useEffect(() => {
+        if (initialLocation) {
+            setFilters(prev => ({ ...prev, p_location: initialLocation }));
+        }
+    }, [initialLocation]);
 
     const fetchProperties = async (searchFilters = filters) => {
         setLoading(true);
