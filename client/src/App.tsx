@@ -14,6 +14,36 @@ import ContactUs from "@/pages/ContactUs";
 import PropertyDetail from "@/pages/PropertyDetail";
 import InvestmentGuide from "@/pages/InvestmentGuide";
 import ChatBot from "@/components/ChatBot";
+import React from "react";
+
+console.log("[App.tsx] Imports done, defining components");
+
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error?: Error }
+> {
+  state: { hasError: boolean; error?: Error } = { hasError: false };
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("[ErrorBoundary] Caught error:", error, info.componentStack);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
+          <h1 style={{ color: "#c00" }}>Something went wrong</h1>
+          <p>{this.state.error?.message}</p>
+          <pre style={{ textAlign: "left", background: "#f5f5f5", padding: "20px", overflow: "auto" }}>
+            {this.state.error?.stack}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function Router() {
   return (
@@ -33,14 +63,16 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="top-right" />
-        <Router />
-        <ChatBot />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner position="top-right" />
+          <Router />
+          <ChatBot />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
