@@ -63,29 +63,30 @@ export async function fetchProperties(customFilters: any = {}) {
         const SIX_MONTHS_AGO = new Date();
         SIX_MONTHS_AGO.setMonth(SIX_MONTHS_AGO.getMonth() - 6);
 
-        // STRICT TECHNICAL FILTRATION
+        // RELAXED TECHNICAL FILTRATION
         properties = properties.filter((p: any) => {
-            // 1. Availability validation
+            // 1. Availability validation (STRICT)
             if (p.PropertyStatus !== 'Available') return false;
 
-            // 2. Data Cleanliness: Description and Location
-            if (!p.Description || p.Description.length < 150) return false;
-            if (!p.GpsX || !p.GpsY || p.GpsX === "0" || p.GpsY === "0") return false;
+            // 2. Data Cleanliness: Description length (RELAXED)
+            if (!p.Description || p.Description.length < 50) return false;
 
-            // 3. Image Quality: Minimum 5 photos
+            // 3. Image Quality: Minimum 5 photos (STRICT)
             const pictureCount = p.PicturesContent?.Picture?.length ||
                 (p.PicturesContent?.Picture ? 1 : 0) || 0;
             if (pictureCount < 5) return false;
 
-            // 4. No Renders/Planos
+            // 4. No Renders/Planos (STRICT)
             const mainImg = (p.MainImage || "").toLowerCase();
             const blacklist = ['render', 'plano', '3d', 'project', 'plan', 'blueprint', 'generic'];
             if (blacklist.some(word => mainImg.includes(word))) return false;
 
-            // 5. Freshness: Must be updated within last 6 months
+            // 5. Freshness: Must be updated within last 24 months (RELAXED for luxury)
             if (p.LastUpdate) {
+                const TWO_YEARS_AGO = new Date();
+                TWO_YEARS_AGO.setFullYear(TWO_YEARS_AGO.getFullYear() - 2);
                 const lastUpdate = new Date(p.LastUpdate);
-                if (lastUpdate < SIX_MONTHS_AGO) return false;
+                if (lastUpdate < TWO_YEARS_AGO) return false;
             }
 
             return true;
