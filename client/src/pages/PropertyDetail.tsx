@@ -56,6 +56,18 @@ interface PropertyDetails {
     PropertyStatus?: string;
 }
 
+interface RankingDetails {
+    selected_market: string;
+    reasoning: string;
+    seo_data: {
+        language_code: string;
+        focus_keyword: string;
+        title_tag: string;
+        meta_description: string;
+        value_score: number;
+    };
+}
+
 export default function PropertyDetail() {
     const [, params] = useRoute("/properties/:id");
     const id = params?.id;
@@ -69,6 +81,7 @@ export default function PropertyDetail() {
     const [galleryIndex, setGalleryIndex] = useState(0);
     const [inquirySubmitting, setInquirySubmitting] = useState(false);
     const [inquiryForm, setInquiryForm] = useState({ name: "", email: "", phone: "", message: "" });
+    const [ranking, setRanking] = useState<RankingDetails | null>(null);
 
     useEffect(() => {
         if (!id) return;
@@ -81,6 +94,9 @@ export default function PropertyDetail() {
 
                 if (data.success && data.data) {
                     setProperty(data.data.Property || data.data);
+                    if (data.ranking) {
+                        setRanking(data.ranking);
+                    }
                 } else {
                     setError("Property details not found.");
                 }
@@ -125,19 +141,24 @@ export default function PropertyDetail() {
 
     // Generate map URL with robust unmapped object fallbacks
     const getMapUrl = () => {
-        const lat = property?.Latitude || (property as any)?.Coordinates?.lat || (property as any)?.Coordinates?.Latitude;
-        const lng = property?.Longitude || (property as any)?.Coordinates?.lng || (property as any)?.Coordinates?.Longitude;
+        const lat = property?.Latitude || (property as any)?.Coordinates?.lat;
+        const lng = property?.Longitude || (property as any)?.Coordinates?.lng;
 
-        const hasValidCoords = lat && lng && lat !== "0" && lng !== "0" && lat !== 0 && lng !== 0;
+        // Ensure they are treated as strings or numbers and they aren't '0' or empty
+        const sLat = String(lat || '').trim();
+        const sLng = String(lng || '').trim();
+
+        const hasValidCoords = sLat && sLng && sLat !== '0' && sLng !== '0';
 
         if (!hasValidCoords) {
-            console.log("[PropertyDetail] Using fallback map (no valid coords)");
-            // Use a default coordinate for Marbella area
-            return `https://maps.google.com/maps?q=36.5167,-4.8833&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+            console.log("[PropertyDetail] Coordinates missing, using location search:", property?.Location);
+            // Si no hay coordenadas, buscamos por el nombre de la ubicación/urbanización
+            const searchQuery = encodeURIComponent(`${property?.Location || ''} ${property?.Area || ''} Costa del Sol`);
+            return `https://maps.google.com/maps?q=${searchQuery}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
         }
 
-        console.log("[PropertyDetail] Using coords map:", { lat, lng });
-        return `https://maps.google.com/maps?q=${lat},${lng}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+        console.log("[PropertyDetail] Using coords map:", { lat: sLat, lng: sLng });
+        return `https://maps.google.com/maps?q=${sLat},${sLng}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
     };
 
     const getWhatsAppUrl = (ref: string) => {
@@ -227,7 +248,7 @@ export default function PropertyDetail() {
 
                     {/* Image Gallery */}
                     {images.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-[500px] overflow-hidden rounded-sm shadow-2xl cursor-pointer" onClick={() => setGalleryOpen(true)}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-[40vh] md:h-[500px] max-h-[580px] overflow-hidden rounded-sm shadow-2xl cursor-pointer" onClick={() => setGalleryOpen(true)}>
                             <div className="h-full">
                                 <img
                                     src={images[0]}
@@ -300,7 +321,21 @@ export default function PropertyDetail() {
                                 </span>
                             </div>
                             <h1 className="text-4xl md:text-5xl font-serif text-[#1a1a1a] mb-6 leading-tight">{property.TypeName}</h1>
-                            <p className="text-3xl font-bold text-[#28a745] font-serif">€{property.Price?.toLocaleString()}</p>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <p className="text-3xl font-bold text-[#28a745] font-serif">€{property.Price?.toLocaleString()}</p>
+
+                                {ranking && (
+                                    <div className="bg-[#f0f9ff] border-l-4 border-[#2ea3f2] p-4 flex items-center gap-4">
+                                        <div className="flex-shrink-0 bg-[#2ea3f2] text-white font-bold p-2 text-xl rounded">
+                                            {ranking.selected_market}
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] uppercase font-bold text-[#2B5F8C] tracking-widest">{isSpanish ? 'Perfil del Comprador Estratégico (AI)' : 'Strategic Buyer Profile (AI)'}</p>
+                                            <p className="text-sm text-gray-700 italic">"{ranking.reasoning}"</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Features Bar */}
@@ -455,11 +490,11 @@ export default function PropertyDetail() {
                         <ChevronLeft className="w-10 h-10" />
                     </button>
 
-                    <div className="max-w-6xl max-h-[85vh] w-full mx-16" onClick={(e) => e.stopPropagation()}>
+                    <div className="max-w-5xl max-h-[85vh] w-full mx-8 flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <img
                             src={images[galleryIndex]}
                             alt={`${property.TypeName} - ${galleryIndex + 1}`}
-                            className="w-full h-full object-contain"
+                            className="w-full max-h-[80vh] object-contain"
                         />
                         <p className="text-white/70 text-center mt-4 text-sm">
                             {galleryIndex + 1} / {images.length}

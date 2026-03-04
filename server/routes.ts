@@ -2,7 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import nodemailer from 'nodemailer';
 import { storage } from "./storage";
-import { setupChatbotRoutes } from "./chatbot";
+import { setupChatbotRoutes, handleChatMessage } from "./chatbot";
+import { rankProperty } from "./ranker";
 import { insertContactInquirySchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -23,12 +24,27 @@ export async function registerRoutes(
     }
   });
 
+  // Debug Resales Connectivity
+  app.get("/api/debug-resales", async (req, res) => {
+    try {
+      const p1 = '1022290';
+      const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
+      const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_location=Marbella`;
+      const response = await fetch(url);
+      const data = await response.json();
+      res.json({ success: true, url, data });
+    } catch (error) {
+      res.json({ success: false, error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
   // Properties search endpoint
   app.get("/api/properties", async (req, res) => {
     try {
-      const filters = req.query; // Allow passing overriding filters
-      const properties = await fetchProperties(filters);
-      res.json({ success: true, data: properties });
+      const filters = req.query;
+      // fetchProperties already returns { success, data: { Property, Pagination } }
+      const result = await fetchProperties(filters);
+      res.json(result);
     } catch (error) {
       console.error("Error exposing properties:", error);
       res.status(200).json({
@@ -47,7 +63,16 @@ export async function registerRoutes(
       if (!details) {
         return res.status(200).json({ success: false, message: "Property not found", data: null });
       }
-      res.json({ success: true, data: details });
+
+      // Proactively rank this property for the user (EstateRanker-AI integration)
+      let ranking = null;
+      try {
+        ranking = await rankProperty(details);
+      } catch (e) {
+        console.error("Ranker call failed for", id, e);
+      }
+
+      res.json({ success: true, data: details, ranking });
     } catch (error) {
       console.error(`Error fetching property details for ${req.params.id}:`, error);
       res.status(200).json({
@@ -62,14 +87,15 @@ export async function registerRoutes(
   app.get("/api/new-developments", async (req, res) => {
     try {
       const filters = req.query;
-      const developments = await fetchNewDevelopments(filters);
-      res.json({ success: true, data: developments });
+      // fetchNewDevelopments -> fetchProperties already returns { success, data: { Property, Pagination } }
+      const result = await fetchNewDevelopments(filters);
+      res.json(result);
     } catch (error) {
       console.error("Error fetching new developments:", error);
       res.status(200).json({
         success: false,
         message: "Error fetching new developments",
-        data: []
+        data: { Property: [], Pagination: { CurrentPage: 1, PageSize: 18, TotalProperties: 0, TotalPages: 0 } }
       });
     }
   });
@@ -296,6 +322,7 @@ export async function registerRoutes(
   });
 
   // Setup chatbot routes
+  app.post("/api/chat-v2", handleChatMessage);
   setupChatbotRoutes(app);
 
   return httpServer;

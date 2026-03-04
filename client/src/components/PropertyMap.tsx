@@ -52,9 +52,8 @@ export default function PropertyMap({ properties, center = [36.51, -4.88], zoom 
                 />
 
                 {properties.map((prop) => {
-                    // Resales Online V6 often provides GpsX and GpsY
-                    const lat = parseFloat(prop.GpsX || "0");
-                    const lng = parseFloat(prop.GpsY || "0");
+                    const lat = parseFloat((prop as any).Latitude || prop.GpsX || "0");
+                    const lng = parseFloat((prop as any).Longitude || prop.GpsY || "0");
 
                     if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return null;
 
@@ -63,13 +62,13 @@ export default function PropertyMap({ properties, center = [36.51, -4.88], zoom 
                             <Popup className="property-popup">
                                 <div className="w-48 overflow-hidden rounded-sm">
                                     <img
-                                        src={prop.MainImage}
-                                        alt={prop.TypeName}
+                                        src={prop.MainImage || ''}
+                                        alt={prop.TypeName || 'Property'}
                                         className="w-full h-32 object-cover mb-2"
                                     />
-                                    <h4 className="font-serif text-[#2B5F8C] text-sm mb-1">{prop.TypeName}</h4>
+                                    <h4 className="font-serif text-[#2B5F8C] text-sm mb-1">{prop.TypeName || 'Property'}</h4>
                                     <p className="text-[#C9A961] font-bold text-sm mb-2">
-                                        €{prop.Price.toLocaleString()}
+                                        €{prop.Price ? prop.Price.toLocaleString() : 'N/A'}
                                     </p>
                                     <Link href={`/properties/${prop.Id}`}>
                                         <a className="text-xs uppercase tracking-wider text-[#2B5F8C] border-b border-[#2B5F8C] hover:text-[#C9A961] hover:border-[#C9A961]">

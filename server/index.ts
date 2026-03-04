@@ -48,11 +48,15 @@ app.use((req, res, next) => {
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        logLine += ` :: BODY: ${JSON.stringify(capturedJsonResponse)}`;
       }
       log(logLine);
     }
   });
+
+  if (path === "/api/chat") {
+    console.log("[DEBUG] /api/chat reached index.ts");
+  }
 
   next();
 });
@@ -95,3 +99,4 @@ app.use((req, res, next) => {
     }
   );
 })();
+// Triggering restart 1772615463864

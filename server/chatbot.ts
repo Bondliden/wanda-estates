@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { fetchProperties } from './resales';
 
-// GLM 4.5 Air API configuration
-const TIGLM_API_KEY = process.env.TIGLM_API_KEY || 'de07c61a2bb74684a894eafc1b1b194a.GPlev7pRyuNvvxu4';
-const TIGLM_API_URL = process.env.TIGLM_API_URL || 'https://open.bigmodel.cn/api/paas/v4';
+// GLM 4.5 Air API configuration (Z.ai - Official from screenshot)
+const TIGLM_API_KEY = 'de07c61a2bb74684a894eafc1b1b194a.GPlev7pRyuNvvxu4';
+const TIGLM_API_URL = 'https://api.z.ai/api/coding/paas/v4';
+const TIGLM_MODEL = 'glm-4.5-air';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -32,110 +33,97 @@ interface ChatResponse {
   };
 }
 
-// System prompt for the Wanda Estates chatbot
-const SYSTEM_PROMPT = `Eres Wanda, el asistente virtual experto de Wanda Estates, una selecta agencia inmobiliaria de lujo en Marbella, España.
-
-Tu estilo de comunicación:
-- Eres muy amable, servicial y profesional, pero NO empalagoso, ni tampoco usas excesivos formalismos aburridos.
-- Tienes un tono seguro, moderno y directo. Ofreces respuestas concisas.
-- Muestras siempre un enfoque orientado a presentar opciones exclusivas al cliente y ayudar en su búsqueda.
-- Responde principalmente en español, pero cambia a inglés si el usuario lo hace.
-
-Reglas operativas:
-- Si el usuario muestra interés en comprar, utiliza las opciones de propiedades disponibles en tu contexto para presentar de 1 a 3 alternativas atractivas e invita a conocerlas mejor.
-- Nunca inventes propiedades que no estén en tu lista. Incluye siempre la Referencia (ej. R123) y el Precio en euros.
-
-Información de contacto de Wanda Estates:
-- Email: info@wandaestates.com
-- Teléfono: +34 952 000 000
-- Dirección: El Rodeo Alto Nº4, Nueva Andalucía, 29660 Marbella, Málaga, Spain
-- Horario: Lunes a Viernes 9:00-18:00, Sábado con cita previa, Domingo cerrado
-- Web: www.wandaestates.com
-
-Siempre invita a los clientes a contactar directamente o visitar la oficina para una atención personalizada.`;
+const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, inmobiliaria de lujo en Marbella.
+- Estilo: Amable, profesional y directa. NO empalagosa.
+- Objetivo: Ayudar a encontrar propiedades y dar información sobre la zona.
+- Idioma: Responde siempre en el idioma del usuario (principalmente español).`;
 
 export async function handleChatMessage(req: Request, res: Response) {
   try {
     const { message, conversationHistory = [] }: ChatRequest = req.body;
 
     if (!message || message.trim() === '') {
-      return res.status(400).json({
-        error: 'El mensaje no puede estar vacío'
-      });
+      return res.status(400).json({ error: 'El mensaje no puede estar vacío' });
     }
 
-    if (!TIGLM_API_KEY) {
-      console.error('TIGLM_API_KEY no está configurada');
-      return res.status(500).json({
-        error: 'Error de configuración del servidor'
-      });
-    }
-
-    // Fetch some recent properties to provide context to GLM 4.5
     let livePropertiesContext = "";
     try {
-      const liveData = await fetchProperties({ p_PageSize: '15' }); // Get 15 recent properties
-      if (liveData && liveData.Property) {
-        const props = liveData.Property.slice(0, 15);
-        const catalog = props.map((p: any) =>
-          `- Ref: ${p.Reference} | ${p.PropertyType?.NameType || 'Propiedad'} en ${p.Location} | Precio: ${new Intl.NumberFormat('de-DE').format(p.Price)}€ | ${p.Beds} hab, ${p.Baths} baños | ${p.BuiltArea}m2`
+      const liveData = await fetchProperties({ p_PageSize: '10' });
+      if (liveData && liveData.data && liveData.data.Property) {
+        const props = Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property];
+        const catalog = props.slice(0, 10).map((p: any) =>
+          `- Ref: ${p.Reference} | ${p.TypeName || 'Propiedad'} en ${p.Location} | Precio: ${p.Price}€`
         ).join("\n");
-        livePropertiesContext = `\n\n### CATÁLOGO ACTUAL DE PROPIEDADES EN VENTA:\nAquí tienes algunas propiedades disponibles ahora mismo:\n${catalog}\n[Fin del catálogo] Usa esto para recomendar opciones reales si te preguntan.`;
+        livePropertiesContext = `\n\n### CATALOGO ACTUAL:\n${catalog}`;
       }
     } catch (e) {
-      console.error("No se pudo obtener el contexto en vivo para el chatbot", e);
+      console.log("[CHATBOT] No se pudo cargar el contexto de propiedades (límite de IP o API)");
     }
 
-    // Build message history
     const messages: ChatMessage[] = [
       { role: 'system', content: SYSTEM_PROMPT + livePropertiesContext },
       ...conversationHistory,
       { role: 'user', content: message }
     ];
 
-    // Call tiGLM 4.5 API
-    const response = await fetch(`${TIGLM_API_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TIGLM_API_KEY}`,
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'glm-4-air',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 1000,
-        stream: false
-      })
-    });
+    // Intentar varios modelos y endpoints según la documentación de Z.ai
+    const endpoints = [
+      'https://api.z.ai/api/coding/paas/v4',
+      'https://api.z.ai/api/paas/v4',
+      'https://open.bigmodel.cn/api/paas/v4'
+    ];
+    // Probamos tanto el nombre sugerido por el usuario como el que sale en el código de ejemplo de Z.ai
+    const modelOptions = ['glm-4.5-air', 'glm-4.5', 'glm-4-air', 'glm-4'];
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('tiGLM API error:', errorData);
-      return res.status(response.status).json({
-        error: 'Error al procesar la solicitud'
-      });
+    let lastError = 'No se pudo conectar con el servicio de IA de Wanda';
+
+    for (const url of endpoints) {
+      for (const modelName of modelOptions) {
+        try {
+          console.log(`[CHATBOT] Probando modelo ${modelName} en ${url}...`);
+          const response = await fetch(`${url}/chat/completions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${TIGLM_API_KEY.trim()}`,
+              'Accept-Language': 'en-US,en'
+            },
+            body: JSON.stringify({
+              model: modelName,
+              messages: messages,
+              temperature: 0.7
+            })
+          });
+
+          if (response.ok) {
+            const data: ChatResponse = await response.json();
+            const assistantMessage = data.choices[0]?.message?.content;
+            if (assistantMessage) {
+              console.log(`[CHATBOT] ¡ÉXITO! Conectado con ${modelName} en ${url}`);
+              return res.json({
+                response: assistantMessage,
+                conversationHistory: [
+                  ...conversationHistory,
+                  { role: 'user', content: message },
+                  { role: 'assistant', content: assistantMessage }
+                ]
+              });
+            }
+          } else {
+            const errBody = await response.text();
+            console.log(`[CHATBOT] Reclamo de ${modelName}: ${errBody.substring(0, 100)}`);
+          }
+        } catch (innerError) {
+          // Error de red, pasamos al siguiente endpoint
+        }
+      }
     }
 
-    const data: ChatResponse = await response.json();
-
-    const assistantMessage = data.choices[0]?.message?.content || 'Lo siento, no pude generar una respuesta.';
-
-    return res.json({
-      response: assistantMessage,
-      conversationHistory: [
-        ...conversationHistory,
-        { role: 'user', content: message },
-        { role: 'assistant', content: assistantMessage }
-      ]
-    });
+    return res.status(500).json({ error: lastError });
 
   } catch (error) {
-    console.error('Error in chatbot handler:', error);
-    return res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    console.error('Chat error:', error);
+    return res.status(500).json({ error: 'Error interno en el asistente de Wanda' });
   }
 }
 

@@ -6,6 +6,9 @@ import { Link } from "wouter";
 
 const WHATSAPP_PHONE = "34641113518";
 
+// Simple placeholder image
+const PLACEHOLDER_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3EProperty Image%3C/text%3E%3C/svg%3E";
+
 interface NewDevelopment {
     Id: string;
     Reference: string;
@@ -162,7 +165,7 @@ export default function NewDevelopmentGrid() {
             const data = await response.json();
 
             if (data.success && data.data) {
-                const devsArray = data.data.NewDevelopment || data.data.Property || [];
+                const devsArray = data.data.Property || data.data.NewDevelopment || [];
                 setDevelopments(Array.isArray(devsArray) ? devsArray : [devsArray]);
                 if (data.data.Pagination) {
                     setPagination(data.data.Pagination);

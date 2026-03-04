@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
 import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
+import PropertyOfTheMonth from "@/components/PropertyOfTheMonth";
 
-// Component force refresh: 2026-03-03 01:50
+// Component force refresh: 2026-03-04 15:00
 export default function Home() {
     const { t } = useTranslation();
 
@@ -44,6 +45,9 @@ export default function Home() {
 
                 {/* Exclusive Neighborhoods Section */}
                 <ExclusiveNeighborhoods />
+
+                {/* Property of the Month Section */}
+                <PropertyOfTheMonth />
 
                 {/* Brand Statement Section - Bold, Large, Italic + Coastal Living Image */}
                 <section className="relative py-28 overflow-hidden">
