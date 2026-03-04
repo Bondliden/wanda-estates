@@ -2,7 +2,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import ContactForm from "@/components/ContactForm";
 
-import { MapPin, Phone, Mail, Clock, Download } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Download, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const COMPANY_VCARD = `BEGIN:VCARD
@@ -76,11 +76,13 @@ export default function ContactUs() {
 
                 <div className="flex items-start">
                   <div className="w-12 h-12 bg-[#f0f9ff] text-[#2ea3f2] flex items-center justify-center mr-6 flex-shrink-0">
-                    <Phone className="w-6 h-6" />
+                    <MessageCircle className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="text-[#2c3e50] font-bold uppercase tracking-wider mb-2">{t("contact.call")}</h4>
-                    +34 641 113 518
+                    <h4 className="text-[#2c3e50] font-bold uppercase tracking-wider mb-2">Contacto por WhatsApp</h4>
+                    <a href="https://wa.me/34641113518" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#2ea3f2] transition-colors">
+                      +34 641 113 518
+                    </a>
                   </div>
                 </div>
 
