@@ -171,7 +171,16 @@ export async function fetchProperties(customFilters: any = {}) {
         };
     } catch (error) {
         console.error("Error fetching properties from Resales Online:", error);
-        throw error;
+        // BLINDAJE: Si la API externa falla (401, 502, offine), enviar array vacio en lugar de romper el servidor
+        return {
+            Property: [],
+            Pagination: {
+                CurrentPage: parseInt(customFilters.p_PageIndex || '1'),
+                PageSize: parseInt(customFilters.p_PageSize || '18'),
+                TotalProperties: 0,
+                TotalPages: 0,
+            }
+        };
     }
 }
 
@@ -226,7 +235,8 @@ export async function fetchPropertyDetails(propertyId: string) {
         return data;
     } catch (error) {
         console.error("Error fetching property details:", error);
-        throw error;
+        // BLINDAJE: Si falla, devolver null para que el frontend muestre la vista de error amigable "Property not found"
+        return null;
     }
 }
 

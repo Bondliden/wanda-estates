@@ -31,9 +31,10 @@ export async function registerRoutes(
       res.json({ success: true, data: properties });
     } catch (error) {
       console.error("Error exposing properties:", error);
-      res.status(500).json({
+      res.status(200).json({
         success: false,
-        message: error instanceof Error ? error.message : "Error fetching properties"
+        message: error instanceof Error ? error.message : "Error fetching properties",
+        data: { Property: [], Pagination: { CurrentPage: 1, PageSize: 18, TotalProperties: 0, TotalPages: 0 } }
       });
     }
   });
@@ -44,7 +45,7 @@ export async function registerRoutes(
       const { id } = req.params;
       const details = await fetchPropertyDetails(id);
       if (!details) {
-        return res.status(404).json({ success: false, message: "Property not found" });
+        return res.status(200).json({ success: false, message: "Property not found", data: null });
       }
       res.json({ success: true, data: details });
     } catch (error) {
@@ -65,9 +66,10 @@ export async function registerRoutes(
       res.json({ success: true, data: developments });
     } catch (error) {
       console.error("Error fetching new developments:", error);
-      res.status(500).json({
+      res.status(200).json({
         success: false,
-        message: "Error fetching new developments"
+        message: "Error fetching new developments",
+        data: []
       });
     }
   });
