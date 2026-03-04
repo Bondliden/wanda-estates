@@ -95,38 +95,47 @@ export default function PropertyDetail() {
         fetchDetails();
     }, [id]);
 
-    // Use normalized images array from the backend
+    // Use normalized images array from the backend, with robust fallbacks
     const getImages = (): string[] => {
         if (!property) return [];
+
+        // 1. If backend already mapped it
         if (property.Images && property.Images.length > 0) {
             return property.Images;
         }
+
+        // 2. If backend returned raw unmapped object
+        const pics = property.PicturesContent?.Picture || (property as any).Pictures?.Picture;
+        if (pics) {
+            const picArray = Array.isArray(pics) ? pics : [pics];
+            const urls = picArray.map((p: any) => p.HighResURL || p.PictureURL || p.Url).filter(Boolean);
+            if (property.MainImage && !urls.includes(property.MainImage)) {
+                urls.unshift(property.MainImage);
+            }
+            if (urls.length > 0) return urls;
+        }
+
+        // 3. Last fallback
         return property.MainImage ? [property.MainImage] : [];
     };
 
     const images = getImages();
 
     console.log("[PropertyDetail] Images loaded:", images.length);
-    console.log("[PropertyDetail] Property data:", {
-        reference: property?.Reference,
-        hasMainImage: !!property?.MainImage,
-        images: images,
-        hasLocation: !!(property?.Latitude && property?.Longitude)
-    });
 
-    // Generate map URL
+    // Generate map URL with robust unmapped object fallbacks
     const getMapUrl = () => {
-        const hasValidCoords = property && property.Latitude && property.Longitude &&
-            property.Latitude !== "0" && property.Longitude !== "0" &&
-            property.Latitude !== 0 && property.Longitude !== 0;
+        const lat = property?.Latitude || (property as any)?.Coordinates?.lat || (property as any)?.Coordinates?.Latitude;
+        const lng = property?.Longitude || (property as any)?.Coordinates?.lng || (property as any)?.Coordinates?.Longitude;
+
+        const hasValidCoords = lat && lng && lat !== "0" && lng !== "0" && lat !== 0 && lng !== 0;
 
         if (!hasValidCoords) {
             console.log("[PropertyDetail] Using fallback map (no valid coords)");
             // Use a default coordinate for Marbella area
             return `https://maps.google.com/maps?q=36.5167,-4.8833&t=&z=13&ie=UTF8&iwloc=&output=embed`;
         }
-        const lat = property.Latitude;
-        const lng = property.Longitude;
+
         console.log("[PropertyDetail] Using coords map:", { lat, lng });
         return `https://maps.google.com/maps?q=${lat},${lng}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
     };
