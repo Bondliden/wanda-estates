@@ -34,8 +34,12 @@ interface PropertyDetails {
     MainImage: string;
     Images?: string[];
     PicturesContent?: {
-        Picture: PropertyImage | PropertyImage[];
+        Picture: any | any[];
     };
+    Pictures?: {
+        Picture: any | any[];
+    };
+    Coordinates?: any;
     Latitude?: number | string;
     Longitude?: number | string;
     Features?: any;
