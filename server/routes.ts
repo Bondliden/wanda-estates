@@ -35,7 +35,7 @@ export async function registerRoutes(
     // 1. Check Resales API connectivity + image URLs
     try {
       const p1 = '1022290';
-      const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
+      const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
       const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_MustHavePictures=1`;
       const r = await fetch(url);
       const d = await r.json();
@@ -79,7 +79,7 @@ export async function registerRoutes(
   app.get("/api/debug-resales", async (req, res) => {
     try {
       const p1 = '1022290';
-      const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
+      const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
       const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_location=Marbella`;
       const response = await fetch(url);
       const data = await response.json();
