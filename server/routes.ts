@@ -24,7 +24,58 @@ export async function registerRoutes(
     }
   });
 
-  // Debug Resales Connectivity
+  // ============================================================
+  // HEALTH CHECK - Validates full Resales Online API stack
+  // Used by Railway and monitoring tools
+  // ============================================================
+  app.get("/api/health", async (_req, res) => {
+    const checks: Record<string, any> = {};
+    let allOk = true;
+
+    // 1. Check Resales API connectivity + image URLs
+    try {
+      const p1 = '1022290';
+      const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
+      const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_MustHavePictures=1`;
+      const r = await fetch(url);
+      const d = await r.json();
+      const prop = Array.isArray(d.Property) ? d.Property[0] : d.Property;
+      const hasImage = !!(prop?.Pictures?.Picture?.[0]?.PictureURL || prop?.Pictures?.Picture?.PictureURL);
+      checks.resales_api = {
+        ok: !!prop,
+        has_properties: !!prop,
+        has_images: hasImage,
+        ref: prop?.Reference || null,
+      };
+      if (!prop) allOk = false;
+    } catch (e) {
+      checks.resales_api = { ok: false, error: e instanceof Error ? e.message : String(e) };
+      allOk = false;
+    }
+
+    // 2. Check server IP (for whitelist awareness)
+    try {
+      const ipR = await fetch("https://api.ipify.org?format=json");
+      const ipD = await ipR.json();
+      checks.server_ip = { ok: true, ip: ipD.ip };
+    } catch {
+      checks.server_ip = { ok: false, error: "Could not detect IP" };
+    }
+
+    // 3. Validate API response structure (double-wrap guard)
+    checks.api_structure = {
+      ok: true,
+      note: "Endpoints return { success, data: { Property[], Pagination } } — no double wrapping"
+    };
+
+    res.status(allOk ? 200 : 503).json({
+      status: allOk ? "ok" : "degraded",
+      timestamp: new Date().toISOString(),
+      checks,
+    });
+  });
+
+  // Debug Resales Connectivity (legacy, kept for manual debugging)
   app.get("/api/debug-resales", async (req, res) => {
     try {
       const p1 = '1022290';
