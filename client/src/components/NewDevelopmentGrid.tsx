@@ -38,6 +38,96 @@ interface PaginationInfo {
     TotalPages: number;
 }
 
+// Extracted Carousel Component to manage its own state
+function PropertyCardCarousel({ property, t }: { property: any, t: any }) {
+    const { useState } = require("react");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    
+    // Normalize images whether coming from new developments or resales
+    let images: string[] = [];
+    if (property.Images && property.Images.length > 0) {
+        images = property.Images;
+    } else if (property.Pictures && property.Pictures.Picture && Array.isArray(property.Pictures.Picture)) {
+        images = property.Pictures.Picture.map((p: any) => p.HighResURL || p.PictureURL);
+        if (property.MainImage && !images.includes(property.MainImage)) {
+            images.unshift(property.MainImage);
+        }
+    } else {
+        images = property.MainImage ? [property.MainImage] : [PLACEHOLDER_IMAGE];
+    }
+    
+    const nextImage = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentIndex((prev: number) => (prev + 1) % images.length);
+    };
+    
+    const prevImage = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentIndex((prev: number) => (prev - 1 + images.length) % images.length);
+    };
+    
+    return (
+        <div className="relative border-b overflow-hidden aspect-[16/9] cursor-pointer group/carousel">
+            <Link href={`/properties/${property.Id || property.Reference}`}>
+                <img
+                    src={images[currentIndex] || PLACEHOLDER_IMAGE}
+                    alt={property.TypeName || property.Name || 'Property'}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    onError={(e) => {
+                        const img = e.target as HTMLImageElement;
+                        img.src = PLACEHOLDER_IMAGE;
+                    }}
+                />
+            </Link>
+            {property.Reference && (
+                <div className="absolute top-6 left-6 pointer-events-none z-20">
+                    <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 shadow-lg">
+                        {property.Reference}
+                    </span>
+                    {/* New Development Badge */}
+                    <span className="bg-[#e09900] ml-2 text-white text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 shadow-lg">
+                        {property.Id ? 'Obra Nueva' : 'New Development'}
+                    </span>
+                </div>
+            )}
+            
+            {images.length > 1 && (
+                <>
+                    <button 
+                        onClick={prevImage}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <button 
+                        onClick={nextImage}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20"
+                    >
+                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
+                        {images.slice(0, 15).map((_, idx) => (
+                            <div 
+                                key={idx} 
+                                className={`h-1 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-4' : 'bg-white/50 w-1.5'}`}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
+            
+            <Link href={`/properties/${property.Id || property.Reference}`}>
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10">
+                    <p className="text-white text-xs uppercase tracking-widest font-bold text-shadow-md">{t("grid.view_details") || 'Ver detalles'}</p>
+                </div>
+            </Link>
+        </div>
+    );
+}
+
 export default function NewDevelopmentGrid() {
     const { t, i18n } = useTranslation();
     const isSpanish = i18n.language === "es";
@@ -212,34 +302,12 @@ export default function NewDevelopmentGrid() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                         {developments.map((dev) => {
-                            const mainImage = getMainImage(dev);
-                            if (!mainImage) return null;
+                            
+                            
 
                             return (
                                 <div key={dev.Id || dev.Reference} className="group border border-gray-100 hover:shadow-2xl transition-all duration-500 bg-white flex flex-col h-full overflow-hidden">
-                                    <Link href={`/properties/${dev.Id}`}>
-                                        <div className="relative overflow-hidden aspect-[16/9] cursor-pointer">
-                                            <img
-                                                src={mainImage}
-                                                alt={dev.Name || dev.TypeName || 'New Development'}
-                                                loading="lazy"
-                                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                            />
-                                            {/* New Development Badge */}
-                                            <div className="absolute top-4 left-4">
-                                                <span className="bg-[#e09900] text-white text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 shadow-lg">
-                                                    {isSpanish ? 'Obra Nueva' : 'New Development'}
-                                                </span>
-                                            </div>
-                                            {dev.Reference && (
-                                                <div className="absolute top-4 right-4">
-                                                    <span className="bg-[#2B5F8C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5">
-                                                        {dev.Reference}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </Link>
+                                    <PropertyCardCarousel property={dev} t={t} />
 
                                     <div className="p-8 flex flex-col flex-grow">
                                         <h3 className="text-lg font-serif text-[#1a1a1a] mb-3 uppercase tracking-wide group-hover:text-[#C9A961] transition-colors leading-tight">

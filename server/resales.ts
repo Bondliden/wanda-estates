@@ -26,13 +26,14 @@ function mapProperty(p: any) {
     if (p.MainImage && !images.includes(p.MainImage)) {
         images.unshift(p.MainImage);
     }
-    
+
     console.log(`[mapProperty] Property ${p.Reference} has ${images.length} images:`, images.slice(0, 2));
-    
+
     return {
         ...p,
         Id: p.Id || p.Reference,
         MainImage: p.MainImage || images[0] || '',
+        Images: images,
         Beds: parseInt(p.Bedrooms || p.Beds || '0'),
         Baths: parseInt(p.Bathrooms || p.Baths || '0'),
         TypeName: p.PropertyType?.NameType || (typeof p.PropertyType === 'string' ? p.PropertyType : '') || p.TypeName || '',

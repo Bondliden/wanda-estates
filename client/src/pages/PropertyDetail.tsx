@@ -9,6 +9,9 @@ import { toast } from "sonner";
 
 const WHATSAPP_PHONE = "34641113518";
 
+// Placeholder image for properties without images
+const PLACEHOLDER_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3EProperty Image%3C/text%3E%3C/svg%3E";
+
 interface PropertyImage {
     PictureURL: string;
     HighResURL?: string;
@@ -105,19 +108,19 @@ export default function PropertyDetail() {
             console.log("[PropertyDetail] Processing image:", { hasHighRes: !!p.HighResURL, url });
             return url;
         }).filter(Boolean);
-        
+
         // Ensure MainImage is first
         if (property.MainImage && !urls.includes(property.MainImage)) {
             urls.unshift(property.MainImage);
             console.log("[PropertyDetail] Added MainImage to front");
         }
-        
+
         console.log(`[PropertyDetail] Property ${property.Reference} has ${urls.length} images`);
         return urls;
     };
 
     const images = getImages();
-    
+
     console.log("[PropertyDetail] Images loaded:", images.length);
     console.log("[PropertyDetail] Property data:", {
         reference: property?.Reference,
@@ -125,17 +128,18 @@ export default function PropertyDetail() {
         images: images,
         hasLocation: !!(property?.Latitude && property?.Longitude)
     });
-    
+
     // Generate map URL
     const getMapUrl = () => {
         if (!property || (!property.Latitude && !property.Longitude)) {
             console.log("[PropertyDetail] Using fallback map (no coords)");
-            return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=Nueva Andalucía, Marbella&zoom=13`;
+            // Use a default coordinate for Marbella area
+            return `https://maps.google.com/maps?q=36.5167,-4.8833&t=&z=13&ie=UTF8&iwloc=&output=embed`;
         }
         const lat = property.Latitude;
         const lng = property.Longitude;
         console.log("[PropertyDetail] Using coords map:", { lat, lng });
-        return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=${lat},${lng}&zoom=16&maptype=satellite`;
+        return `https://maps.google.com/maps?q=${lat},${lng}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
     };
 
     const getWhatsAppUrl = (ref: string) => {
@@ -224,30 +228,62 @@ export default function PropertyDetail() {
                     </button>
 
                     {/* Image Gallery */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-[500px] overflow-hidden rounded-sm shadow-2xl cursor-pointer" onClick={() => setGalleryOpen(true)}>
-                        <div className="h-full">
-                            <img src={images[0] || property.MainImage} alt={property.TypeName} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-2 h-full">
-                            {images.slice(1, 5).map((img, idx) => (
-                                <div key={idx} className="relative overflow-hidden">
-                                    <img src={img} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt={`${property.TypeName} ${idx + 2}`} />
-                                    {idx === 3 && images.length > 5 && (
-                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                            <span className="text-white text-lg font-serif">+{images.length - 5} {isSpanish ? 'fotos' : 'photos'}</span>
+                    {images.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-[500px] overflow-hidden rounded-sm shadow-2xl cursor-pointer" onClick={() => setGalleryOpen(true)}>
+                            <div className="h-full">
+                                <img
+                                    src={images[0]}
+                                    alt={property.TypeName}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        console.error("[PropertyDetail] Image failed to load:", images[0]);
+                                        e.currentTarget.src = PLACEHOLDER_IMAGE;
+                                    }}
+                                />
+                            </div>
+                            {images.length > 1 && (
+                                <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-2 h-full">
+                                    {images.slice(1, 5).map((img, idx) => (
+                                        <div key={idx} className="relative overflow-hidden">
+                                            <img
+                                                src={img}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                                alt={`${property.TypeName} ${idx + 2}`}
+                                                onError={(e) => {
+                                                    console.error("[PropertyDetail] Thumbnail failed to load:", img);
+                                                    e.currentTarget.src = PLACEHOLDER_IMAGE;
+                                                }}
+                                            />
+                                            {idx === 3 && images.length > 5 && (
+                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                                    <span className="text-white text-lg font-serif">+{images.length - 5} {isSpanish ? 'fotos' : 'photos'}</span>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
-                    </div>
-                    
+                    ) : (
+                        <div className="h-[500px] bg-gray-100 rounded-sm shadow-2xl flex items-center justify-center">
+                            <img
+                                src={PLACEHOLDER_IMAGE}
+                                alt="Property placeholder"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+
                     {/* Image Counter */}
-                    <div className="text-center mt-4 text-sm text-gray-500">
-                        {images.length > 1 && (
-                            <span>{images.length} {isSpanish ? 'fotos' : 'photos'} • Click to view all</span>
-                        )}
-                    </div>
+                    {images.length > 0 && (
+                        <div className="text-center mt-4 text-sm text-gray-500">
+                            {images.length > 1 ? (
+                                <span>{images.length} {isSpanish ? 'fotos' : 'photos'} • Click to view all</span>
+                            ) : (
+                                <span>1 {isSpanish ? 'foto' : 'photo'}</span>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -319,6 +355,7 @@ export default function PropertyDetail() {
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
                                     className="w-full h-full"
+                                    title={isSpanish ? 'Mapa de ubicación' : 'Location map'}
                                 />
                             </div>
                         </div>
