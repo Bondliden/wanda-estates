@@ -32,6 +32,7 @@ interface PropertyDetails {
     TypeName: string;
     Description: string;
     MainImage: string;
+    Images?: string[];
     PicturesContent?: {
         Picture: PropertyImage | PropertyImage[];
     };
@@ -90,33 +91,13 @@ export default function PropertyDetail() {
         fetchDetails();
     }, [id]);
 
-    // Parse V6 images
+    // Use normalized images array from the backend
     const getImages = (): string[] => {
-        if (!property) {
-            console.log("[PropertyDetail] No property data");
-            return [];
+        if (!property) return [];
+        if (property.Images && property.Images.length > 0) {
+            return property.Images;
         }
-        const pics = property.PicturesContent?.Picture;
-        if (!pics) {
-            console.log("[PropertyDetail] No PicturesContent, using MainImage only:", property.MainImage);
-            return property.MainImage ? [property.MainImage] : [];
-        }
-
-        const picArray = Array.isArray(pics) ? pics : [pics];
-        const urls = picArray.map((p: any) => {
-            const url = p.HighResURL || p.PictureURL;
-            console.log("[PropertyDetail] Processing image:", { hasHighRes: !!p.HighResURL, url });
-            return url;
-        }).filter(Boolean);
-
-        // Ensure MainImage is first
-        if (property.MainImage && !urls.includes(property.MainImage)) {
-            urls.unshift(property.MainImage);
-            console.log("[PropertyDetail] Added MainImage to front");
-        }
-
-        console.log(`[PropertyDetail] Property ${property.Reference} has ${urls.length} images`);
-        return urls;
+        return property.MainImage ? [property.MainImage] : [];
     };
 
     const images = getImages();
@@ -131,8 +112,12 @@ export default function PropertyDetail() {
 
     // Generate map URL
     const getMapUrl = () => {
-        if (!property || (!property.Latitude && !property.Longitude)) {
-            console.log("[PropertyDetail] Using fallback map (no coords)");
+        const hasValidCoords = property && property.Latitude && property.Longitude &&
+            property.Latitude !== "0" && property.Longitude !== "0" &&
+            property.Latitude !== 0 && property.Longitude !== 0;
+
+        if (!hasValidCoords) {
+            console.log("[PropertyDetail] Using fallback map (no valid coords)");
             // Use a default coordinate for Marbella area
             return `https://maps.google.com/maps?q=36.5167,-4.8833&t=&z=13&ie=UTF8&iwloc=&output=embed`;
         }
