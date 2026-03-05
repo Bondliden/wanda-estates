@@ -35,8 +35,12 @@ interface ChatResponse {
 
 const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, inmobiliaria de ultra-lujo en la Costa del Sol.
 - PERSONALIDAD: Profesional, eficiente y sofisticada. Tu tiempo y el del cliente son valiosos.
-- TONO: Conciso y directo. Evita párrafos largos de cortesía innecesaria. 
-- REGLA CRÍTICA: Ofrece ÚNICAMENTE propiedades que coincidan con el TIPO solicitado (ej. si piden Villa, NO ofrezcas apartamentos o locales).
+- TONO: Conciso y directo.
+- REGLA DE RESULTADOS: 
+    1. Ofrece máximo 3 propiedades que coincidan estrictamente con la ubicación pedida.
+    2. Si hay un "CHOLLO" (una propiedad con valor excepcional) muy cerca de donde busca, añade la frase exacta: "¿Considerarías algo mejor por el mismo precio muy cerca de donde buscas?" y descríbelo.
+- REGLA DE DATOS FALTANTES: Si el usuario no ha especificado número de dormitorios o baños, pregúntale educadamente al final de tu respuesta para refinar la búsqueda.
+- REGLA CRÍTICA: Ofrece ÚNICAMENTE el tipo de propiedad solicitado (ej. si piden Villa, NO ofrezcas apartamentos).
 - OBJETIVO: Presentar las mejores oportunidades "Value for Money" (mejor relación precio/m2).
 - IDIOMA: Responde siempre en el idioma del usuario.`;
 
@@ -70,6 +74,10 @@ export async function handleChatMessage(req: Request, res: Response) {
     const detectedTypeKey = Object.keys(propertyTypesMap).find(key => lowerMsg.includes(key));
     const detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
 
+    // Chequeo de datos faltantes
+    const mentionsBeds = lowerMsg.includes('dormitorio') || lowerMsg.includes('habitacion') || lowerMsg.includes('habitación') || lowerMsg.includes('beds') || /\d+\s*dorm/.test(lowerMsg);
+    const mentionsBaths = lowerMsg.includes('baño') || lowerMsg.includes('baths') || lowerMsg.includes('aseo') || /\d+\s*baño/.test(lowerMsg);
+
     // Detección básica de precio máximo
     let detectedMaxPrice = "";
     const priceMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/);
@@ -83,11 +91,13 @@ export async function handleChatMessage(req: Request, res: Response) {
 
     let livePropertiesContext = "";
     try {
+      // Pedimos más para poder filtrar chollos cercanos
       const searchParams: any = {
-        p_PageSize: '40',
+        p_PageSize: '60',
         p_PropertyTypes: detectedType,
       };
 
+      // Si detectamos Marbella, buscamos en todo Marbella para encontrar chollos cercanos
       if (detectedLocation) searchParams.p_location = detectedLocation;
       if (detectedMaxPrice) searchParams.p_max = detectedMaxPrice;
 
@@ -96,35 +106,48 @@ export async function handleChatMessage(req: Request, res: Response) {
       if (liveData && liveData.data && liveData.data.Property) {
         let props = Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property];
 
-        // Refinado de seguridad (evitar locales comerciales o parkings si se pidió vivienda)
+        // Refinado por tipo
         props = props.filter((p: any) => {
           const type = (p.TypeName || "").toLowerCase();
           const isDwelling = type.includes("villa") || type.includes("apartment") || type.includes("penthouse") || type.includes("townhouse") || type.includes("casa") || type.includes("apartamento") || type.includes("ático");
-
           if (detectedTypeKey) {
-            // Si el usuario pidió algo específico, ser estrictos
             return type.includes(detectedTypeKey) || (detectedTypeKey === 'villa' && type.includes('casa'));
           }
           return isDwelling;
         });
 
-        // Lógica "Value for Money": Mejor precio por metro construido
-        const valueSorted = [...props].sort((a: any, b: any) => {
+        // 1. Separar los que coinciden estrictamente con la zona vs "Chollos cercanos"
+        // (En este caso 'fetchProperties' ya nos filtra por location si se la pasamos)
+        // Pero si el usuario pidió algo muy específico como "Nueva Andalucía", 
+        // podríamos buscar en Marbella general. Para simplificar, asumimos que 
+        // los mejores resultados de la lista son los que presentaremos.
+
+        const sortedByValue = [...props].sort((a: any, b: any) => {
           const areaA = a.BuiltArea || 1;
           const areaB = b.BuiltArea || 1;
-          const priceA = a.Price || 0;
-          const priceB = b.Price || 0;
-          return (priceA / areaA) - (priceB / areaB);
+          return (a.Price / areaA) - (b.Price / areaB);
         });
 
-        const catalog = valueSorted.slice(0, 5).map((p: any) =>
-          `- REF: ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()} (Excelente relación calidad-precio)`
+        // Tomamos los 3 primeros como "match directo"
+        const topMatches = sortedByValue.slice(0, 3);
+
+        // Buscamos 1 "Chollo adicional" que no esté en el top 3 pero sea excepcional
+        const bargainCandidate = sortedByValue[3];
+
+        let catalog = topMatches.map((p: any) =>
+          `- MATCH: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()}`
         ).join("\n");
 
+        if (bargainCandidate) {
+          catalog += `\n- CHOLLO CERCANO: REF ${bargainCandidate.Reference} | ${bargainCandidate.TypeName} en ${bargainCandidate.Location} | ${bargainCandidate.Beds} Dorm | ${bargainCandidate.BuiltArea}m2 | €${bargainCandidate.Price.toLocaleString()} (Valor excepcional)`;
+        }
+
+        const missingInfoPrompt = (!mentionsBeds || !mentionsBaths) ? "\n\nNOTA: El cliente no ha especificado dormitorios/baños. Pregúntale." : "";
+
         if (catalog) {
-          livePropertiesContext = `\n\n### INVENTARIO DISPONIBLE:\n${catalog}\n\nREGLA: Presenta estas opciones de forma ejecutiva y concisa. Si no hay una coincidencia exacta, informa profesionalmente y ofrece buscar en nuestro portfolio off-market.`;
+          livePropertiesContext = `\n\n### INVENTARIO SELECCIONADO:\n${catalog}${missingInfoPrompt}\n\nRECUERDA: Máximo 3 matches + 1 chollo cercano si aplica. Usa la frase de "Considerarías algo mejor..." si presentas el chollo.`;
         } else {
-          livePropertiesContext = `\n\nAVISO: No se han encontrado ${detectedTypeKey || 'propiedades'} que coincidan exactamente con esos criterios en el catálogo activo ahora mismo.`;
+          livePropertiesContext = `\n\nAVISO: No hay coincidencias directas ahora mismo.${missingInfoPrompt}`;
         }
       }
     } catch (e) {
