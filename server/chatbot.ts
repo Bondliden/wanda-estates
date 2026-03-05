@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { fetchProperties } from './resales';
 
-// GLM 4.5 Air API configuration (Z.ai - Official from screenshot)
+// GLM 4.5 Air API configuration (Z.ai - Official)
 const TIGLM_API_KEY = 'de07c61a2bb74684a894eafc1b1b194a.GPlev7pRyuNvvxu4';
 const TIGLM_API_URL = 'https://api.z.ai/api/coding/paas/v4';
 const TIGLM_MODEL = 'glm-4.5-air';
@@ -33,62 +33,102 @@ interface ChatResponse {
   };
 }
 
-const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, una inmobiliaria boutique de ultra-lujo en la Costa del Sol.
-- Estilo: Muy amable, sofisticada, profesional y servicial. Haz que el cliente se sienta en buenas manos.
-- Objetivo: Ayudar a encontrar las mejores oportunidades inmobiliarias ("Value for Money").
-- Prioridad: Sugiere SIEMPRE propiedades dentro del municipio que el usuario mencione o pregunte.
-- Idioma: Responde siempre en el idioma del usuario.`;
+const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, inmobiliaria de ultra-lujo en la Costa del Sol.
+- PERSONALIDAD: Profesional, eficiente y sofisticada. Tu tiempo y el del cliente son valiosos.
+- TONO: Conciso y directo. Evita párrafos largos de cortesía innecesaria. 
+- REGLA CRÍTICA: Ofrece ÚNICAMENTE propiedades que coincidan con el TIPO solicitado (ej. si piden Villa, NO ofrezcas apartamentos o locales).
+- OBJETIVO: Presentar las mejores oportunidades "Value for Money" (mejor relación precio/m2).
+- IDIOMA: Responde siempre en el idioma del usuario.`;
 
 export async function handleChatMessage(req: Request, res: Response) {
   try {
     const { message, conversationHistory = [] }: ChatRequest = req.body;
+    const lowerMsg = message.toLowerCase();
 
     if (!message || message.trim() === '') {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío' });
     }
 
-    // Intentar detectar municipio en el mensaje del usuario
-    const locations = ["Marbella", "Benahavís", "Estepona", "Sotogrande", "Casares", "Mijas", "Fuengirola", "Benalmádena"];
-    const detectedLocation = locations.find(loc => message.toLowerCase().includes(loc.toLowerCase()));
+    // 1. Extracción de Criterios (Inteligencia Simple)
+    const locations = ["Marbella", "Benahavís", "Estepona", "Sotogrande", "Casares", "Mijas", "Fuengirola", "Benalmádena", "Nueva Andalucía", "Golden Mile", "Milla de Oro", "Puerto Banús"];
+    const detectedLocation = locations.find(loc => lowerMsg.includes(loc.toLowerCase()));
+
+    const propertyTypesMap: any = {
+      'villa': 'Villa',
+      'casa': 'Villa',
+      'finca': 'Villa',
+      'apartment': 'Apartment',
+      'apartamento': 'Apartment',
+      'piso': 'Apartment',
+      'penthouse': 'Penthouse',
+      'atico': 'Penthouse',
+      'ático': 'Penthouse',
+      'townhouse': 'Townhouse',
+      'adosado': 'Townhouse',
+      'pareado': 'Townhouse'
+    };
+    const detectedTypeKey = Object.keys(propertyTypesMap).find(key => lowerMsg.includes(key));
+    const detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
+
+    // Detección básica de precio máximo
+    let detectedMaxPrice = "";
+    const priceMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/);
+    if (priceMatch) {
+      let val = parseFloat(priceMatch[1].replace(',', '.'));
+      const unit = priceMatch[2];
+      if (unit.startsWith('m')) val *= 1000000;
+      else if (unit === 'k') val *= 1000;
+      detectedMaxPrice = String(Math.floor(val));
+    }
 
     let livePropertiesContext = "";
     try {
-      // Configurar búsqueda inteligente
       const searchParams: any = {
         p_PageSize: '40',
-        p_PropertyTypes: 'Villa,Apartment,Penthouse,Townhouse',
+        p_PropertyTypes: detectedType,
       };
 
-      if (detectedLocation) {
-        searchParams.p_location = detectedLocation;
-      }
+      if (detectedLocation) searchParams.p_location = detectedLocation;
+      if (detectedMaxPrice) searchParams.p_max = detectedMaxPrice;
 
       const liveData = await fetchProperties(searchParams);
 
       if (liveData && liveData.data && liveData.data.Property) {
         let props = Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property];
 
-        // Filtrar no-viviendas
+        // Refinado de seguridad (evitar locales comerciales o parkings si se pidió vivienda)
         props = props.filter((p: any) => {
           const type = (p.TypeName || "").toLowerCase();
-          return !type.includes("parking") && !type.includes("garaje") && !type.includes("trastero") && !type.includes("parcela") && !type.includes("plot");
+          const isDwelling = type.includes("villa") || type.includes("apartment") || type.includes("penthouse") || type.includes("townhouse") || type.includes("casa") || type.includes("apartamento") || type.includes("ático");
+
+          if (detectedTypeKey) {
+            // Si el usuario pidió algo específico, ser estrictos
+            return type.includes(detectedTypeKey) || (detectedTypeKey === 'villa' && type.includes('casa'));
+          }
+          return isDwelling;
         });
 
-        // Lógica "Value for Money": Ordenar por precio/m2 (menor es mejor valor)
+        // Lógica "Value for Money": Mejor precio por metro construido
         const valueSorted = [...props].sort((a: any, b: any) => {
-          const ratioA = (a.Price || 0) / (a.BuiltArea || 1);
-          const ratioB = (b.Price || 0) / (b.BuiltArea || 1);
-          return ratioA - ratioB;
+          const areaA = a.BuiltArea || 1;
+          const areaB = b.BuiltArea || 1;
+          const priceA = a.Price || 0;
+          const priceB = b.Price || 0;
+          return (priceA / areaA) - (priceB / areaB);
         });
 
-        const catalog = valueSorted.slice(0, 8).map((p: any) =>
-          `- Ref: ${p.Reference} | ${p.TypeName || 'Propiedad'} en ${p.Location} | ${p.Beds} dorm | ${p.BuiltArea}m2 | Precio: ${p.Price.toLocaleString()}€ (Excelente relación calidad-precio)`
+        const catalog = valueSorted.slice(0, 5).map((p: any) =>
+          `- REF: ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()} (Excelente relación calidad-precio)`
         ).join("\n");
 
-        livePropertiesContext = `\n\n### MEJORES OPORTUNIDADES ACTUALES${detectedLocation ? ` EN ${detectedLocation.toUpperCase()}` : ''}:\n${catalog}\n\nREGLA: Si el usuario pidió un sitio concreto (${detectedLocation || 'la zona'}), céntrate en estos resultados. Presenta las opciones con entusiasmo resaltando por qué son "Value for Money".`;
+        if (catalog) {
+          livePropertiesContext = `\n\n### INVENTARIO DISPONIBLE:\n${catalog}\n\nREGLA: Presenta estas opciones de forma ejecutiva y concisa. Si no hay una coincidencia exacta, informa profesionalmente y ofrece buscar en nuestro portfolio off-market.`;
+        } else {
+          livePropertiesContext = `\n\nAVISO: No se han encontrado ${detectedTypeKey || 'propiedades'} que coincidan exactamente con esos criterios en el catálogo activo ahora mismo.`;
+        }
       }
     } catch (e) {
-      console.log("[CHATBOT] No se pudo cargar el contexto dinámico");
+      console.log("[CHATBOT] Error en fetch contextual", e);
     }
 
     const messages: ChatMessage[] = [
@@ -97,16 +137,12 @@ export async function handleChatMessage(req: Request, res: Response) {
       { role: 'user', content: message }
     ];
 
-    // Intentar varios modelos y endpoints según la documentación de Z.ai
     const endpoints = [
       'https://api.z.ai/api/coding/paas/v4',
       'https://api.z.ai/api/paas/v4',
       'https://open.bigmodel.cn/api/paas/v4'
     ];
-    // Probamos modelos disponibles
     const modelOptions = ['glm-4.5-air', 'glm-4-air', 'glm-4'];
-
-    let lastError = 'No se pudo conectar con el servicio de IA de Wanda';
 
     for (const url of endpoints) {
       for (const modelName of modelOptions) {
@@ -116,12 +152,11 @@ export async function handleChatMessage(req: Request, res: Response) {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${TIGLM_API_KEY.trim()}`,
-              'Accept-Language': 'en-US,en'
             },
             body: JSON.stringify({
               model: modelName,
               messages: messages,
-              temperature: 0.5
+              temperature: 0.3
             })
           });
 
@@ -145,7 +180,7 @@ export async function handleChatMessage(req: Request, res: Response) {
       }
     }
 
-    return res.status(500).json({ error: lastError });
+    return res.status(500).json({ error: 'No se pudo conectar con el servicio de IA de Wanda' });
 
   } catch (error) {
     console.error('Chat error:', error);
