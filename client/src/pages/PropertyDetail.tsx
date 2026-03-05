@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRoute, Link } from "wouter";
+import { useRoute, Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -82,6 +82,27 @@ export default function PropertyDetail() {
     const [inquirySubmitting, setInquirySubmitting] = useState(false);
     const [inquiryForm, setInquiryForm] = useState({ name: "", email: "", phone: "", message: "" });
     const [ranking, setRanking] = useState<RankingDetails | null>(null);
+    const [, setLocation] = useLocation();
+
+    // Navigation logic
+    const [prevProp, setPrevProp] = useState<string | null>(null);
+    const [nextProp, setNextProp] = useState<string | null>(null);
+
+    useEffect(() => {
+        const storedIds = sessionStorage.getItem("lastSearchResults");
+        if (storedIds && id) {
+            try {
+                const ids = JSON.parse(storedIds);
+                const currentIndex = ids.indexOf(id);
+                if (currentIndex !== -1) {
+                    setPrevProp(currentIndex > 0 ? ids[currentIndex - 1] : null);
+                    setNextProp(currentIndex < ids.length - 1 ? ids[currentIndex + 1] : null);
+                }
+            } catch (e) {
+                console.error("Error parsing stored property IDs", e);
+            }
+        }
+    }, [id]);
 
     useEffect(() => {
         if (!id) return;
@@ -510,6 +531,28 @@ export default function PropertyDetail() {
                     </button>
                 </div>
             )}
+
+            {/* Property Navigation Arrows */}
+            <div className="fixed bottom-10 right-10 flex gap-4 z-40 pointer-events-none">
+                {prevProp && (
+                    <Button
+                        onClick={() => setLocation(`/properties/${prevProp}`)}
+                        className="bg-white/90 backdrop-blur-sm border border-[#2B5F8C] text-[#2B5F8C] hover:bg-[#2B5F8C] hover:text-white rounded-full w-14 h-14 shadow-2xl transition-all pointer-events-auto flex items-center justify-center p-0"
+                        title={isSpanish ? "Propiedad Anterior" : "Previous Property"}
+                    >
+                        <ChevronLeft className="w-8 h-8" />
+                    </Button>
+                )}
+                {nextProp && (
+                    <Button
+                        onClick={() => setLocation(`/properties/${nextProp}`)}
+                        className="bg-[#2B5F8C] text-white hover:bg-[#1e4363] rounded-full w-14 h-14 shadow-2xl transition-all pointer-events-auto flex items-center justify-center p-0"
+                        title={isSpanish ? "Siguiente Propiedad" : "Next Property"}
+                    >
+                        <ChevronRight className="w-8 h-8" />
+                    </Button>
+                )}
+            </div>
 
             <Footer />
         </div>

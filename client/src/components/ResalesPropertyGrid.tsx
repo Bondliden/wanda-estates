@@ -141,20 +141,23 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
         CurrentPage: 1, PageSize: 18, TotalProperties: 0, TotalPages: 1
     });
 
-    const [filters, setFilters] = useState({
-        minPrice: "1500000",
-        maxPrice: "50000000",
-        p_location: initialLocation,
-        p_beds: "",
-        p_baths: "",
-        p_PropertyTypes: "",
-        p_sort: "commission",
-        p_newBuild: isNewDevelopment ? "1" : "",
-        shuffle: "false",
-        p_MustHaveFeatures: [] as string[],
-        p_NiceToHaveFeatures: [] as string[],
-        p_RefId: "",
-        searchMode: "sale" // sale, rent_long, rent_short
+    const [filters, setFilters] = useState(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        return {
+            minPrice: searchParams.get("p_min") || "1500000",
+            maxPrice: searchParams.get("p_max") || "50000000",
+            p_location: searchParams.get("p_location") || initialLocation || "",
+            p_beds: searchParams.get("p_beds") || "",
+            p_baths: searchParams.get("p_baths") || "",
+            p_PropertyTypes: searchParams.get("p_PropertyTypes") || "",
+            p_sort: searchParams.get("p_sort") || "commission",
+            p_newBuild: searchParams.get("p_newBuild") || (isNewDevelopment ? "1" : ""),
+            shuffle: searchParams.get("shuffle") || "false",
+            p_MustHaveFeatures: (searchParams.get("p_MustHaveFeatures") || "").split(",").filter(Boolean),
+            p_NiceToHaveFeatures: (searchParams.get("p_NiceToHaveFeatures") || "").split(",").filter(Boolean),
+            p_RefId: searchParams.get("p_RefId") || "",
+            searchMode: (searchParams.get("searchMode") as any) || "sale"
+        };
     });
 
     const [showAdvanced, setShowAdvanced] = useState(false);
@@ -177,6 +180,18 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 p_PageSize: '18',
                 p_PageIndex: String(page),
             };
+
+            // Sync URL
+            const urlParams = new URLSearchParams();
+            Object.entries(params).forEach(([key, val]) => {
+                if (val) urlParams.set(key, val as string);
+            });
+            urlParams.set("searchMode", searchFilters.searchMode);
+            if (searchFilters.p_MustHaveFeatures.length > 0) urlParams.set("p_MustHaveFeatures", searchFilters.p_MustHaveFeatures.join(","));
+            if (searchFilters.p_NiceToHaveFeatures.length > 0) urlParams.set("p_NiceToHaveFeatures", searchFilters.p_NiceToHaveFeatures.join(","));
+
+            const newRelativePathQuery = window.location.pathname + '?' + urlParams.toString();
+            window.history.pushState(null, '', newRelativePathQuery);
 
             if (searchFilters.p_location) params.p_location = searchFilters.p_location;
             if (searchFilters.p_beds) params.p_beds = searchFilters.p_beds;
@@ -208,6 +223,10 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 if (data.data.Pagination) {
                     setPagination(data.data.Pagination);
                 }
+
+                // Save for Navigation Arrows
+                const propertyIds = propertiesToSet.map(p => p.Id || p.Reference);
+                sessionStorage.setItem("lastSearchResults", JSON.stringify(propertyIds));
             } else {
                 setProperties([]);
                 setError(data.error || "No properties found matching your criteria.");
@@ -233,6 +252,17 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
         if (newPage < 1 || newPage > pagination.TotalPages) return;
         fetchProperties(filters, newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const formatPriceInput = (val: string) => {
+        if (!val) return "";
+        const numeric = val.replace(/\D/g, "");
+        return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const handlePriceChange = (key: 'minPrice' | 'maxPrice', val: string) => {
+        const raw = val.replace(/\D/g, "");
+        setFilters(prev => ({ ...prev, [key]: raw }));
     };
 
     const getWhatsAppUrl = (ref: string) => {
@@ -319,21 +349,21 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                             <div className="flex-grow">
                                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#2B5F8C] mb-3">{t("grid.min_price")}</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
-                                    value={filters.minPrice}
-                                    step="100000"
-                                    onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
+                                    value={formatPriceInput(filters.minPrice)}
+                                    placeholder="0"
+                                    onChange={(e) => handlePriceChange('minPrice', e.target.value)}
                                 />
                             </div>
                             <div className="flex-grow">
                                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#2B5F8C] mb-3">{t("grid.max_price")}</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="w-full border-b border-gray-200 py-2 focus:outline-none focus:border-[#C9A961] bg-transparent text-sm"
-                                    value={filters.maxPrice}
-                                    step="200000"
-                                    onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
+                                    value={formatPriceInput(filters.maxPrice)}
+                                    placeholder="0"
+                                    onChange={(e) => handlePriceChange('maxPrice', e.target.value)}
                                 />
                             </div>
                         </div>

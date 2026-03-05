@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "organization": "Apify",
+  "date": "February 2026",
+  "abstract": "Expert guidance for scraping and automation using Apify Agent Skills. Execute Actors for lead generation, ecommerce, content analysis, influencer discovery, audience analysis, brand reputation monitoring, competitor intelligence, content analytics, market research, and trend analysis.",
+  "references": [
+    "https://apify.com",
+    "https://github.com/apify/agent-skills"
+  ]
+}
