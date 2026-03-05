@@ -214,7 +214,18 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
 
             if (data.success && data.data) {
                 const propsArray = data.data.Property || [];
-                const propertiesToSet = Array.isArray(propsArray) ? propsArray : [propsArray];
+                let propertiesToSet = Array.isArray(propsArray) ? propsArray : [propsArray];
+
+                // Manual safeguard for Property Type obedience
+                if (searchFilters.p_PropertyTypes) {
+                    const requested = searchFilters.p_PropertyTypes.split(",").map((s: string) => s.trim().toLowerCase());
+                    propertiesToSet = propertiesToSet.filter(p => {
+                        const type = (p.TypeName || "").toLowerCase();
+                        // Allow "Villa" to match "Detached Villa", "Semi-Detached Villa", etc.
+                        return requested.some(req => type.includes(req) || (req === 'villa' && type.includes('casa')));
+                    });
+                }
+
                 console.log("[ResalesPropertyGrid] API Response:", {
                     totalProperties: propertiesToSet.length,
                     firstProperty: propertiesToSet[0],
@@ -396,6 +407,8 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                 <option value="Apartment">Apartamento</option>
                                 <option value="Penthouse">Ático</option>
                                 <option value="Townhouse">Adosado</option>
+                                <option value="Plot">Terreno</option>
+                                <option value="Finca">Finca</option>
                             </select>
                         </div>
 

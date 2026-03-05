@@ -64,7 +64,6 @@ export async function handleChatMessage(req: Request, res: Response) {
     const propertyTypesMap: any = {
       'villa': 'Villa',
       'casa': 'Villa',
-      'finca': 'Villa',
       'apartment': 'Apartment',
       'apartamento': 'Apartment',
       'piso': 'Apartment',
@@ -73,7 +72,11 @@ export async function handleChatMessage(req: Request, res: Response) {
       'ático': 'Penthouse',
       'townhouse': 'Townhouse',
       'adosado': 'Townhouse',
-      'pareado': 'Townhouse'
+      'pareado': 'Townhouse',
+      'terreno': 'Plot',
+      'parcela': 'Plot',
+      'plot': 'Plot',
+      'finca': 'Finca'
     };
     const detectedTypeKey = Object.keys(propertyTypesMap).find(key => lowerMsg.includes(key));
     const detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
