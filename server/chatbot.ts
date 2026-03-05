@@ -49,13 +49,17 @@ export async function handleChatMessage(req: Request, res: Response) {
     const { message, conversationHistory = [] }: ChatRequest = req.body;
     const lowerMsg = message.toLowerCase();
 
+    // Normalización para búsqueda de localizaciones (ignorando acentos)
+    const normalize = (str: string) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const normalizedMsg = normalize(message);
+
     if (!message || message.trim() === '') {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío' });
     }
 
     // 1. Extracción de Criterios (Inteligencia Simple)
     const locations = ["Marbella", "Benahavís", "Estepona", "Sotogrande", "Casares", "Mijas", "Fuengirola", "Benalmádena", "Nueva Andalucía", "Golden Mile", "Milla de Oro", "Puerto Banús"];
-    const detectedLocation = locations.find(loc => lowerMsg.includes(loc.toLowerCase()));
+    const detectedLocation = locations.find(loc => normalizedMsg.includes(normalize(loc)));
 
     const propertyTypesMap: any = {
       'villa': 'Villa',
@@ -81,15 +85,35 @@ export async function handleChatMessage(req: Request, res: Response) {
     // Detección de necesidad de reforma
     const isRenovationRequest = lowerMsg.includes('reformar') || lowerMsg.includes('reforma') || lowerMsg.includes('renovar') || lowerMsg.includes('restaurar');
 
-    // Detección básica de precio máximo
+    // Detección de precio (Soporta rango e individual)
     let detectedMaxPrice = "";
-    const priceMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/);
-    if (priceMatch) {
-      let val = parseFloat(priceMatch[1].replace(',', '.'));
-      const unit = priceMatch[2];
-      if (unit.startsWith('m')) val *= 1000000;
-      else if (unit === 'k') val *= 1000;
-      detectedMaxPrice = String(Math.floor(val));
+    let detectedMinPrice = "";
+
+    // Regex para rango: "entre 1.5 y 2 millones", "1.5-2m"
+    const rangeRegex = /(\d+(?:\.\d+)?)\s*(?:y|a|e|hasta|-)\s*(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/i;
+    const rangeMatch = lowerMsg.match(rangeRegex);
+
+    if (rangeMatch) {
+      let minVal = parseFloat(rangeMatch[1].replace(',', '.'));
+      let maxVal = parseFloat(rangeMatch[2].replace(',', '.'));
+      const unit = rangeMatch[3].toLowerCase();
+      let multi = 1;
+      if (unit.startsWith('m')) multi = 1000000;
+      else if (unit === 'k') multi = 1000;
+
+      detectedMinPrice = String(Math.floor(minVal * multi));
+      detectedMaxPrice = String(Math.floor(maxVal * multi));
+    } else {
+      // Caso único: "hasta 2 millones", "por 500k"
+      const singleMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/i);
+      if (singleMatch) {
+        let val = parseFloat(singleMatch[1].replace(',', '.'));
+        const unit = singleMatch[2].toLowerCase();
+        let multi = 1;
+        if (unit.startsWith('m')) multi = 1000000;
+        else if (unit === 'k') multi = 1000;
+        detectedMaxPrice = String(Math.floor(val * multi));
+      }
     }
 
     let livePropertiesContext = "";
@@ -104,8 +128,8 @@ export async function handleChatMessage(req: Request, res: Response) {
         searchParams.p_MustHaveFeatures = "Restoration Required";
       }
 
-      // Si detectamos Marbella, buscamos en todo Marbella para encontrar chollos cercanos
       if (detectedLocation) searchParams.p_location = detectedLocation;
+      if (detectedMinPrice) searchParams.p_min = detectedMinPrice;
       if (detectedMaxPrice) searchParams.p_max = detectedMaxPrice;
 
       const liveData = await fetchProperties(searchParams);
@@ -122,12 +146,6 @@ export async function handleChatMessage(req: Request, res: Response) {
           }
           return isDwelling;
         });
-
-        // 1. Separar los que coinciden estrictamente con la zona vs "Chollos cercanos"
-        // (En este caso 'fetchProperties' ya nos filtra por location si se la pasamos)
-        // Pero si el usuario pidió algo muy específico como "Nueva Andalucía", 
-        // podríamos buscar en Marbella general. Para simplificar, asumimos que 
-        // los mejores resultados de la lista son los que presentaremos.
 
         const sortedByValue = [...props].sort((a: any, b: any) => {
           const areaA = a.BuiltArea || 1;
@@ -149,12 +167,16 @@ export async function handleChatMessage(req: Request, res: Response) {
           catalog += `\n- CHOLLO CERCANO: REF ${bargainCandidate.Reference} | ${bargainCandidate.TypeName} en ${bargainCandidate.Location} | ${bargainCandidate.Beds} Dorm | ${bargainCandidate.BuiltArea}m2 | €${bargainCandidate.Price.toLocaleString()} (Valor excepcional)`;
         }
 
+        const priceRangeDesc = (detectedMinPrice && detectedMaxPrice)
+          ? `en el rango de €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M`
+          : (detectedMaxPrice ? `hasta €${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M` : "");
+
         const missingInfoPrompt = (!mentionsBeds || !mentionsBaths) ? "\n\nNOTA: El cliente no ha especificado dormitorios/baños. Pregúntale." : "";
 
         if (catalog) {
-          livePropertiesContext = `\n\n### INVENTARIO SELECCIONADO:\n${catalog}${missingInfoPrompt}\n\nRECUERDA: Máximo 3 matches + 1 chollo cercano si aplica. Usa la frase de "Considerarías algo mejor..." si presentas el chollo.`;
+          livePropertiesContext = `\n\n### INVENTARIO SELECCIONADO ${priceRangeDesc}:\n${catalog}${missingInfoPrompt}\n\nRECUERDA: Máximo 3 matches + 1 chollo cercano si aplica. Usa la frase de "Considerarías algo mejor..." si presentas el chollo.`;
         } else {
-          livePropertiesContext = `\n\nAVISO: No hay coincidencias directas ahora mismo.${missingInfoPrompt}`;
+          livePropertiesContext = `\n\nAVISO: No hemos encontrado propiedades que coincidan exactamente con el rango €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M en nuestro catálogo online ahora mismo. Pero tenemos opciones off-market.${missingInfoPrompt}`;
         }
       }
     } catch (e) {
