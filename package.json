@@ -10,7 +10,8 @@
     "start": "NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
     "db:push": "drizzle-kit push",
-    "monitor:demand": "node scripts/demand-monitor.js"
+    "monitor:demand": "node scripts/demand-monitor.js",
+    "worker": "tsx server/automation/socialPoster.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -63,6 +64,7 @@
     "lucide-react": "^0.545.0",
     "memorystore": "^1.6.7",
     "next-themes": "^0.4.6",
+    "node-cron": "^4.2.1",
     "nodemailer": "^8.0.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -75,6 +77,7 @@
     "react-leaflet": "^5.0.0",
     "react-resizable-panels": "^2.1.9",
     "recharts": "^2.15.4",
+    "sharp": "^0.34.5",
     "sonner": "^2.0.7",
     "swiper": "^12.0.3",
     "tailwind-merge": "^3.3.1",
