@@ -10,63 +10,71 @@ export type DemandProfile = {
     metaDescription: string;
 };
 
-// Growth Marketing & SEO Rules based on weekly trends
+// Growth Marketing & SEO Rules based on weekly trends 2026
 const demandMatrix: Record<string, DemandProfile> = {
     GB: {
         countryCode: "GB",
         propertyType: "Townhouse,Villa",
         preferredLocation: "Marbella,Estepona",
         minPrice: "750000",
-        titleSuffix: "Luxury Villas & Townhouses in Costa del Sol",
-        metaDescription: "Discover premium real estate in Marbella for British investors. Find your dream townhouse or luxury villa with Wanda Estates.",
+        titleSuffix: "Wealth-Building Marbella Real Estate | Rental Yields",
+        metaDescription: "Discover high-yield luxury properties. Wanda Estates specializes in wealth management through Marbella real estate for savvy UK investors.",
     },
     SE: {
         countryCode: "SE",
         propertyType: "Villa",
         preferredLocation: "Marbella,Benahavis",
         minPrice: "1000000",
-        titleSuffix: "Exklusiva villor i Marbella & Benahavís",
-        metaDescription: "Investera i lyxiga och hållbara villor på Solkusten. Wanda Estates hjälper svenska köpare hitta drömboendet.",
+        titleSuffix: "Exklusiva villor i Marbella | Lilla Stockholm",
+        metaDescription: "Investera i hållbara lyxvillor på Solkusten. Vi förstår den skandinaviska smaken för ljus, rymd och kvalitet i Nueva Andalucía.",
     },
     NL: {
         countryCode: "NL",
         propertyType: "Penthouse,Apartment",
         preferredLocation: "Marbella,Sotogrande",
         minPrice: "750000",
-        titleSuffix: "Luxe Penthouses & Appartementen in Marbella",
-        metaDescription: "Op zoek naar luxe vastgoed aan de Costa del Sol? Wanda Estates is uw partner voor penthouses met ROI in Marbella.",
+        titleSuffix: "Marbella Vastgoed Investering | Hoog Rendement",
+        metaDescription: "Zoek u luxe vastgoed met ROI? Wanda Estates is uw partner voor fiscaal-efficiënte investeringen in Marbella en Sotogrande.",
     },
     PL: {
         countryCode: "PL",
         propertyType: "Apartment",
         preferredLocation: "Marbella,Estepona",
         minPrice: "500000",
-        titleSuffix: "Luksusowe Apartamenty na Costa del Sol",
-        metaDescription: "Zainwestuj w luksusowe apartamenty z wysokim ROI w Marbella. Wanda Estates zapewnia pełne wsparcie polskim inwestorom.",
+        titleSuffix: "Luksusowe Apartamenty Marbella | Wysokie ROI",
+        metaDescription: "Nowa przystań inwestycyjna w Hiszpanii. Zainwestuj w luksusowe apartamenty w Marbella z pełnym wsparciem w języku polskim.",
     },
     DE: {
         countryCode: "DE",
         propertyType: "Villa,Finca",
         preferredLocation: "Sotogrande,Benahavis",
         minPrice: "1500000",
-        titleSuffix: "Luxusvillen & Fincas an der Costa del Sol",
-        metaDescription: "Exklusive Immobilien in Marbella und Sotogrande. Wanda Estates hilft deutschen Investoren beim Kauf von Luxusobjekten.",
+        titleSuffix: "Luxusimmobilien Marbella | Deutsche Präzision",
+        metaDescription: "Exklusivität und Diskretion an der Costa del Sol. Investment-Chancen für deutsche Anleger in Marbella, Sotogrande und Benahavís.",
     },
     FR: {
         countryCode: "FR",
         propertyType: "Villa,Penthouse",
         preferredLocation: "Marbella",
         minPrice: "1000000",
-        titleSuffix: "Villas de Luxe & Penthouses à Marbella",
-        metaDescription: "Trouvez votre villa de luxe ou penthouse avec vue mer sur la Costa del Sol. Accompagnement exclusif pour les francophones.",
+        titleSuffix: "Villas de Luxe Marbella | Sanctuaire Méditerranéen",
+        metaDescription: "Découvrez l'art de vivre au soleil. Villas et penthouses de luxe avec vue mer imprenable. Accompagnement exclusif en français.",
+    },
+    IT: {
+        countryCode: "IT",
+        propertyType: "Villa,Penthouse",
+        preferredLocation: "Marbella,Benahavis",
+        minPrice: "1000000",
+        titleSuffix: "Immobiliare di Lusso Marbella | Investimenti 2026",
+        metaDescription: "Investire nel lusso in Costa del Sol. Selezioniamo le migliori opportunità 'Value for Money' per investitori italiani a Marbella.",
     },
     ES: {
         countryCode: "ES",
         propertyType: "Apartment,Villa",
         preferredLocation: "Marbella,Benahavis",
         minPrice: "750000",
-        titleSuffix: "Inmobiliaria de Lujo en Marbella",
-        metaDescription: "Propiedades exclusivas en la Costa del Sol. Áticos, villas de lujo y apartamentos de alto standing con Wanda Estates.",
+        titleSuffix: "Inmobiliaria de Lujo Marbella | Wanda Estates",
+        metaDescription: "Propiedades exclusivas en la Costa del Sol. Áticos, villas de lujo y apartamentos de alto standing con asesoramiento experto.",
     },
 };
 

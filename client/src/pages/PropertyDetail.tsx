@@ -256,8 +256,33 @@ export default function PropertyDetail() {
         </div>
     );
 
+    const jsonLd = property ? {
+        "@context": "https://schema.org/",
+        "@type": "RealEstateListing",
+        "name": property.TypeName,
+        "description": property.Description,
+        "url": window.location.href,
+        "image": images[0],
+        "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": property.Price,
+            "priceCurrency": property.Currency || "EUR"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": property.Location || property.Area,
+            "addressRegion": "Costa del Sol",
+            "addressCountry": "ES"
+        }
+    } : null;
+
     return (
         <div className="min-h-screen bg-white">
+            {jsonLd && (
+                <script type="application/ld+json">
+                    {JSON.stringify(jsonLd)}
+                </script>
+            )}
             <Navbar />
 
             {/* Gallery Header */}
