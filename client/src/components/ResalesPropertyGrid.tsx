@@ -356,7 +356,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                         >
                                             Todas las áreas
                                         </button>
-                                        {RESALES_LOCATIONS.map(loc => (
+                                        {[...RESALES_LOCATIONS].sort().map(loc => (
                                             <button
                                                 key={loc}
                                                 onClick={() => setFilters({ ...filters, p_location: loc })}
