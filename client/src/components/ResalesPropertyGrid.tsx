@@ -299,6 +299,20 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                             />
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#2B5F8C] transition-colors">Alquiler Larga Temporada</span>
                         </label>
+
+                        <label className="flex items-center gap-3 cursor-pointer group">
+                            <Checkbox
+                                checked={filters.p_MustHaveFeatures.includes("Restoration Required")}
+                                onCheckedChange={(checked) => {
+                                    const feature = "Restoration Required";
+                                    const newFeats = checked
+                                        ? [...filters.p_MustHaveFeatures, feature]
+                                        : filters.p_MustHaveFeatures.filter(f => f !== feature);
+                                    setFilters({ ...filters, p_MustHaveFeatures: newFeats });
+                                }}
+                            />
+                            <span className="text-xs font-bold uppercase tracking-widest text-[#C9A961] group-hover:text-[#2B5F8C] transition-colors">Para Reformar</span>
+                        </label>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-8">

@@ -78,6 +78,9 @@ export async function handleChatMessage(req: Request, res: Response) {
     const mentionsBeds = lowerMsg.includes('dormitorio') || lowerMsg.includes('habitacion') || lowerMsg.includes('habitación') || lowerMsg.includes('beds') || /\d+\s*dorm/.test(lowerMsg);
     const mentionsBaths = lowerMsg.includes('baño') || lowerMsg.includes('baths') || lowerMsg.includes('aseo') || /\d+\s*baño/.test(lowerMsg);
 
+    // Detección de necesidad de reforma
+    const isRenovationRequest = lowerMsg.includes('reformar') || lowerMsg.includes('reforma') || lowerMsg.includes('renovar') || lowerMsg.includes('restaurar');
+
     // Detección básica de precio máximo
     let detectedMaxPrice = "";
     const priceMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/);
@@ -96,6 +99,10 @@ export async function handleChatMessage(req: Request, res: Response) {
         p_PageSize: '60',
         p_PropertyTypes: detectedType,
       };
+
+      if (isRenovationRequest) {
+        searchParams.p_MustHaveFeatures = "Restoration Required";
+      }
 
       // Si detectamos Marbella, buscamos en todo Marbella para encontrar chollos cercanos
       if (detectedLocation) searchParams.p_location = detectedLocation;
