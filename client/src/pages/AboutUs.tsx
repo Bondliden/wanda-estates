@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import teamMeeting from "@assets/generated_images/real_estate_agent_team_meeting.png";
 import { useTranslation } from "react-i18next";
+import { Link } from "wouter";
 
 export default function AboutUs() {
   const { t } = useTranslation();
@@ -47,13 +48,14 @@ export default function AboutUs() {
                 )}
               </div>
 
-              <div className="mt-8">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Sig_JME.png"
-                  alt="Signature"
-                  className="h-16 opacity-60"
-                />
-                <p className="text-sm text-gray-400 mt-2 font-serif italic">{t("about.founder")}</p>
+              <div className="mt-8 border-t border-gray-100 pt-6">
+                <div
+                  className="text-4xl text-[#3b5998] mb-2"
+                  style={{ fontFamily: "'Brush Script MT', 'Source Code Pro', 'Bradley Hand', 'Caveat', cursive", fontStyle: "italic", letterSpacing: "1px" }}
+                >
+                  José María Esquerdo
+                </div>
+                <p className="text-sm text-gray-500 font-serif italic">— {t("about.founder")}</p>
               </div>
             </div>
 
@@ -100,9 +102,11 @@ export default function AboutUs() {
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
             {t("about.cta.desc")}
           </p>
-          <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-10 py-6">
-            {t("about.cta.button")}
-          </Button>
+          <Link href="/contact">
+            <Button className="bg-[#2ea3f2] hover:bg-[#2ea3f2]/90 text-white rounded-none uppercase tracking-wider font-bold px-10 py-6">
+              {t("about.cta.button")}
+            </Button>
+          </Link>
         </div>
       </section>
 

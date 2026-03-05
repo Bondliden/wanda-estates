@@ -26,7 +26,7 @@ const neighborhoods: Neighborhood[] = [
         desc: "Ultra-luxury villas with panoramic views",
         count: "30+",
         minPrice: "€3M+",
-        image: "/sierra_blanca_villa_1772497375486.png"
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/La_Concha_Marbella.jpg/1200px-La_Concha_Marbella.jpg"
     },
     {
         id: "la-zagaleta",
@@ -36,17 +36,17 @@ const neighborhoods: Neighborhood[] = [
         desc: "The most exclusive residential enclave in Europe",
         count: "45+",
         minPrice: "€5M+",
-        image: "/la_zagaleta_aerial_1772497357614.png"
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Benahav%C3%ADs_-_Spain_%2827137351624%29.jpg/1200px-Benahav%C3%ADs_-_Spain_%2827137351624%29.jpg"
     },
     {
         id: "puerto-banus",
         name: "Puerto Banús",
         location: "Marbella",
-        query: "Puerto Banus",
+        query: "Puerto Banús",
         desc: "The heart of Mediterranean glamour",
         count: "70+",
         minPrice: "€1M+",
-        image: "/puerto_banus_marina_1772497395674.png"
+        image: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Puerto_Ban%C3%BAs_-_Marbella_-_Spain.jpg"
     },
     {
         id: "nueva-andalucia",
@@ -56,7 +56,7 @@ const neighborhoods: Neighborhood[] = [
         desc: "The valley of golf and tranquility",
         count: "100+",
         minPrice: "€1.5M+",
-        image: "/nueva_andalucia_golf_1772497410980.png"
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg/1200px-Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg"
     }
 ];
 
@@ -95,12 +95,13 @@ export default function ExclusiveNeighborhoods() {
                                 >
                                     <motion.div
                                         whileHover={{ y: -10 }}
-                                        onClick={() => {
-                                            setActiveTab(n);
-                                        }}
+                                        onMouseEnter={() => setActiveTab(n)}
                                         className={`relative aspect-[3/4] overflow-hidden group cursor-pointer shadow-xl transition-all duration-500 rounded-sm ${activeTab.id === n.id ? "ring-2 ring-[#C9A961] ring-offset-4 ring-offset-white" : "grayscale-[50%] hover:grayscale-0"
                                             }`}
                                     >
+                                        <Link href={`/properties-for-sale?p_location=${encodeURIComponent(n.query)}`} className="absolute inset-0 z-20">
+                                            <span className="sr-only">View properties in {n.name}</span>
+                                        </Link>
                                         <img
                                             src={n.image}
                                             alt={n.name}
@@ -108,7 +109,7 @@ export default function ExclusiveNeighborhoods() {
                                         />
                                         <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-500 ${activeTab.id === n.id ? "opacity-100" : "opacity-70"}`}></div>
 
-                                        <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                                        <div className="absolute inset-0 p-6 flex flex-col justify-end z-10 pointer-events-none">
                                             <h3 className="text-2xl font-serif text-white mb-1">{n.name}</h3>
                                             <p className="text-white/60 text-[10px] uppercase tracking-widest mb-4 h-8 overflow-hidden line-clamp-2">
                                                 {n.desc}
@@ -127,7 +128,7 @@ export default function ExclusiveNeighborhoods() {
                                         </div>
 
                                         {activeTab.id === n.id && (
-                                            <div className="absolute top-4 right-4 bg-[#C9A961] p-1.5 rounded-full shadow-lg">
+                                            <div className="absolute top-4 right-4 bg-[#C9A961] p-1.5 rounded-full shadow-lg z-10 pointer-events-none">
                                                 <LayoutGrid className="w-4 h-4 text-white" />
                                             </div>
                                         )}

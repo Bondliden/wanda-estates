@@ -8,7 +8,7 @@ import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
 import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
 import PropertyOfTheMonth from "@/components/PropertyOfTheMonth";
 
-// Component force refresh: 2026-03-04 15:00
+// Component force refresh: 2026-03-05 13:20
 export default function Home() {
     const { t } = useTranslation();
 
