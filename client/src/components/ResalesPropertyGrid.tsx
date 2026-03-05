@@ -179,20 +179,10 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                 p_sort: searchFilters.p_sort,
                 p_PageSize: '18',
                 p_PageIndex: String(page),
+                searchMode: searchFilters.searchMode
             };
 
-            // Sync URL
-            const urlParams = new URLSearchParams();
-            Object.entries(params).forEach(([key, val]) => {
-                if (val) urlParams.set(key, val as string);
-            });
-            urlParams.set("searchMode", searchFilters.searchMode);
-            if (searchFilters.p_MustHaveFeatures.length > 0) urlParams.set("p_MustHaveFeatures", searchFilters.p_MustHaveFeatures.join(","));
-            if (searchFilters.p_NiceToHaveFeatures.length > 0) urlParams.set("p_NiceToHaveFeatures", searchFilters.p_NiceToHaveFeatures.join(","));
-
-            const newRelativePathQuery = window.location.pathname + '?' + urlParams.toString();
-            window.history.pushState(null, '', newRelativePathQuery);
-
+            // Add optional filters
             if (searchFilters.p_location) params.p_location = searchFilters.p_location;
             if (searchFilters.p_beds) params.p_beds = searchFilters.p_beds;
             if (searchFilters.p_baths) params.p_baths = searchFilters.p_baths;
@@ -206,6 +196,17 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
             // Adjust categories for rent if needed
             if (searchFilters.searchMode === "rent_long") params.p_RentalType = "LongTerm";
             if (searchFilters.searchMode === "rent_short") params.p_RentalType = "ShortTerm";
+
+            // Sync URL - NOW INCLUDES ALL PARAMS
+            const urlParams = new URLSearchParams();
+            Object.entries(params).forEach(([key, val]) => {
+                if (val && key !== 'p_RentalType') { // Don't sync internal API markers
+                    urlParams.set(key, val as string);
+                }
+            });
+
+            const newRelativePathQuery = window.location.pathname + '?' + urlParams.toString();
+            window.history.pushState(null, '', newRelativePathQuery);
 
             const queryParams = new URLSearchParams(params).toString();
             const response = await fetch(`/api/properties?${queryParams}`);
