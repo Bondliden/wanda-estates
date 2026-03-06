@@ -14,7 +14,8 @@ import ContactUs from "@/pages/ContactUs";
 import PropertyDetail from "@/pages/PropertyDetail";
 import InvestmentGuide from "@/pages/InvestmentGuide";
 import ChatBot from "@/components/ChatBot";
-import React from "react";
+import FloatingBanner from "@/components/FloatingBanner";
+import React, { useState } from "react";
 
 console.log("[App.tsx] Imports done, defining components");
 
@@ -50,10 +51,12 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/properties-for-sale" component={PropertiesForSale} />
+      <Route path="/listings" component={PropertiesForSale} />
       <Route path="/properties/:id" component={PropertyDetail} />
       <Route path="/new-developments" component={NewDevelopments} />
       <Route path="/services" component={Services} />
       <Route path="/about-us" component={AboutUs} />
+      <Route path="/contact" component={ContactUs} />
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/investment-guide" component={InvestmentGuide} />
       <Route component={NotFound} />
@@ -62,6 +65,8 @@ function Router() {
 }
 
 function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -69,7 +74,8 @@ function App() {
           <Toaster />
           <Sonner position="top-right" />
           <Router />
-          <ChatBot />
+          <FloatingBanner isChatOpen={isChatOpen} />
+          <ChatBot isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>

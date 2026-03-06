@@ -37,7 +37,7 @@ export default function Navbar() {
     { name: t("nav.developments"), href: "/new-developments" },
     { name: t("nav.services"), href: "/services" },
     { name: t("nav.about"), href: "/about-us" },
-    { name: t("nav.contact"), href: "/contact-us" },
+    { name: t("nav.contact"), href: "/contact" },
   ];
 
   return (
@@ -46,11 +46,11 @@ export default function Navbar() {
         {/* Logo Area */}
         <div className="w-[200px] md:w-[274px]">
           <Link href="/" className="block">
-              <img 
-                src="/wanda_logo_horizontal.png" 
-                alt="Wanda Estates" 
-                className="w-full h-auto object-contain"
-              />
+            <img
+              src="/wanda_logo_horizontal.png"
+              alt="Wanda Estates"
+              className="w-full h-auto object-contain"
+            />
           </Link>
         </div>
 
@@ -58,15 +58,15 @@ export default function Navbar() {
         <div className="hidden lg:flex space-x-6 items-center">
           {links.map((link) => (
             <Link key={link.href} href={link.href} className="text-sm font-bold uppercase hover:text-[#e09900] transition-colors">
-                {link.name}
+              {link.name}
             </Link>
           ))}
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="text-white hover:text-[#e09900] hover:bg-white/10 ml-4 font-bold uppercase flex items-center gap-2"
               >
                 <Globe className="w-4 h-4" />
@@ -76,7 +76,7 @@ export default function Navbar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white text-[#2c3e50]">
               {languages.map((lang) => (
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   key={lang.code}
                   onClick={() => changeLanguage(lang.code)}
                   className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
@@ -91,37 +91,37 @@ export default function Navbar() {
 
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 lg:hidden">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-white hover:text-[#e09900] hover:bg-white/10 font-bold uppercase p-0 h-auto flex items-center gap-1"
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white hover:text-[#e09900] hover:bg-white/10 font-bold uppercase p-0 h-auto flex items-center gap-1"
+              >
+                {currentLang.code.toUpperCase()}
+                <ChevronDown className="w-3 h-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white text-[#2c3e50]">
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => changeLanguage(lang.code)}
+                  className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
                 >
-                  {currentLang.code.toUpperCase()}
-                  <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white text-[#2c3e50]">
-                {languages.map((lang) => (
-                  <DropdownMenuItem 
-                    key={lang.code}
-                    onClick={() => changeLanguage(lang.code)}
-                    className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
-                  >
-                    <span className="text-lg">{lang.flag}</span>
-                    {lang.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <button 
-              className="text-white"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+                  <span className="text-lg">{lang.flag}</span>
+                  {lang.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <button
+            className="text-white"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
 
@@ -130,13 +130,13 @@ export default function Navbar() {
         <div className="lg:hidden bg-[#013b7a] p-4 absolute top-full left-0 right-0 border-t border-white/10 z-50">
           <div className="flex flex-col space-y-4">
             {links.map((link) => (
-              <Link 
-                key={link.href} 
+              <Link
+                key={link.href}
                 href={link.href}
                 className="text-sm font-bold uppercase text-white hover:text-[#e09900]"
                 onClick={() => setIsOpen(false)}
               >
-                  {link.name}
+                {link.name}
               </Link>
             ))}
           </div>

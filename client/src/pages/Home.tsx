@@ -5,7 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
-import ExclusiveNeighborhoods from "@/components/ExclusiveNeighborhoods";
+import ZoneSection from "@/components/ZoneSection";
 import PropertyOfTheMonth from "@/components/PropertyOfTheMonth";
 
 // Component force refresh: 2026-03-05 13:20
@@ -43,8 +43,30 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* Exclusive Neighborhoods Section */}
-                <ExclusiveNeighborhoods />
+                {/* Exclusive Neighborhoods Sections */}
+                <ZoneSection
+                    zoneName="La Zagaleta"
+                    locationQuery="La Zagaleta"
+                    heroImage="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Benahav%C3%ADs_-_Spain_%2827137351624%29.jpg/1200px-Benahav%C3%ADs_-_Spain_%2827137351624%29.jpg"
+                />
+
+                <ZoneSection
+                    zoneName="Sierra Blanca"
+                    locationQuery="Sierra Blanca"
+                    heroImage="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/La_Concha_Marbella.jpg/1200px-La_Concha_Marbella.jpg"
+                />
+
+                <ZoneSection
+                    zoneName="Puerto Banús"
+                    locationQuery="Puerto Banús"
+                    heroImage="https://upload.wikimedia.org/wikipedia/commons/4/4b/Puerto_Ban%C3%BAs_-_Marbella_-_Spain.jpg"
+                />
+
+                <ZoneSection
+                    zoneName="Nueva Andalucía"
+                    locationQuery="Nueva Andalucia"
+                    heroImage="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg/1200px-Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg"
+                />
 
                 {/* Property of the Month Section */}
                 <PropertyOfTheMonth />

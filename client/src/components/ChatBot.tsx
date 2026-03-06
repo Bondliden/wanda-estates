@@ -8,9 +8,13 @@ interface ChatMessage {
   content: string;
 }
 
-export default function ChatBot() {
+interface ChatBotProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -124,11 +128,10 @@ export default function ChatBot() {
                 </div>
               )}
               <div
-                className={`max-w-[75%] p-3 rounded-lg text-sm ${
-                  msg.role === "user"
+                className={`max-w-[75%] p-3 rounded-lg text-sm ${msg.role === "user"
                     ? "bg-[#2B5F8C] text-white rounded-br-none"
                     : "bg-white text-gray-700 shadow-sm rounded-bl-none"
-                }`}
+                  }`}
               >
                 {msg.content}
               </div>
