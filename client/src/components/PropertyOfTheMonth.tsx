@@ -5,6 +5,7 @@ import { Link } from "wouter";
 
 export default function PropertyOfTheMonth() {
     const { t } = useTranslation();
+    console.log("PropertyOfTheMonth Build ID:", t("home.featured.build_id"));
 
     // ID y Referencia fijos para esta propiedad específica
     const propertyId = "R5321632";

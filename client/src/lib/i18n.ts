@@ -158,6 +158,7 @@ const resources = {
       "home.featured.property.total_land": "Total Land",
       "home.featured.property.opportunity_price": "Opportunity Price",
       "home.featured.property.view_details": "View Details",
+      "home.featured.build_id": "BUILD_2026_03_06_13_38",
 
       "properties.cta": "Request Private Dossier",
       "neighborhoods.title": "Exclusive Neighborhoods",
@@ -229,6 +230,7 @@ const resources = {
       "home.featured.property.total_land": "Terreno Total",
       "home.featured.property.opportunity_price": "Precio de Oportunidad",
       "home.featured.property.view_details": "Ver Detalles",
+      "home.featured.build_id": "BUILD_2026_03_06_13_38",
 
 
       "properties.title": "Propiedades en Venta",
