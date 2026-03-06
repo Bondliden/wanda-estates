@@ -29,7 +29,7 @@ export default function FloatingBanner({ isChatOpen }: FloatingBannerProps) {
                     </div>
 
                     <p className="text-[#2c3e50] text-xs leading-relaxed font-light italic">
-                        "¡Hola! Soy su asesor personal de inmuebles de lujo. ¿Cómo puedo ayudarle a encontrar su santuario mediterráneo?"
+                        "¡Hola! Soy Wanda, su asesor personal de inmuebles de lujo. ¿Cómo puedo ayudarle a encontrar su santuario mediterráneo?"
                     </p>
 
                     <div className="flex items-center justify-between mt-2">
