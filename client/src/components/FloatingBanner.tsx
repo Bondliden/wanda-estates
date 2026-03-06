@@ -26,7 +26,7 @@ export default function FloatingBanner({ isChatOpen }: FloatingBannerProps) {
                     borderRadius: isMinimized ? "100px" : "8px"
                 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className={`fixed bottom - 24 right - 8 z - [45] bg - white shadow - [0_20px_50px_rgba(0, 0, 0, 0.15)] border border - [#C9A961] / 20 cursor - pointer group transition - all duration - 500 hover: shadow - [0_30px_60px_rgba(0, 0, 0, 0.2)] overflow - hidden flex items - center justify - center`}
+                className={`fixed bottom-24 right-8 z-[45] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[#C9A961]/20 cursor-pointer group transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] overflow-hidden flex items-center justify-center`}
                 onClick={() => {
                     if (isMinimized) {
                         setIsMinimized(false);
