@@ -15,7 +15,7 @@ export default function PropertyOfTheMonth() {
         BuiltArea: 620,
         PlotArea: 31000,
         Location: "Mijas Golg • Costa del Sol",
-        Image: "/images/featured/R5321632.jpg?v=5"
+        Image: "/images/featured/R5321632.jpg?v=6"
     };
 
     const getWhatsAppUrl = (ref: string) => {
