@@ -1,0 +1,17 @@
+{
+    "name": "Wanda Estates",
+    "short_name": "Wanda",
+    "description": "Inmobiliaria de Lujo en Costa del Sol",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2B5F8C",
+    "icons": [
+        {
+            "src": "/pwa-icon.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        }
+    ]
+}
