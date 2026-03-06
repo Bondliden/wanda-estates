@@ -55,7 +55,15 @@ export default function ZoneSection({ zoneName, locationQuery, heroImage }: Zone
             const response = await fetch(`/api/properties?${params.toString()}`);
             if (!response.ok) throw new Error("Failed to fetch properties");
             const result = await response.json();
-            return result.success ? (Array.isArray(result.data.Property) ? result.data.Property : [result.data.Property]) : [];
+            let properties = result.success ? (Array.isArray(result.data.Property) ? result.data.Property : [result.data.Property]) : [];
+
+            // Sort by Value for Money (Price / BuiltArea)
+            // Lower price per square meter = Better value
+            return properties.sort((a: any, b: any) => {
+                const valA = (a.BuiltArea && a.BuiltArea > 0) ? (a.Price / a.BuiltArea) : Infinity;
+                const valB = (b.BuiltArea && b.BuiltArea > 0) ? (b.Price / b.BuiltArea) : Infinity;
+                return valA - valB;
+            });
         },
         staleTime: 1000 * 60 * 5 // 5 minutes
     });
@@ -148,7 +156,7 @@ export default function ZoneSection({ zoneName, locationQuery, heroImage }: Zone
                                 {t("zone.catalog", { zone: zoneName })}
                             </h3>
                             <p className="text-[#C9A961] text-xs font-semibold uppercase tracking-widest mt-1">
-                                {t("zone.exclusive_selection", "Propiedades de lujo seleccionadas")}
+                                {t("zone.exclusive_selection", "Oportunidades \"Value for Money\": Propiedades de lujo seleccionadas")}
                             </p>
                         </div>
                         <div className="flex gap-2">

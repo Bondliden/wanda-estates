@@ -8,15 +8,15 @@ export default function PropertyOfTheMonth() {
 
     // Puedes cambiar estos datos fácilmente para mostrar la propiedad que quieras cada mes
     const featuredProperty = {
-        Id: "R4814416",
-        Title: "Villa Independiente en Mijas",
-        Price: 1000000,
-        Beds: 4,
-        Baths: 3,
-        BuiltArea: 820,
-        PlotArea: 1727,
-        Location: "Mijas, Costa del Sol",
-        Image: "https://cdn.resales-online.com/public/6u5vbuh1hk/properties/d8b977ed62ab11ef90df0217bc231ef4/w400/1-8feb9a13440344d11ba504bcb1dd499c.jpg?v=1758121777"
+        Id: "R5321632",
+        Title: "Mansión Exclusiva con Vistas Infinitas",
+        Price: 12500000,
+        Beds: 7,
+        Baths: 8,
+        BuiltArea: 1200,
+        PlotArea: 5000,
+        Location: "La Zagaleta, Benahavís",
+        Image: "/images/featured/R5321632.jpg?v=2"
     };
 
     const getWhatsAppUrl = (ref: string) => {
@@ -26,7 +26,7 @@ export default function PropertyOfTheMonth() {
     };
 
     return (
-        <section className="py-24 bg-[#f8f9fa] border-y border-gray-100 relative overflow-hidden">
+        <section className="pt-0 pb-24 bg-[#f8f9fa] border-y border-gray-100 relative overflow-hidden">
             {/* Background elements for premium feel */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-[#2c1810]/5 -skew-x-12 transform translate-x-20"></div>
 
@@ -63,7 +63,7 @@ export default function PropertyOfTheMonth() {
                             <div className="h-px w-20 bg-[#C9A961] mb-8"></div>
 
                             <p className="text-gray-500 leading-relaxed mb-10 text-lg font-light italic">
-                                "Una villa independiente con 820 m² construidos sobre una parcela de 1.727 m² en uno de los entornos más tranquilos de la Costa del Sol. Amplio jardín privado, piscina y vistas panorámicas."
+                                "Una propiedad incomparable situada en el enclave más prestigioso de Europa. Esta mansión ofrece vistas panorámicas al mar de 360 grados, privacidad absoluta y un diseño arquitectónico de vanguardia con acabados de ultra-lujo."
                             </p>
                         </div>
 

@@ -8,7 +8,7 @@ import DynamicFeaturedProperties from "@/components/DynamicFeaturedProperties";
 import ZoneSection from "@/components/ZoneSection";
 import PropertyOfTheMonth from "@/components/PropertyOfTheMonth";
 
-// Component force refresh: 2026-03-05 13:20
+// Component force refresh: 2026-03-06 09:50
 export default function Home() {
     const { t } = useTranslation();
 
@@ -18,30 +18,11 @@ export default function Home() {
             <main>
                 <Hero />
 
-                {/* Featured Property Section */}
-                <section className="py-12 bg-white">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-wrap items-center mb-12">
-                            <div className="w-full md:w-1/4">
-                                <div className="bg-[#2c3e50] text-white py-3 px-6 text-center uppercase tracking-wider text-sm font-semibold">
-                                    {t("home.featured.title")}
-                                </div>
-                            </div>
-                            <div className="w-full md:w-3/4 pl-0 md:pl-4 mt-4 md:mt-0">
-                                <div className="h-px bg-gray-200 w-full"></div>
-                            </div>
-                        </div>
+                {/* Propiedad del Mes - Maximum Prominence */}
+                <PropertyOfTheMonth />
 
-                        <div className="text-center mb-12 max-w-4xl mx-auto px-4">
-                            <p className="text-2xl md:text-3xl font-serif text-[#2c3e50] mb-6 italic leading-relaxed">
-                                {t("home.featured.quote.text", "«El verdadero lujo es la libertad de espíritu; es la paz interior lo que nos permite disfrutar de las cosas bellas del mundo sin ser esclavos de ellas.»")}
-                            </p>
-                            <p className="text-lg font-light text-[#e09900] uppercase tracking-widest">— Oscar Wilde</p>
-                        </div>
-
-                        <DynamicFeaturedProperties />
-                    </div>
-                </section>
+                {/* Dynamic Featured Properties Carousel */}
+                <DynamicFeaturedProperties />
 
                 {/* Exclusive Neighborhoods Sections */}
                 <ZoneSection
@@ -68,8 +49,6 @@ export default function Home() {
                     heroImage="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg/1200px-Golf_club_Las_Brisas_%28Nueva_Andalucia%29-105.jpg"
                 />
 
-                {/* Property of the Month Section */}
-                <PropertyOfTheMonth />
 
                 {/* Brand Statement Section - Bold, Large, Italic + Coastal Living Image */}
                 <section className="relative py-28 overflow-hidden">
