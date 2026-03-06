@@ -9,14 +9,15 @@ export default function PropertyOfTheMonth() {
     // Puedes cambiar estos datos fácilmente para mostrar la propiedad que quieras cada mes
     const featuredProperty = {
         Id: "R5321632",
-        Title: "Mansión Exclusiva con Vistas Infinitas",
+        Reference: "R5321632",
+        Title: "Mansión de Ultra-Lujo en La Zagaleta",
         Price: 12500000,
         Beds: 7,
         Baths: 8,
         BuiltArea: 1200,
         PlotArea: 5000,
         Location: "La Zagaleta, Benahavís",
-        Image: "/images/featured/R5321632.jpg?v=2"
+        Image: "/images/featured/R5321632.jpg?v=3"
     };
 
     const getWhatsAppUrl = (ref: string) => {

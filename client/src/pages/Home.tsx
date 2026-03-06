@@ -21,8 +21,30 @@ export default function Home() {
                 {/* Propiedad del Mes - Maximum Prominence */}
                 <PropertyOfTheMonth />
 
-                {/* Dynamic Featured Properties Carousel */}
-                <DynamicFeaturedProperties />
+                {/* Dynamic Featured Properties Carousel Section */}
+                <section className="py-12 bg-white">
+                    <div className="container mx-auto px-4">
+                        <div className="flex flex-wrap items-center mb-12">
+                            <div className="w-full md:w-1/4">
+                                <div className="bg-[#2c3e50] text-white py-3 px-6 text-center uppercase tracking-wider text-sm font-semibold">
+                                    {t("home.featured.title")}
+                                </div>
+                            </div>
+                            <div className="w-full md:w-3/4 pl-0 md:pl-4 mt-4 md:mt-0">
+                                <div className="h-px bg-gray-200 w-full"></div>
+                            </div>
+                        </div>
+
+                        <div className="text-center mb-12 max-w-4xl mx-auto px-4">
+                            <p className="text-2xl md:text-3xl font-serif text-[#2c3e50] mb-6 italic leading-relaxed">
+                                {t("home.featured.quote.text", "«El verdadero lujo es la libertad de espíritu; es la paz interior lo que nos permite disfrutar de las cosas bellas del mundo sin ser esclavos de ellas.»")}
+                            </p>
+                            <p className="text-lg font-light text-[#e09900] uppercase tracking-widest">— Oscar Wilde</p>
+                        </div>
+
+                        <DynamicFeaturedProperties />
+                    </div>
+                </section>
 
                 {/* Exclusive Neighborhoods Sections */}
                 <ZoneSection

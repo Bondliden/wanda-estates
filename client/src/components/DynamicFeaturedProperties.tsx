@@ -73,13 +73,6 @@ export default function DynamicFeaturedProperties() {
     }
 
     return (
-        <>
-            <div className="text-center mb-8">
-                <span className="inline-block bg-[#e09900] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 mb-2">
-                    {t("home.featured.title")}
-                </span>
-                <p className="text-gray-500 text-sm">{t("home.featured.desc")}</p>
-            </div>
 
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex touch-pan-y mt-2 mb-2 gap-4">
