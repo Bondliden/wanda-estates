@@ -10,19 +10,17 @@ export default function PropertyOfTheMonth() {
     const featuredProperty = {
         Id: "R5321632",
         Reference: "R5321632",
-        Title: "Mansión de Ultra-Lujo en La Zagaleta",
-        Price: 12500000,
-        Beds: 7,
-        Baths: 8,
-        BuiltArea: 1200,
-        PlotArea: 5000,
-        Location: "La Zagaleta, Benahavís",
-        Image: "/images/featured/R5321632.jpg?v=3"
+        Title: "Oportunidad de Inversión: Terreno de Lujo",
+        Price: 750000,
+        BuiltArea: 620,
+        PlotArea: 31000,
+        Location: "Mijas Golg • Costa del Sol",
+        Image: "/images/featured/R5321632.jpg?v=4"
     };
 
     const getWhatsAppUrl = (ref: string) => {
-        const phone = "34641113518"; // El número real de Wanda Estates que vi en otros componentes
-        const message = encodeURIComponent(`Hola Wanda Estates, me interesa la Propiedad del Mes (${ref}) que he visto en la web. ¿Podrían darme más información?`);
+        const phone = "34641113518";
+        const message = encodeURIComponent(`Hola Wanda Estates, me interesa el Terreno del Mes (${ref}) que he visto en la web. ¿Podrían darme más información?`);
         return `https://wa.me/${phone}?text=${message}`;
     };
 
@@ -56,40 +54,35 @@ export default function PropertyOfTheMonth() {
                     <div className="w-full md:w-1/2">
                         <div className="mb-8">
                             <p className="text-[#C9A961] font-medium tracking-[0.3em] uppercase text-xs mb-4">
-                                Mijas • Costa del Sol • Málaga
+                                {featuredProperty.Location}
                             </p>
-                            <h2 className="text-4xl md:text-6xl font-serif text-[#2c3e50] leading-tight mb-6">
+                            <h2 className="text-4xl md:text-5xl font-serif text-[#2c3e50] leading-tight mb-6">
                                 {featuredProperty.Title}
                             </h2>
                             <div className="h-px w-20 bg-[#C9A961] mb-8"></div>
 
                             <p className="text-gray-500 leading-relaxed mb-10 text-lg font-light italic">
-                                "Una propiedad incomparable situada en el enclave más prestigioso de Europa. Esta mansión ofrece vistas panorámicas al mar de 360 grados, privacidad absoluta y un diseño arquitectónico de vanguardia con acabados de ultra-lujo."
+                                "Oportunidad única: 31.000 m² de terreno exclusivo con la posibilidad de construir una mansión de ensueño de hasta 620 m². Un lienzo en blanco con vistas espectaculares para crear su santuario privado en un entorno natural incomparable de la Costa del Sol."
                             </p>
                         </div>
 
                         {/* Stats Grid */}
-                        <div className="grid grid-cols-3 gap-8 mb-12 border-y border-gray-200 py-8">
+                        <div className="grid grid-cols-2 gap-8 mb-12 border-y border-gray-200 py-8">
                             <div className="text-center md:text-left">
-                                <Bed className="w-5 h-5 text-[#C9A961] mx-auto md:mx-0 mb-3" />
-                                <p className="text-2xl font-serif text-[#2c3e50]">{featuredProperty.Beds}</p>
-                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Dormitorios</p>
-                            </div>
-                            <div className="text-center md:text-left border-x border-gray-100">
                                 <Maximize className="w-5 h-5 text-[#C9A961] mx-auto md:mx-0 mb-3" />
                                 <p className="text-2xl font-serif text-[#2c3e50]">{featuredProperty.BuiltArea} m²</p>
-                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Construidos</p>
+                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Potencial Edificable</p>
                             </div>
-                            <div className="text-center md:text-left">
-                                <Bath className="w-5 h-5 text-[#C9A961] mx-auto md:mx-0 mb-3" />
-                                <p className="text-2xl font-serif text-[#2c3e50]">{(featuredProperty as any).PlotArea?.toLocaleString() || featuredProperty.Baths} m²</p>
-                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Parcela</p>
+                            <div className="text-center md:text-left border-l border-gray-100 pl-8">
+                                <Maximize className="w-5 h-5 text-[#C9A961] mx-auto md:mx-0 mb-3" />
+                                <p className="text-2xl font-serif text-[#2c3e50]">{featuredProperty.PlotArea?.toLocaleString()} m²</p>
+                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Terreno Total</p>
                             </div>
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-center gap-6">
                             <div className="flex-grow text-center sm:text-left">
-                                <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Precio</p>
+                                <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Precio de Oportunidad</p>
                                 <p className="text-3xl md:text-4xl font-serif text-[#2c3e50]">
                                     €{featuredProperty.Price.toLocaleString()}
                                 </p>
