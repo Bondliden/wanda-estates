@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FloatingBannerProps {
     isChatOpen: boolean;
 }
 
 export default function FloatingBanner({ isChatOpen }: FloatingBannerProps) {
+    const { t } = useTranslation();
     const [isMinimized, setIsMinimized] = useState(false);
 
     if (isChatOpen) return null;
@@ -24,7 +26,7 @@ export default function FloatingBanner({ isChatOpen }: FloatingBannerProps) {
                     borderRadius: isMinimized ? "100px" : "8px"
                 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className={`fixed bottom-24 right-8 z-[45] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[#C9A961]/20 cursor-pointer group transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] overflow-hidden flex items-center justify-center`}
+                className={`fixed bottom - 24 right - 8 z - [45] bg - white shadow - [0_20px_50px_rgba(0, 0, 0, 0.15)] border border - [#C9A961] / 20 cursor - pointer group transition - all duration - 500 hover: shadow - [0_30px_60px_rgba(0, 0, 0, 0.2)] overflow - hidden flex items - center justify - center`}
                 onClick={() => {
                     if (isMinimized) {
                         setIsMinimized(false);
@@ -51,18 +53,18 @@ export default function FloatingBanner({ isChatOpen }: FloatingBannerProps) {
                                 W
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] text-[#C9A961] font-bold uppercase tracking-[0.2em]">Asesor Personal</span>
-                                <span className="text-[#1a3a54] text-sm font-bold leading-none">Concierge de Lujo 24/7</span>
+                                <span className="text-[10px] text-[#C9A961] font-bold uppercase tracking-[0.2em]">{t("chat.advisor")}</span>
+                                <span className="text-[#1a3a54] text-sm font-bold leading-none">{t("chat.subtitle")}</span>
                             </div>
                         </div>
 
                         <p className="text-[#2c3e50] text-xs leading-relaxed font-light italic">
-                            "¡Hola! Pregúnteme ahora y le daré opciones directas para encontrar la casa de sus sueños."
+                            "{t("chat.banner")}"
                         </p>
 
                         <div className="flex items-center justify-between mt-2">
                             <span className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Online ahora
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> {t("chat.status")}
                             </span>
                             <motion.span
                                 animate={{ x: [0, 5, 0] }}

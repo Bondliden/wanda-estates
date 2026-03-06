@@ -14,6 +14,7 @@ interface ChatMessage {
 interface ChatRequest {
   message: string;
   conversationHistory?: ChatMessage[];
+  language?: string;
 }
 
 interface ChatResponse {
@@ -46,7 +47,7 @@ const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, inmobi
 
 export async function handleChatMessage(req: Request, res: Response) {
   try {
-    const { message, conversationHistory = [] }: ChatRequest = req.body;
+    const { message, conversationHistory = [], language = 'es' }: ChatRequest = req.body;
     const lowerMsg = message.toLowerCase();
 
     // Normalización para búsqueda de localizaciones (ignorando acentos)
@@ -186,8 +187,24 @@ export async function handleChatMessage(req: Request, res: Response) {
       console.log("[CHATBOT] Error en fetch contextual", e);
     }
 
+    const languageNames: any = {
+      'es': 'Español',
+      'en': 'English',
+      'fr': 'Français',
+      'de': 'Deutsch',
+      'nl': 'Nederlands',
+      'sv': 'Svenska',
+      'pl': 'Polski'
+    };
+    const currentLangName = languageNames[language] || 'Español';
+
     const messages: ChatMessage[] = [
-      { role: 'system', content: SYSTEM_PROMPT + livePropertiesContext },
+      {
+        role: 'system',
+        content: `${SYSTEM_PROMPT}
+- OBLIGATORIO: Debes responder en el idioma: ${currentLangName}.
+${livePropertiesContext}`
+      },
       ...conversationHistory,
       { role: 'user', content: message }
     ];

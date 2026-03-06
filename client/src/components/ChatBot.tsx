@@ -14,7 +14,7 @@ interface ChatBotProps {
 }
 
 export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +52,7 @@ export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
         body: JSON.stringify({
           message: userMessage,
           conversationHistory: messages,
+          language: i18n.language,
         }),
       });
 
