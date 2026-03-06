@@ -28,6 +28,12 @@ export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const handleOpenChat = () => setIsOpen(true);
+    window.addEventListener('open-chat', handleOpenChat);
+    return () => window.removeEventListener('open-chat', handleOpenChat);
+  }, [setIsOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -129,8 +135,8 @@ export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
               )}
               <div
                 className={`max-w-[75%] p-3 rounded-lg text-sm ${msg.role === "user"
-                    ? "bg-[#2B5F8C] text-white rounded-br-none"
-                    : "bg-white text-gray-700 shadow-sm rounded-bl-none"
+                  ? "bg-[#2B5F8C] text-white rounded-br-none"
+                  : "bg-white text-gray-700 shadow-sm rounded-bl-none"
                   }`}
               >
                 {msg.content}
