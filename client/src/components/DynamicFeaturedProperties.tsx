@@ -73,7 +73,7 @@ export default function DynamicFeaturedProperties() {
     }
 
     return (
-
+        <>
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex touch-pan-y mt-2 mb-2 gap-4">
                     {properties.filter(p => p.MainImage).map((property) => (
