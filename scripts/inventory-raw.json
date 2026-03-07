@@ -1,0 +1,10 @@
+!!! FETCHING RESALES API WITH URL: https://webapi.resales-online.com/V6/SearchProperties?p1=1022290&p2=c985be4dc15535fb73878a444b7ba2a475290c37&p_output=json&p_Agency_FilterId=1&p_PropertyStatus=Available&p_MustHavePictures=1&p_PageSize=10&p_PageIndex=1&p_location=Nueva+Andaluc%C3%ADa&p_min=500000&p_max=5000000&p_PropertyTypes=Villa%2CApartment%2CPenthouse%2CTownhouse
+Resales API Error: {"transaction":{"status":"error","incomingIp":"47.63.68.68","version":"6","service":"Search Properties","datetime":"07-03-2026 07:35:13","errordescription":{"001":"the IP does not match with your API key","099":"You are not authorised to access this service","102":"P2 not valid"}}}
+FATAL ERROR in fetchProperties: Error: Resales API returned status 401
+    at fetchProperties (C:\wanda resalesonline\server\resales.ts:148:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async checkInventory (C:\wanda resalesonline\scripts\check-inventory.ts:13:21)
+Error: Resales API returned status 401
+    at fetchProperties (C:\wanda resalesonline\server\resales.ts:148:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async checkInventory (C:\wanda resalesonline\scripts\check-inventory.ts:13:21)

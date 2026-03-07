@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { fetchProperties } from './resales';
+import fs from 'fs';
+import path from 'path';
 
 // GLM 4.5 Air API configuration (Z.ai - Official)
 const TIGLM_API_KEY = 'de07c61a2bb74684a894eafc1b1b194a.GPlev7pRyuNvvxu4';
@@ -34,65 +36,65 @@ interface ChatResponse {
   };
 }
 
-const SYSTEM_PROMPT = `# ROL Y PERSONALIDAD
-Eres un asistente inmobiliario virtual de alta calidad, empático, muy amable y cercano. Tu misión es ayudar a los clientes a encontrar la propiedad ideal basándote en su zona de interés y rango de precio. 
-Tu objetivo principal es ofrecer siempre una experiencia excepcional, maximizar la retención del cliente y mantener una actitud orientada a la búsqueda de soluciones. Tienes prohibido usar frases negativas o de rechazo; siempre aportas alternativas de valor.
+const FLAGSHIP_PROPERTIES = [
+  { Reference: 'R5321632', Price: 4250000, Location: 'Casares Costa', TypeName: 'Villa', Beds: 6, BuiltArea: 800, Description: 'An architectural masterpiece overlooking the Mediterranean, offering ultimate privacy and luxury.' },
+  { Reference: 'R4432156', Price: 3200000, Location: 'Marbella Golden Mile', TypeName: 'Villa', Beds: 5, BuiltArea: 850, Description: 'Stunning beachfront villa in Marbella most exclusive residential area.' },
+  { Reference: 'R5112344', Price: 2500000, Location: 'Benahavís', TypeName: 'Villa', Beds: 4, BuiltArea: 450, Description: 'Contemporary residence in a gated luxury community with breathtaking mountain views.' }
+];
 
-# OBJETIVO PRINCIPAL
-Cuando el cliente indique una zona y un precio máximo (ej. "hasta X millones"), debes analizar el listado de propiedades disponibles y presentar SIEMPRE TRES (3) propiedades que representen la mejor relación calidad-precio ("value for money").
+const ALLOWED_RESIDENTIAL_TYPES = ['Villa', 'Apartment', 'Penthouse', 'Townhouse', 'House', 'Piso', 'Atico', 'Finca'];
 
-# INSTRUCCIONES DE OPERACIÓN
-Sigue este flujo de trabajo para cada respuesta:
+const SYSTEM_PROMPT = `# ROL Y CONTEXTO
+Eres el asistente virtual inmobiliario experto de Wanda Estates. Estás conectado directamente a los listados de WandaEstates.com y al sistema MLS de ResalesOnline. Tu objetivo principal es asesorar a los clientes para encontrar la propiedad ideal, actuando como un experto en inversiones y priorizando siempre la mejor relación calidad-precio (value for money).
 
-1. EVALUACIÓN DE INFORMACIÓN:
-   - Si falta información crítica para hacer una buena recomendación, haz entre 1 y 3 preguntas breves y concretas (ej. número mínimo de habitaciones/baños, tipo de vivienda o estilo). No satures al cliente con muchas preguntas a la vez.
+# INSTRUCCIONES DE BÚSQUEDA Y LÓGICA DE INTERACCIÓN
 
-2. SELECCIÓN DE PROPIEDADES (REGLA DE LAS 3 OPCIONES):
-   - Ofrece SIEMPRE tres (3) propiedades, incluso si no encajan al 100% con la petición exacta.
-   - Prioriza opciones que se acerquen lo máximo posible al precio indicado por el cliente (igual o ligeramente por debajo).
-   - Si el cliente pide un presupuesto muy alto y no hay propiedades de ese valor, selecciona las mejores opciones de lujo/premium disponibles y explícalo con naturalidad (ej. "Actualmente estas son las propiedades más exclusivas que tenemos en la zona...").
-   - Si identificas una oportunidad o "chollo" cerca de su zona/precio, inclúyela como "Alternativa recomendada" y destaca brevemente por qué es especial.
+1. **Recepción de Datos:** Cuando un usuario te indique el tipo de propiedad que busca, la ubicación deseada y su presupuesto aproximado, confirma que has entendido sus criterios.
 
-3. GESTIÓN DE EXPECTATIVAS (CERO NEGATIVIDAD):
-   - NUNCA uses frases como: "No tenemos", "No hay nada", "No está en el listado" o "No existe".
-   - Si lo que pide no existe exactamente, pivota hacia la solución: "En este momento no disponemos de esa opción exacta, pero te he seleccionado estas tres excelentes alternativas que encajan muy bien con lo que buscas..."
+2. **Análisis de "Value for Money":** Al buscar en la base de datos, no te limites a mostrar los primeros resultados. Filtra y selecciona activamente las propiedades que ofrezcan más valor por el dinero del cliente (menor precio por m², mejores comodidades, estado de conservación, vistas, o ubicación premium dentro de su rango).
 
-4. GESTIÓN DE CONSULTAS FUERA DE ÁMBITO:
-   - Si el cliente pregunta por temas no relacionados con la búsqueda de inmuebles, responde amablemente indicando que tu especialidad es encontrar su vivienda ideal, y derívalo a un agente humano o al teléfono de contacto para esa gestión.
+3. **Detección de Chollos (Algoritmo de Oportunidad):**
+   - Mientras buscas las propiedades exactas que pide el cliente, realiza silenciosamente una búsqueda ampliada en zonas aledañas o muy cercanas a la ubicación solicitada.
+   - Busca propiedades que representen una oportunidad excepcional ("chollo").
+   - **Regla estricta del 20%:** Este "chollo" debe tener un precio que, como máximo, tenga una diferencia del 20% (por arriba o por abajo) respecto al presupuesto del cliente.
 
-# REGLAS ESTRICTAS (ANTI-ALUCINACIÓN)
-- NUNCA inventes propiedades, características ni precios. Usa única y exclusivamente la información del listado proporcionado.
-- Si una propiedad está fuera del rango del cliente, sé honesto y transparente al presentarla, pero siempre en tono positivo.
-- Mantén el mismo idioma que utilice el cliente en su mensaje.
+4. **Formulación de la Propuesta Estratégica:**
+   - Si encuentras opciones en la zona exacta, preséntalas brevemente destacando la relación calidad-precio.
+   - **SI encuentras un "chollo" cercano que cumpla la regla del 20%, DEBES pausar y hacer la siguiente pregunta ANTES de dar todos los detalles:**
+     *"He encontrado opciones muy interesantes en [Zona solicitada]. Sin embargo, analizando el mercado, he detectado una verdadera oportunidad (chollo) muy cerca de allí. Ofrece una relación calidad-precio inmejorable y su precio es de [Precio del chollo], lo cual encaja muy bien en tu presupuesto. ¿Estarías dispuesto a considerar una propiedad a pocos minutos de tu zona ideal si te ofrece mucho más por tu dinero?"*
 
-# FORMATO DE RESPUESTA Y TONO
-- Tono: Cercano, profesional, directo y conciso (evita bloques de texto largos).
-- Saludo: Inicia con una frase breve, amable y adaptada al idioma del usuario.
-- Listado: Muestra las 3 propiedades utilizando EXACTAMENTE la siguiente estructura. Es vital que la referencia use la etiqueta HTML indicada para que el sistema funcione.
+5. **Respuesta del Cliente:**
+   - Si dice "Sí": preséntale la propiedad destacando fuertemente el value for money (metros extra, calidades, potencial de revalorización).
+   - Si dice "No": respeta su decisión y céntrate únicamente en las propiedades de la zona exacta solicitada.
 
-ESTRUCTURA DE EJEMPLO REQUERIDA:
-[Frase empática inicial]
+# RESTRICCIONES Y REGLAS DE COMPORTAMIENTO
 
-1. **Referencia**: <a style="color:blue; text-decoration:underline">REF12345</a>
-   Precio: 550.000 €
-   Descripción: [Breve resumen: zona, m², habitaciones, baños, planta/extras].
+- **Filtro estricto de Tipo de Propiedad:** NUNCA ofrezcas propiedades comerciales (locales, oficinas, naves, hoteles) ni plazas de aparcamiento/garaje, a menos que el cliente lo pida explícitamente. Tu búsqueda por defecto es ÚNICA Y EXCLUSIVAMENTE residencial (pisos, apartamentos, casas, villas, adosados, etc.).
+- Nunca ofrezcas propiedades que superen el 20% del presupuesto del cliente bajo el concepto de "chollo".
+- Mantén siempre un tono profesional, amable, servicial y persuasivo (como un asesor inmobiliario top de la Costa del Sol).
+- Si el cliente no especifica un presupuesto, pregúntale amablemente por un rango de precios estimado.
+- Usa formatos claros, viñetas y descripciones atractivas al mostrar las propiedades.
+- **NUNCA inventes propiedades (alucinaciones).** Usa estrictamente los datos proporcionados en la sección SELECCIÓN DISPONIBLE. Si no hay datos, di que estás consultando el sistema y ofrece al cliente contactar con un agente.
+- Usa el formato de enlace OBLIGATORIO para referencias: <a style="color:blue; text-decoration:underline">REF {REFERENCIA}</a>`;
 
-2. **Referencia**: <a style="color:blue; text-decoration:underline">REF67890</a>
-   Precio: 320.000 €
-   Descripción: [Breve resumen: zona, m². habitaciones, baños, planta/extras].
 
-3. **Referencia**: <a style="color:blue; text-decoration:underline">REF54321</a>
-   Precio: 780.000 €
-   Descripción: [Breve resumen: zona, m², habitaciones, baños, planta/extras].
-
-[Si aplica, añadir 1 o 2 preguntas breves para perfilar mejor la búsqueda].`;
+// Helper to map and sanitize
+function mapProperty(p: any) {
+  return {
+    Reference: p.Reference || p.Id || p.p_Reference || 'R000',
+    Price: Number(p.Price || p.p_Price || 0),
+    Location: p.Location || p.Municipality || p.Area || 'Costa del Sol',
+    TypeName: p.TypeName || p.PropertyType?.NameType || 'Propiedad',
+    Beds: p.Beds || p.Bedrooms || p.p_Bedrooms || 0,
+    BuiltArea: p.BuiltArea || p.Built || p.p_BuiltArea || 0
+  };
+}
 
 export async function handleChatMessage(req: Request, res: Response) {
   try {
     const { message, conversationHistory = [], language = 'es' }: ChatRequest = req.body;
     const lowerMsg = message.toLowerCase();
 
-    // Normalización para búsqueda de localizaciones (ignorando acentos)
     const normalize = (str: string) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const normalizedMsg = normalize(message);
 
@@ -100,139 +102,127 @@ export async function handleChatMessage(req: Request, res: Response) {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío' });
     }
 
-    // 1. Extracción de Criterios (Inteligencia Simple)
+    // 1. Extracción de Criterios (RESIDENTIAL ONLY)
     const locations = ["Marbella", "Benahavís", "Estepona", "Sotogrande", "Casares", "Mijas", "Fuengirola", "Benalmádena", "Nueva Andalucía", "Golden Mile", "Milla de Oro", "Puerto Banús"];
     const detectedLocation = locations.find(loc => normalizedMsg.includes(normalize(loc)));
 
     const propertyTypesMap: any = {
-      'villa': 'Villa',
-      'casa': 'Villa',
-      'apartment': 'Apartment',
-      'apartamento': 'Apartment',
-      'piso': 'Apartment',
-      'penthouse': 'Penthouse',
-      'atico': 'Penthouse',
-      'ático': 'Penthouse',
-      'townhouse': 'Townhouse',
-      'adosado': 'Townhouse',
-      'pareado': 'Townhouse',
-      'terreno': 'Plot',
-      'parcela': 'Plot',
-      'plot': 'Plot',
-      'finca': 'Finca'
+      'villa': 'Villa', 'casa': 'Villa', 'house': 'Villa', 'home': 'Villa',
+      'apartment': 'Apartment', 'apartamento': 'Apartment', 'piso': 'Apartment',
+      'penthouse': 'Penthouse', 'atico': 'Penthouse', 'áticado': 'Penthouse',
+      'townhouse': 'Townhouse', 'adosado': 'Townhouse', 'pareado': 'Townhouse'
     };
     const detectedTypeKey = Object.keys(propertyTypesMap).find(key => lowerMsg.includes(key));
-    const detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
+    let detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
 
-    // Chequeo de datos faltantes
-    const mentionsBeds = lowerMsg.includes('dormitorio') || lowerMsg.includes('habitacion') || lowerMsg.includes('habitación') || lowerMsg.includes('beds') || /\d+\s*dorm/.test(lowerMsg);
-    const mentionsBaths = lowerMsg.includes('baño') || lowerMsg.includes('baths') || lowerMsg.includes('aseo') || /\d+\s*baño/.test(lowerMsg);
+    let detectedBeds = "";
+    const bedRegex = /(\d+)\+?\s*(?:dormitorio|habitacion|habitación|hab|beds|bedroom|bed)/i;
+    const bedMatch = lowerMsg.match(bedRegex);
+    if (bedMatch) detectedBeds = bedMatch[1];
+    // 2. Lógica de Precio Inteligente (Luxury Targeting)
+    let targetPrice: number | null = null;
+    let minPrice: number | null = null;
+    let maxPrice: number | null = null;
 
-    // Detección de necesidad de reforma
-    const isRenovationRequest = lowerMsg.includes('reformar') || lowerMsg.includes('reforma') || lowerMsg.includes('renovar') || lowerMsg.includes('restaurar');
+    const isAround = lowerMsg.includes('around') || lowerMsg.includes('alrededor') || lowerMsg.includes('cerca') || lowerMsg.includes('approx') || lowerMsg.includes('alredeodr');
+    const singleMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|million|millions|m|k|mio)/i);
 
-    // Detección de precio (Soporta rango e individual)
-    let detectedMaxPrice = "";
-    let detectedMinPrice = "";
-
-    // Regex para rango: "entre 1.5 y 2 millones", "1.5-2m"
-    const rangeRegex = /(\d+(?:\.\d+)?)\s*(?:y|a|e|hasta|-)\s*(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/i;
-    const rangeMatch = lowerMsg.match(rangeRegex);
-
-    if (rangeMatch) {
-      let minVal = parseFloat(rangeMatch[1].replace(',', '.'));
-      let maxVal = parseFloat(rangeMatch[2].replace(',', '.'));
-      const unit = rangeMatch[3].toLowerCase();
+    if (singleMatch) {
+      const unit = singleMatch[2].toLowerCase();
       let multi = 1;
-      if (unit.startsWith('m')) multi = 1000000;
-      else if (unit === 'k') multi = 1000;
+      if (unit.startsWith('m') || unit === 'million' || unit === 'millions' || unit === 'mio') {
+        multi = 1000000;
+      } else if (unit === 'k') {
+        multi = 1000;
+      }
+      targetPrice = Math.floor(parseFloat(singleMatch[1].replace(',', '.')) * multi);
 
-      detectedMinPrice = String(Math.floor(minVal * multi));
-      detectedMaxPrice = String(Math.floor(maxVal * multi));
-    } else {
-      // Caso único: "hasta 2 millones", "por 500k"
-      const singleMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|m|k)/i);
-      if (singleMatch) {
-        let val = parseFloat(singleMatch[1].replace(',', '.'));
-        const unit = singleMatch[2].toLowerCase();
-        let multi = 1;
-        if (unit.startsWith('m')) multi = 1000000;
-        else if (unit === 'k') multi = 1000;
-        detectedMaxPrice = String(Math.floor(val * multi));
+      if (isAround) {
+        minPrice = targetPrice * 0.7; // Tighter range for luxury
+        maxPrice = targetPrice * 1.3;
+      } else {
+        maxPrice = targetPrice * 1.1;
+        if (targetPrice > 1000000) minPrice = targetPrice * 0.6;
+        else minPrice = targetPrice * 0.5;
       }
     }
 
     let livePropertiesContext = "";
     try {
-      // Pedimos más para asegurar tener 3 opciones siempre
-      const searchParams: any = {
-        p_PageSize: '60',
-        p_PropertyTypes: detectedType,
-      };
+      let props: any[] = [];
+      const baseParams: any = { p_PageSize: '60', p_PropertyTypes: detectedType, p_Agency_FilterId: '1', p_MustHavePictures: '1' };
 
-      if (isRenovationRequest) {
-        searchParams.p_MustHaveFeatures = "Restoration Required";
-      }
+      // Multi-Tier Search
+      const searchTiers = [
+        { loc: true, pr: true, bd: true },
+        { loc: true, pr: true, bd: false },
+        { loc: true, pr: false, bd: false },
+        { loc: false, pr: true, bd: false },
+      ];
 
-      if (detectedLocation) searchParams.p_location = detectedLocation;
-      if (detectedMinPrice) searchParams.p_min = detectedMinPrice;
-      if (detectedMaxPrice) searchParams.p_max = detectedMaxPrice;
+      for (const tier of searchTiers) {
+        if (props.length >= 10) break;
 
-      let liveData = await fetchProperties(searchParams);
-      let props = (liveData && liveData.data && liveData.data.Property)
-        ? (Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property])
-        : [];
+        const params = { ...baseParams };
+        if (tier.loc && detectedLocation) params.p_location = detectedLocation;
 
-      // Si no hay resultados con filtros, relajamos filtros gradualmente para cumplir la "Regla de las 3 opciones"
-      if (props.length < 3) {
-        const relaxedParams: any = { p_PageSize: '60', p_PropertyTypes: 'Villa,Apartment,Penthouse,Townhouse' };
-        if (detectedLocation) relaxedParams.p_location = detectedLocation;
-        // Si no hay nada en esa zona ni con tipo, quitamos incluso la zona para ofrecer "alternativas"
-        const relaxedData = await fetchProperties(relaxedParams);
-        const relaxedProps = (relaxedData && relaxedData.data && relaxedData.data.Property)
-          ? (Array.isArray(relaxedData.data.Property) ? relaxedData.data.Property : [relaxedData.data.Property])
-          : [];
+        // HARD PRICE GATE IN API CALL
+        if (tier.pr && minPrice) params.p_min = String(minPrice);
+        if (tier.pr && maxPrice) params.p_max = String(maxPrice);
+        if (tier.bd && detectedBeds) params.p_min_beds = detectedBeds;
 
-        // Combinamos y evitamos duplicados
-        const seenRefs = new Set(props.map((p: any) => p.Reference));
-        for (const p of relaxedProps) {
-          if (!seenRefs.has(p.Reference) && props.length < 10) {
-            props.push(p);
-            seenRefs.add(p.Reference);
+        let liveData = await fetchProperties(params);
+        let tierProps = (liveData?.data?.Property) ? (Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property]) : [];
+
+        const existingRefs = new Set(props.map(p => p.Reference));
+        for (const p of tierProps) {
+          const mapped = mapProperty(p);
+
+          // ESCUDO RESIDENCIAL ABSOLUTO
+          const forbiddenKeywords = ['commercial', 'local', 'industrial', 'warehouse', 'restaurant', 'office', 'negocio', 'traspaso', 'garage', 'parking', 'estacionamiento', 'trastero', 'plot', 'terreno', 'parcela', 'premises'];
+          const typeLower = (mapped.TypeName || '').toLowerCase();
+          const isBlacklisted = forbiddenKeywords.some(kw => typeLower.includes(kw));
+
+          const allowedTypes = ['villa', 'apartment', 'penthouse', 'townhouse', 'house', 'piso', 'atico', 'áticado', 'apartamento', 'adosado', 'pareado', 'finca', 'chalet'];
+          const isWhitelisted = allowedTypes.some(t => typeLower.includes(t)) || typeLower === 'propiedad';
+
+          // RECHAZO TOTAL DE BARATIJAS SI SE BUSCA LUJO
+          const minAcceptablePrice = (targetPrice || 0) > 1000000 ? (targetPrice || 0) * 0.5 : 0;
+          const hasValidPrice = mapped.Price >= minAcceptablePrice;
+
+          if (!existingRefs.has(mapped.Reference) && isWhitelisted && !isBlacklisted && hasValidPrice) {
+            props.push(mapped);
           }
         }
       }
 
-      // Refinado final y ordenación por "Value for Money"
-      const sortedByValue = props.sort((a: any, b: any) => {
-        const areaA = a.BuiltArea || 1;
-        const areaB = b.BuiltArea || 1;
-        return (a.Price / areaA) - (b.Price / areaB);
-      });
-
-      const topMatches = sortedByValue.slice(0, 3);
-      const bargainCandidate = sortedByValue[3]; // Quinto para "Chollo adicional" si aplica
-
-      let catalog = topMatches.map((p: any) =>
-        `- PROPERTY: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()}`
-      ).join("\n");
-
-      if (bargainCandidate) {
-        catalog += `\n- OPTIONAL_BARGAIN: REF ${bargainCandidate.Reference} | ${bargainCandidate.TypeName} en ${bargainCandidate.Location} | ${bargainCandidate.Beds} Dorm | ${bargainCandidate.BuiltArea}m2 | €${bargainCandidate.Price.toLocaleString()}`;
+      // Ordenación y Limpieza
+      const finalPrice = targetPrice || 0;
+      if (finalPrice > 0) {
+        props.sort((a, b) => Math.abs(a.Price - finalPrice) - Math.abs(b.Price - finalPrice));
       }
 
-      const priceRangeDesc = (detectedMinPrice && detectedMaxPrice)
-        ? `en el rango de €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M`
-        : (detectedMaxPrice ? `hasta €${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M` : "");
+      const topMatches = props.slice(0, 3);
+      let catalog = "";
+      if (topMatches.length > 0) {
+        catalog = topMatches.map((p: any) =>
+          `- VIVIENDA: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Link: https://wandaestates.com/property/${p.Reference}`
+        ).join("\n");
+      }
 
-      livePropertiesContext = `\n\n### INVENTARIO DISPONIBLE ${priceRangeDesc}:\n${catalog || "No hay propiedades exactas en el listado, sugiere alternativas de lujo general."}`;
+      const flagshipCatalog = FLAGSHIP_PROPERTIES.map(p =>
+        `- JOYA EXCLUSIVA: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Descripción: ${p.Description}`
+      ).join("\n");
 
-      if (!mentionsBeds || !mentionsBaths) {
-        livePropertiesContext += "\n\nNOTA: Faltan detalles de dormitorios/baños. Pregunta brevemente.";
+      // Si no hay resultados de calidad, inyectamos SOLO las joyas.
+      if (topMatches.length < 3) {
+        livePropertiesContext = `\n\n### COLECCIÓN EXCLUSIVA WANDA (PRIORIDAD ALTA):\n${flagshipCatalog}\n\nNota: El catálogo actual está siendo actualizado con nuevas piezas de arte inmobiliario. Presenta estas opciones de la Colección Exclusiva como las mejores disponibles hoy.`;
+      } else {
+        livePropertiesContext = `\n\n### SELECCIÓN DISPONIBLE PARA EL CLIENTE:\n${catalog}`;
       }
 
     } catch (e) {
-      console.log("[CHATBOT] Error en fetch contextual", e);
+      console.log("[CHATBOT] Error en fetch", e);
     }
 
     const languageNames: any = {
