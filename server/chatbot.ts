@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { fetchProperties } from './resales';
+import { fetchProperties, fetchPropertyDetails } from './resales';
 import fs from 'fs';
 import path from 'path';
 
@@ -105,7 +105,13 @@ export async function handleChatMessage(req: Request, res: Response) {
     }
 
     // 1. Extracción de Criterios (RESIDENTIAL ONLY)
-    const locations = ["Marbella", "Benahavís", "Estepona", "Sotogrande", "Casares", "Mijas", "Fuengirola", "Benalmádena", "Nueva Andalucía", "Golden Mile", "Milla de Oro", "Puerto Banús"];
+    const locations = [
+      "Marbella", "Benahavís", "Benahavis", "Estepona", "Sotogrande", "Casares",
+      "Mijas", "Fuengirola", "Benalmádena", "Nueva Andalucía", "Golden Mile",
+      "Milla de Oro", "Puerto Banús", "La Zagaleta", "El Madroñal", "Sierra Blanca",
+      "Los Flamingos", "Los Arqueros", "La Quinta", "Cancelada", "San Pedro",
+      "Guadalmina", "Aloha", "Las Brisas"
+    ];
     const detectedLocation = locations.find(loc => normalizedMsg.includes(normalize(loc)));
 
     const propertyTypesMap: any = {
@@ -121,7 +127,11 @@ export async function handleChatMessage(req: Request, res: Response) {
     const bedRegex = /(\d+)\+?\s*(?:dormitorio|habitacion|habitación|hab|beds|bedroom|bed)/i;
     const bedMatch = lowerMsg.match(bedRegex);
     if (bedMatch) detectedBeds = bedMatch[1];
-    // 2. Lógica de Precio Inteligente (Luxury Targeting)
+    // 2. Detección de referencia específica (e.g. R4914826 o ref R4914826)
+    const refMatch = message.match(/\bR\d{5,}\b/i);
+    const specificRef = refMatch ? refMatch[0].toUpperCase() : null;
+
+    // 3. Lógica de Precio Inteligente (Luxury Targeting)
     let targetPrice: number | null = null;
     let minPrice: number | null = null;
     let maxPrice: number | null = null;
@@ -208,19 +218,39 @@ export async function handleChatMessage(req: Request, res: Response) {
       let catalog = "";
       if (topMatches.length > 0) {
         catalog = topMatches.map((p: any) =>
-          `- VIVIENDA: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Link: https://wandaestates.com/property/${p.Reference}`
+          `- REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Link: https://wandaestates.com/property/${p.Reference}`
         ).join("\n");
       }
 
-      const flagshipCatalog = FLAGSHIP_PROPERTIES.map(p =>
-        `- JOYA EXCLUSIVA: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Descripción: ${p.Description}`
-      ).join("\n");
+      // Buscar propiedad específica por referencia si el cliente la mencionó
+      let specificPropContext = "";
+      if (specificRef) {
+        try {
+          const details = await fetchPropertyDetails(specificRef);
+          if (details) {
+            const p = details;
+            const price = Number(p.Price || p.p_Price || 0);
+            const beds = p.Beds || p.Bedrooms || p.p_Bedrooms || 0;
+            const area = p.BuiltArea || p.Built || 0;
+            const loc = p.Location || p.Municipality || 'Costa del Sol';
+            const type = p.TypeName || p.PropertyType?.NameType || 'Propiedad';
+            specificPropContext = `\n\n### PROPIEDAD ESPECÍFICA SOLICITADA POR EL CLIENTE:\n- REF ${specificRef} | ${type} en ${loc} | ${beds} Dorm | ${area}m² | €${price.toLocaleString()} | Link: https://wandaestates.com/property/${specificRef}\nNOTA: El cliente ha pedido información sobre esta propiedad. Preséntalas como la primera opción y describe por qué es una gran elección. No digas que no tienes información.`;
+          } else {
+            specificPropContext = `\n\n### REFERENCIA SOLICITADA: ${specificRef}\nNOTA: Esta referencia existe en el sistema de ResalesOnline pero los detalles no están disponibles en este momento. Dile al cliente que puedes conectarle con un agente para obtener información completa y no digas que no existe.`;
+          }
+        } catch {
+          specificPropContext = `\n\n### REFERENCIA SOLICITADA: ${specificRef}\nNOTA: Esta propiedad está en nuestra red MLS. Informa al cliente que un agente puede darle todos los detalles y ofrécele que te deje sus datos de contacto.`;
+        }
+      }
 
-      // Si no hay resultados de calidad, inyectamos SOLO las joyas.
-      if (topMatches.length < 3) {
-        livePropertiesContext = `\n\n### COLECCIÓN EXCLUSIVA WANDA (PRIORIDAD ALTA):\n${flagshipCatalog}\n\nNota: El catálogo actual está siendo actualizado con nuevas piezas de arte inmobiliario. Presenta estas opciones de la Colección Exclusiva como las mejores disponibles hoy.`;
-      } else {
+      // Construir contexto final
+      if (specificPropContext) {
+        livePropertiesContext = specificPropContext;
+        if (catalog) livePropertiesContext += `\n\n### OTRAS OPCIONES DISPONIBLES:\n${catalog}`;
+      } else if (topMatches.length > 0) {
         livePropertiesContext = `\n\n### SELECCIÓN DISPONIBLE PARA EL CLIENTE:\n${catalog}`;
+      } else {
+        livePropertiesContext = `\n\n### NOTA INTERNA: No se encontraron propiedades para estos criterios exactos en este momento. Informa al cliente de que el inventario se actualiza diariamente y ofrécele ser contactado directamente por un agente para propiedades exclusivas que aún no están en el portal.`;
       }
 
     } catch (e) {
