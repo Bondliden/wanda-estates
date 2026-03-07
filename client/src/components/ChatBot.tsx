@@ -140,7 +140,11 @@ export default function ChatBot({ isOpen, setIsOpen }: ChatBotProps) {
                   : "bg-white text-gray-700 shadow-sm rounded-bl-none"
                   }`}
               >
-                {msg.content}
+                {msg.role === "assistant" ? (
+                  <span dangerouslySetInnerHTML={{ __html: msg.content }} />
+                ) : (
+                  msg.content
+                )}
               </div>
               {msg.role === "user" && (
                 <div className="w-8 h-8 bg-[#C9A961] rounded-full flex items-center justify-center flex-shrink-0">

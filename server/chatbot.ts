@@ -69,7 +69,7 @@ Mientras presentas las opciones de la zona exacta, fíjate si en la selección h
 Muestra cada propiedad así:
 - 🏡 **[Tipo] en [Zona]** — [Precio]€
   - Dormitorios: X | Superficie: Xm²
-  - Referencia: <a style="color:blue;text-decoration:underline">REF {REFERENCIA}</a>
+  - 🔗 <a href="https://wandaestates.com/property/{REFERENCIA}" target="_blank" style="color:blue;text-decoration:underline">Ver propiedad →</a>
   - Por qué es una buena opción: [1 frase de valor]
 
 # REGLAS DE HIERRO
