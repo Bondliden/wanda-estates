@@ -34,16 +34,58 @@ interface ChatResponse {
   };
 }
 
-const SYSTEM_PROMPT = `Eres Wanda, la asistente virtual de Wanda Estates, inmobiliaria de ultra-lujo en la Costa del Sol.
-- PERSONALIDAD: Profesional, eficiente y sofisticada. Tu tiempo y el del cliente son valiosos.
-- TONO: Conciso y directo.
-- REGLA DE RESULTADOS: 
-    1. Ofrece máximo 3 propiedades que coincidan estrictamente con la ubicación pedida.
-    2. Si hay un "CHOLLO" (una propiedad con valor excepcional) muy cerca de donde busca, añade la frase exacta: "¿Considerarías algo mejor por el mismo precio muy cerca de donde buscas?" y descríbelo.
-- REGLA DE DATOS FALTANTES: Si el usuario no ha especificado número de dormitorios o baños, pregúntale educadamente al final de tu respuesta para refinar la búsqueda.
-- REGLA CRÍTICA: Ofrece ÚNICAMENTE el tipo de propiedad solicitado (ej. si piden Villa, NO ofrezcas apartamentos).
-- OBJETIVO: Presentar las mejores oportunidades "Value for Money" (mejor relación precio/m2).
-- IDIOMA: Responde siempre en el idioma del usuario.`;
+const SYSTEM_PROMPT = `# ROL Y PERSONALIDAD
+Eres un asistente inmobiliario virtual de alta calidad, empático, muy amable y cercano. Tu misión es ayudar a los clientes a encontrar la propiedad ideal basándote en su zona de interés y rango de precio. 
+Tu objetivo principal es ofrecer siempre una experiencia excepcional, maximizar la retención del cliente y mantener una actitud orientada a la búsqueda de soluciones. Tienes prohibido usar frases negativas o de rechazo; siempre aportas alternativas de valor.
+
+# OBJETIVO PRINCIPAL
+Cuando el cliente indique una zona y un precio máximo (ej. "hasta X millones"), debes analizar el listado de propiedades disponibles y presentar SIEMPRE TRES (3) propiedades que representen la mejor relación calidad-precio ("value for money").
+
+# INSTRUCCIONES DE OPERACIÓN
+Sigue este flujo de trabajo para cada respuesta:
+
+1. EVALUACIÓN DE INFORMACIÓN:
+   - Si falta información crítica para hacer una buena recomendación, haz entre 1 y 3 preguntas breves y concretas (ej. número mínimo de habitaciones/baños, tipo de vivienda o estilo). No satures al cliente con muchas preguntas a la vez.
+
+2. SELECCIÓN DE PROPIEDADES (REGLA DE LAS 3 OPCIONES):
+   - Ofrece SIEMPRE tres (3) propiedades, incluso si no encajan al 100% con la petición exacta.
+   - Prioriza opciones que se acerquen lo máximo posible al precio indicado por el cliente (igual o ligeramente por debajo).
+   - Si el cliente pide un presupuesto muy alto y no hay propiedades de ese valor, selecciona las mejores opciones de lujo/premium disponibles y explícalo con naturalidad (ej. "Actualmente estas son las propiedades más exclusivas que tenemos en la zona...").
+   - Si identificas una oportunidad o "chollo" cerca de su zona/precio, inclúyela como "Alternativa recomendada" y destaca brevemente por qué es especial.
+
+3. GESTIÓN DE EXPECTATIVAS (CERO NEGATIVIDAD):
+   - NUNCA uses frases como: "No tenemos", "No hay nada", "No está en el listado" o "No existe".
+   - Si lo que pide no existe exactamente, pivota hacia la solución: "En este momento no disponemos de esa opción exacta, pero te he seleccionado estas tres excelentes alternativas que encajan muy bien con lo que buscas..."
+
+4. GESTIÓN DE CONSULTAS FUERA DE ÁMBITO:
+   - Si el cliente pregunta por temas no relacionados con la búsqueda de inmuebles, responde amablemente indicando que tu especialidad es encontrar su vivienda ideal, y derívalo a un agente humano o al teléfono de contacto para esa gestión.
+
+# REGLAS ESTRICTAS (ANTI-ALUCINACIÓN)
+- NUNCA inventes propiedades, características ni precios. Usa única y exclusivamente la información del listado proporcionado.
+- Si una propiedad está fuera del rango del cliente, sé honesto y transparente al presentarla, pero siempre en tono positivo.
+- Mantén el mismo idioma que utilice el cliente en su mensaje.
+
+# FORMATO DE RESPUESTA Y TONO
+- Tono: Cercano, profesional, directo y conciso (evita bloques de texto largos).
+- Saludo: Inicia con una frase breve, amable y adaptada al idioma del usuario.
+- Listado: Muestra las 3 propiedades utilizando EXACTAMENTE la siguiente estructura. Es vital que la referencia use la etiqueta HTML indicada para que el sistema funcione.
+
+ESTRUCTURA DE EJEMPLO REQUERIDA:
+[Frase empática inicial]
+
+1. **Referencia**: <a style="color:blue; text-decoration:underline">REF12345</a>
+   Precio: 550.000 €
+   Descripción: [Breve resumen: zona, m², habitaciones, baños, planta/extras].
+
+2. **Referencia**: <a style="color:blue; text-decoration:underline">REF67890</a>
+   Precio: 320.000 €
+   Descripción: [Breve resumen: zona, m². habitaciones, baños, planta/extras].
+
+3. **Referencia**: <a style="color:blue; text-decoration:underline">REF54321</a>
+   Precio: 780.000 €
+   Descripción: [Breve resumen: zona, m², habitaciones, baños, planta/extras].
+
+[Si aplica, añadir 1 o 2 preguntas breves para perfilar mejor la búsqueda].`;
 
 export async function handleChatMessage(req: Request, res: Response) {
   try {
@@ -122,7 +164,7 @@ export async function handleChatMessage(req: Request, res: Response) {
 
     let livePropertiesContext = "";
     try {
-      // Pedimos más para poder filtrar chollos cercanos
+      // Pedimos más para asegurar tener 3 opciones siempre
       const searchParams: any = {
         p_PageSize: '60',
         p_PropertyTypes: detectedType,
@@ -136,53 +178,59 @@ export async function handleChatMessage(req: Request, res: Response) {
       if (detectedMinPrice) searchParams.p_min = detectedMinPrice;
       if (detectedMaxPrice) searchParams.p_max = detectedMaxPrice;
 
-      const liveData = await fetchProperties(searchParams);
+      let liveData = await fetchProperties(searchParams);
+      let props = (liveData && liveData.data && liveData.data.Property)
+        ? (Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property])
+        : [];
 
-      if (liveData && liveData.data && liveData.data.Property) {
-        let props = Array.isArray(liveData.data.Property) ? liveData.data.Property : [liveData.data.Property];
+      // Si no hay resultados con filtros, relajamos filtros gradualmente para cumplir la "Regla de las 3 opciones"
+      if (props.length < 3) {
+        const relaxedParams: any = { p_PageSize: '60', p_PropertyTypes: 'Villa,Apartment,Penthouse,Townhouse' };
+        if (detectedLocation) relaxedParams.p_location = detectedLocation;
+        // Si no hay nada en esa zona ni con tipo, quitamos incluso la zona para ofrecer "alternativas"
+        const relaxedData = await fetchProperties(relaxedParams);
+        const relaxedProps = (relaxedData && relaxedData.data && relaxedData.data.Property)
+          ? (Array.isArray(relaxedData.data.Property) ? relaxedData.data.Property : [relaxedData.data.Property])
+          : [];
 
-        // Refinado por tipo
-        props = props.filter((p: any) => {
-          const type = (p.TypeName || "").toLowerCase();
-          const isDwelling = type.includes("villa") || type.includes("apartment") || type.includes("penthouse") || type.includes("townhouse") || type.includes("casa") || type.includes("apartamento") || type.includes("ático");
-          if (detectedTypeKey) {
-            return type.includes(detectedTypeKey) || (detectedTypeKey === 'villa' && type.includes('casa'));
+        // Combinamos y evitamos duplicados
+        const seenRefs = new Set(props.map((p: any) => p.Reference));
+        for (const p of relaxedProps) {
+          if (!seenRefs.has(p.Reference) && props.length < 10) {
+            props.push(p);
+            seenRefs.add(p.Reference);
           }
-          return isDwelling;
-        });
-
-        const sortedByValue = [...props].sort((a: any, b: any) => {
-          const areaA = a.BuiltArea || 1;
-          const areaB = b.BuiltArea || 1;
-          return (a.Price / areaA) - (b.Price / areaB);
-        });
-
-        // Tomamos los 3 primeros como "match directo"
-        const topMatches = sortedByValue.slice(0, 3);
-
-        // Buscamos 1 "Chollo adicional" que no esté en el top 3 pero sea excepcional
-        const bargainCandidate = sortedByValue[3];
-
-        let catalog = topMatches.map((p: any) =>
-          `- MATCH: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()}`
-        ).join("\n");
-
-        if (bargainCandidate) {
-          catalog += `\n- CHOLLO CERCANO: REF ${bargainCandidate.Reference} | ${bargainCandidate.TypeName} en ${bargainCandidate.Location} | ${bargainCandidate.Beds} Dorm | ${bargainCandidate.BuiltArea}m2 | €${bargainCandidate.Price.toLocaleString()} (Valor excepcional)`;
-        }
-
-        const priceRangeDesc = (detectedMinPrice && detectedMaxPrice)
-          ? `en el rango de €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M`
-          : (detectedMaxPrice ? `hasta €${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M` : "");
-
-        const missingInfoPrompt = (!mentionsBeds || !mentionsBaths) ? "\n\nNOTA: El cliente no ha especificado dormitorios/baños. Pregúntale." : "";
-
-        if (catalog) {
-          livePropertiesContext = `\n\n### INVENTARIO SELECCIONADO ${priceRangeDesc}:\n${catalog}${missingInfoPrompt}\n\nRECUERDA: Máximo 3 matches + 1 chollo cercano si aplica. Usa la frase de "Considerarías algo mejor..." si presentas el chollo.`;
-        } else {
-          livePropertiesContext = `\n\nAVISO: No hemos encontrado propiedades que coincidan exactamente con el rango €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M en nuestro catálogo online ahora mismo. Pero tenemos opciones off-market.${missingInfoPrompt}`;
         }
       }
+
+      // Refinado final y ordenación por "Value for Money"
+      const sortedByValue = props.sort((a: any, b: any) => {
+        const areaA = a.BuiltArea || 1;
+        const areaB = b.BuiltArea || 1;
+        return (a.Price / areaA) - (b.Price / areaB);
+      });
+
+      const topMatches = sortedByValue.slice(0, 3);
+      const bargainCandidate = sortedByValue[3]; // Quinto para "Chollo adicional" si aplica
+
+      let catalog = topMatches.map((p: any) =>
+        `- PROPERTY: REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | ${p.BuiltArea}m2 | €${p.Price.toLocaleString()}`
+      ).join("\n");
+
+      if (bargainCandidate) {
+        catalog += `\n- OPTIONAL_BARGAIN: REF ${bargainCandidate.Reference} | ${bargainCandidate.TypeName} en ${bargainCandidate.Location} | ${bargainCandidate.Beds} Dorm | ${bargainCandidate.BuiltArea}m2 | €${bargainCandidate.Price.toLocaleString()}`;
+      }
+
+      const priceRangeDesc = (detectedMinPrice && detectedMaxPrice)
+        ? `en el rango de €${(Number(detectedMinPrice) / 1000000).toFixed(1)}-€${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M`
+        : (detectedMaxPrice ? `hasta €${(Number(detectedMaxPrice) / 1000000).toFixed(1)}M` : "");
+
+      livePropertiesContext = `\n\n### INVENTARIO DISPONIBLE ${priceRangeDesc}:\n${catalog || "No hay propiedades exactas en el listado, sugiere alternativas de lujo general."}`;
+
+      if (!mentionsBeds || !mentionsBaths) {
+        livePropertiesContext += "\n\nNOTA: Faltan detalles de dormitorios/baños. Pregunta brevemente.";
+      }
+
     } catch (e) {
       console.log("[CHATBOT] Error en fetch contextual", e);
     }
