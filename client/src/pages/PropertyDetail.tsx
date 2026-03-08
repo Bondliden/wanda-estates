@@ -113,12 +113,16 @@ export default function PropertyDetail() {
                 const response = await fetch(`/api/properties/${id}`);
                 const data = await response.json();
 
+                console.log('[PropertyDetail] API Response:', { success: data.success, hasData: !!data.data, dataType: typeof data.data });
                 if (data.success && data.data) {
-                    setProperty(data.data.Property || data.data);
+                    const propertyData = data.data.Property || data.data;
+                    console.log('[PropertyDetail] Property data:', { hasPropertyData: !!propertyData, reference: propertyData?.Reference });
+                    setProperty(propertyData);
                     if (data.ranking) {
                         setRanking(data.ranking);
                     }
                 } else {
+                    console.error('[PropertyDetail] API failed:', data);
                     setError("Property details not found.");
                 }
             } catch (err) {
