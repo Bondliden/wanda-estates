@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://webapi.resales-online.com/V6';
+import { RESALES_CONFIG, BASE_API_PARAMS, buildResalesApiUrl } from './config';
+
+const API_BASE_URL = RESALES_CONFIG.baseUrl;
 
 function shuffleArray(array: any[]) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -54,29 +56,17 @@ function mapProperty(p: any) {
 }
 
 export async function fetchProperties(customFilters: any = {}) {
-    // API Credentials and shared filters
-    const p1 = process.env.RESALES_P1;
-    const p2 = process.env.RESALES_P2;
-    const agencyFilterId = '1';
-
     if (typeof fetch === 'undefined') {
         throw new Error("Global fetch is not defined. Ensure Node.js 18+ is used.");
     }
 
-    if (!p1 || !p2) {
-        throw new Error("Resales Online API credentials are not configured.");
-    }
+    // ✅ CONFIGURACIÓN BLINDADA: Usa BASE_API_PARAMS en lugar de hardcoding
 
     const pageSize = customFilters.p_PageSize || '18';
     const pageIndex = customFilters.p_PageIndex || '1';
 
     const baseFilters = {
-        p1: p1,
-        p2: p2,
-        p_output: 'json',
-        p_Agency_FilterId: '1',
-        p_PropertyStatus: 'Available',
-        p_MustHavePictures: '1',
+        ...BASE_API_PARAMS,
         p_min: customFilters.p_min || '0',
         p_location: customFilters.p_location || '',
         p_PageSize: pageSize,
@@ -88,20 +78,15 @@ export async function fetchProperties(customFilters: any = {}) {
     // If p_RefId is provided, priority is to find that specific property.
     // We add p1, p2, output and the ID. Other filters can often cause "not found" if they don't match the specific property's data.
     if (customFilters.p_RefId) {
-        queryParams.append('p1', p1);
-        queryParams.append('p2', p2);
+        queryParams.append('p1', BASE_API_PARAMS.p1);
+        queryParams.append('p2', BASE_API_PARAMS.p2);
         queryParams.append('p_output', 'json');
-        queryParams.append('p_Agency_FilterId', '1');
+        queryParams.append('p_Agency_FilterId', BASE_API_PARAMS.p_Agency_FilterId);
         queryParams.append('p_RefId', customFilters.p_RefId.replace(/\D/g, ''));
         queryParams.append('p_Reference', customFilters.p_RefId);
     } else {
         const baseFilters: any = {
-            p1: p1,
-            p2: p2,
-            p_output: 'json',
-            p_Agency_FilterId: '1',
-            p_PropertyStatus: 'Available',
-            p_MustHavePictures: '1',
+            ...BASE_API_PARAMS,
             p_PageSize: pageSize,
             p_PageIndex: pageIndex,
         };
@@ -234,17 +219,11 @@ export async function fetchProperties(customFilters: any = {}) {
 }
 
 export async function fetchPropertyDetails(propertyId: string) {
-    const p1 = process.env.RESALES_P1;
-    const p2 = process.env.RESALES_P2;
-
-    if (!p1 || !p2) {
-        throw new Error("Resales Online API credentials (P1/P2) are not set.");
-    }
-
     try {
-        // Try SearchProperties with p_RefId first (works for most alphanumeric references)
+        // Try SearchProperties with p_RefId first (works for most alphanumeric references)  
         const searchParams = new URLSearchParams({
-            p1, p2, p_output: 'json', p_Agency_FilterId: '1', p_RefId: propertyId
+            ...BASE_API_PARAMS,
+            p_RefId: propertyId
         });
 
         console.log(`[fetchPropertyDetails] Trying search for ${propertyId}`);

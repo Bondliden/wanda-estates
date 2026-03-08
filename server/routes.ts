@@ -8,6 +8,7 @@ import { insertContactInquirySchema } from "@shared/schema";
 import { z } from "zod";
 
 import { fetchProperties, fetchPropertyDetails, fetchNewDevelopments } from "./resales";
+import { BASE_API_PARAMS, buildResalesApiUrl } from "./config";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -38,9 +39,7 @@ export async function registerRoutes(
 
     // 1. Check Resales API connectivity + image URLs
     try {
-      const p1 = process.env.RESALES_P1;
-      const p2 = process.env.RESALES_P2;
-      const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_MustHavePictures=1`;
+      const url = buildResalesApiUrl('SearchProperties', { p_PageSize: '1' });
       const r = await fetch(url);
       const d = await r.json();
       const prop = Array.isArray(d.Property) ? d.Property[0] : d.Property;
@@ -82,9 +81,7 @@ export async function registerRoutes(
   // Debug Resales Connectivity (legacy, kept for manual debugging)
   app.get("/api/debug-resales", async (req, res) => {
     try {
-      const p1 = process.env.RESALES_P1;
-      const p2 = process.env.RESALES_P2;
-      const url = `https://webapi.resales-online.com/V6/SearchProperties?p1=${p1}&p2=${p2}&p_output=json&p_Agency_FilterId=1&p_PageSize=1&p_location=Marbella`;
+      const url = buildResalesApiUrl('SearchProperties', { p_PageSize: '1', p_location: 'Marbella' });
       const response = await fetch(url);
       const data = await response.json();
       res.json({ success: true, url, data });
