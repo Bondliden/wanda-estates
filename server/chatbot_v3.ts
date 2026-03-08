@@ -108,9 +108,9 @@ export async function handleChatMessageV3(req: Request, res: Response) {
       if (propData) {
         const props = Array.isArray(propData) ? propData : [propData];
         const catalog = props.slice(0, 10).map((p: any) =>
-          `- Ref: ${p.Reference} | ${p.PropertyType?.NameType || 'Propiedad'} en ${p.Location} | Precio: ${p.Price}€`
+          `- Ref: ${p.Reference} | ${p.PropertyType?.NameType || 'Propiedad'} en ${p.Location} | Precio: ${p.Price}€ | URL: https://wandaestates.com/property/${p.Reference}`
         ).join("\n");
-        livePropertiesContext = `\n\n### CATALOGO ACTUAL:\n${catalog}`;
+        livePropertiesContext = `\n\n### CATALOGO ACTUAL (usa las URLs exactas de este catálogo en tus respuestas, NO inventes URLs):\n${catalog}`;
       }
     } catch (e) {
       console.error("Context error", e);
