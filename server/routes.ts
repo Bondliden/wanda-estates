@@ -13,6 +13,10 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Redirect singular /property/:id to plural /properties/:id
+  app.get("/property/:id", (req, res) => {
+    res.redirect(301, `/properties/${req.params.id}`);
+  });
   // Endpoint to check server IP for whitelisting
   app.get("/api/my-ip", async (_req, res) => {
     try {
