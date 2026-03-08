@@ -1,6 +1,6 @@
 async function test() {
-    const p1 = "1022290";
-    const p2 = "c985be4dc15535fb73878a444b7ba2a475290c37";
+    const p1 = process.env.RESALES_P1 || "1022290";
+    const p2 = process.env.RESALES_P2 || "c985be4dc15535fb73878a444b7ba2a475290c37";
     const API_BASE_URL = 'https://webapi.resales-online.com/V6';
 
     const params = new URLSearchParams({
