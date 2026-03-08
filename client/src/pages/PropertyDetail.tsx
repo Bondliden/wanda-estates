@@ -109,17 +109,42 @@ export default function PropertyDetail() {
 
         const fetchDetails = async () => {
             setLoading(true);
+            setError(null); // Clear previous errors
+            
             try {
+                console.log(`[PropertyDetail] Fetching property: ${id}`);
                 const response = await fetch(`/api/properties/${id}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
 
                 console.log('[PropertyDetail] API Response:', { success: data.success, hasData: !!data.data, dataType: typeof data.data });
+                console.log('[PropertyDetail] Full response:', data);
+                
                 if (data.success && data.data) {
                     const propertyData = data.data.Property || data.data;
-                    console.log('[PropertyDetail] Property data:', { hasPropertyData: !!propertyData, reference: propertyData?.Reference });
-                    setProperty(propertyData);
-                    if (data.ranking) {
-                        setRanking(data.ranking);
+                    console.log('[PropertyDetail] Property data extracted:', { 
+                      hasPropertyData: !!propertyData, 
+                      reference: propertyData?.Reference,
+                      id: propertyData?.Id,
+                      price: propertyData?.Price,
+                      dataKeys: Object.keys(propertyData || {})
+                    });
+                    
+                    // Validación más robusta
+                    if (propertyData && (propertyData.Reference || propertyData.Id)) {
+                        console.log('[PropertyDetail] Setting property state with valid data');
+                        setProperty(propertyData);
+                        setError(null); // Clear any previous errors
+                        if (data.ranking) {
+                            setRanking(data.ranking);
+                        }
+                    } else {
+                        console.error('[PropertyDetail] Property data invalid:', propertyData);
+                        setError("Property data is incomplete.");
                     }
                 } else {
                     console.error('[PropertyDetail] API failed:', data);
@@ -250,11 +275,26 @@ export default function PropertyDetail() {
         </div>
     );
     if (error || !property) return (
-        <div className="min-h-screen flex items-center justify-center font-serif text-red-500">
-            <div className="text-center">
-                <p className="text-xl mb-4">{error}</p>
+        <div className="min-h-screen flex items-center justify-center font-serif">
+            <div className="text-center max-w-2xl p-8">
+                <h2 className="text-2xl mb-4 text-red-600">{error || "Property not loaded"}</h2>
+                
+                {/* DEBUG INFO - Temporal para diagnosticar */}
+                <div className="bg-gray-100 p-4 text-left text-sm mb-6">
+                    <h3 className="font-bold mb-2">🔍 Debug Info (temporal):</h3>
+                    <p><strong>Property ID:</strong> {id}</p>
+                    <p><strong>Loading:</strong> {loading ? 'Yes' : 'No'}</p>
+                    <p><strong>Error:</strong> {error || 'None'}</p>
+                    <p><strong>Property state:</strong> {property ? 'Has data' : 'Null'}</p>
+                    <p className="text-xs mt-2 text-gray-600">
+                        Abrir F12 → Console para ver logs detallados de la API
+                    </p>
+                </div>
+                
                 <Link href="/properties-for-sale">
-                    <Button variant="outline" className="rounded-none">{isSpanish ? 'Volver a propiedades' : 'Back to properties'}</Button>
+                    <Button variant="outline" className="rounded-none">
+                        {isSpanish ? 'Volver a propiedades' : 'Back to properties'}
+                    </Button>
                 </Link>
             </div>
         </div>
