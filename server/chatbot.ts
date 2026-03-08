@@ -140,7 +140,7 @@ Present between **3 and 5 well-filtered properties** with this exact format:
 Bedrooms: X | Bathrooms: X | Built: X m² | Plot: X m²
 Zone: [urbanisation name or area]
 [Brief comment: why it's interesting — views, qualities, renovation, appreciation potential, etc.]
-🔗 [View property →](https://www.wandaestates.com/property/[ID])
+🔗 <a href="https://www.wandaestates.com/property/[ID]" target="_self" style="color: #2B5F8C; text-decoration: none; font-weight: 600;">Ver propiedad →</a>
 \`\`\`
 
 ---
@@ -324,7 +324,7 @@ export async function handleChatMessage(req: Request, res: Response) {
       let catalog = "";
       if (topMatches.length > 0) {
         catalog = topMatches.map((p: any) =>
-          `- REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | Link: https://wandaestates.com/properties/${p.Reference}`
+          `- REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | <a href="https://www.wandaestates.com/property/${p.Reference}" target="_self" style="color: #2B5F8C; text-decoration: none; font-weight: 600;">🔗 Ver propiedad</a>`
         ).join("\n");
       }
 
@@ -340,7 +340,7 @@ export async function handleChatMessage(req: Request, res: Response) {
             const area = p.BuiltArea || p.Built || 0;
             const loc = p.Location || p.Municipality || 'Costa del Sol';
             const type = p.TypeName || p.PropertyType?.NameType || 'Propiedad';
-            specificPropContext = `\n\n### PROPIEDAD ESPECÍFICA SOLICITADA POR EL CLIENTE:\n- REF ${specificRef} | ${type} en ${loc} | ${beds} Dorm | ${area}m² | €${price.toLocaleString()} | Link: https://wandaestates.com/properties/${specificRef}\nNOTA: El cliente ha pedido información sobre esta propiedad. Preséntalas como la primera opción y describe por qué es una gran elección. No digas que no tienes información.`;
+            specificPropContext = `\n\n### PROPIEDAD ESPECÍFICA SOLICITADA POR EL CLIENTE:\n- REF ${specificRef} | ${type} en ${loc} | ${beds} Dorm | ${area}m² | €${price.toLocaleString()} | <a href="https://www.wandaestates.com/property/${specificRef}" target="_self" style="color: #2B5F8C; text-decoration: none; font-weight: 600;">🔗 Ver propiedad</a>\nNOTA: El cliente ha pedido información sobre esta propiedad. Preséntalas como la primera opción y describe por qué es una gran elección. No digas que no tienes información.`;
           } else {
             specificPropContext = `\n\n### REFERENCIA SOLICITADA: ${specificRef}\nNOTA: Esta referencia existe en el sistema de ResalesOnline pero los detalles no están disponibles en este momento. Dile al cliente que puedes conectarle con un agente para obtener información completa y no digas que no existe.`;
           }
