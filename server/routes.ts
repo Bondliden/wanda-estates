@@ -377,6 +377,7 @@ export async function registerRoutes(
   });
 
   // Setup chatbot routes
+  app.post("/api/chat", handleChatMessage);
   app.post("/api/chat-v2", handleChatMessage);
   setupChatbotRoutes(app);
 
