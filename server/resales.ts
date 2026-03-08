@@ -56,8 +56,7 @@ function mapProperty(p: any) {
 export async function fetchProperties(customFilters: any = {}) {
     // API Credentials and shared filters
     const p1 = '1022290';
-    // FORCE using the known working key, ignoring process.env just in case it has the expired one
-    const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
+    const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
     const agencyFilterId = '1';
 
     if (typeof fetch === 'undefined') {
@@ -236,7 +235,7 @@ export async function fetchProperties(customFilters: any = {}) {
 
 export async function fetchPropertyDetails(propertyId: string) {
     const p1 = '1022290';
-    const p2 = 'c985be4dc15535fb73878a444b7ba2a475290c37';
+    const p2 = '13b9e88dcae7bf03423e2e5c08f2df629a103c1a';
 
     if (!p1 || !p2) {
         throw new Error("Resales Online API credentials (P1/P2) are not set.");
