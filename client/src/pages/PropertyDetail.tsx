@@ -275,27 +275,40 @@ export default function PropertyDetail() {
         </div>
     );
     if (error || !property) return (
-        <div className="min-h-screen flex items-center justify-center font-serif">
+        <div className="min-h-screen flex items-center justify-center font-serif bg-gradient-to-br from-slate-50 to-blue-50">
             <div className="text-center max-w-2xl p-8">
-                <h2 className="text-2xl mb-4 text-red-600">{error || "Property not loaded"}</h2>
-                
-                {/* DEBUG INFO - Temporal para diagnosticar */}
-                <div className="bg-gray-100 p-4 text-left text-sm mb-6">
-                    <h3 className="font-bold mb-2">🔍 Debug Info (temporal):</h3>
-                    <p><strong>Property ID:</strong> {id}</p>
-                    <p><strong>Loading:</strong> {loading ? 'Yes' : 'No'}</p>
-                    <p><strong>Error:</strong> {error || 'None'}</p>
-                    <p><strong>Property state:</strong> {property ? 'Has data' : 'Null'}</p>
-                    <p className="text-xs mt-2 text-gray-600">
-                        Abrir F12 → Console para ver logs detallados de la API
+                <div className="mb-6">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-2xl">🏠</span>
+                    </div>
+                    <h2 className="text-2xl mb-2 text-gray-800">Propiedad no disponible</h2>
+                    <p className="text-gray-600 mb-6">
+                        Esta propiedad puede haberse vendido recientemente o estar temporalmente fuera del mercado.
+                        Nuestro inventario se actualiza constantemente.
                     </p>
                 </div>
                 
-                <Link href="/properties-for-sale">
-                    <Button variant="outline" className="rounded-none">
-                        {isSpanish ? 'Volver a propiedades' : 'Back to properties'}
-                    </Button>
-                </Link>
+                <div className="space-y-4">
+                    <Link href="/properties-for-sale">
+                        <Button className="bg-[#2B5F8C] hover:bg-[#1a3a54] text-white px-6 py-2 rounded-none">
+                            Ver todas las propiedades disponibles
+                        </Button>
+                    </Link>
+                    <p className="text-sm text-gray-500">
+                        ¿Buscas algo específico? <br/>
+                        <a href="mailto:info@wandaestates.com" className="text-[#C9A961] hover:underline">
+                            Contacta con nuestro equipo
+                        </a> para propiedades exclusivas off-market
+                    </p>
+                </div>
+                
+                {/* DEBUG INFO - Solo en development */}
+                {process.env.NODE_ENV === 'development' && (
+                    <div className="bg-gray-100 p-4 text-left text-xs mt-8 rounded">
+                        <h3 className="font-bold mb-2">🔍 Debug Info:</h3>
+                        <p>ID: {id} | Loading: {loading ? 'Yes' : 'No'} | Error: {error || 'None'}</p>
+                    </div>
+                )}
             </div>
         </div>
     );

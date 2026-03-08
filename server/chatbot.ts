@@ -68,6 +68,18 @@ function getDynamicSystemPrompt(language: string = 'es'): string {
   return SYSTEM_PROMPT.replace('[VIEW_PROPERTY_TEXT]', viewPropertyText);
 }
 
+/**
+ * Validar que una propiedad existe antes de crear enlaces
+ */
+async function validateProperty(reference: string): Promise<boolean> {
+  try {
+    const details = await fetchPropertyDetails(reference);
+    return !!details;
+  } catch {
+    return false;
+  }
+}
+
 const SYSTEM_PROMPT = `# WANDA — SYSTEM PROMPT v2.0
 # For: Wanda Estates Chatbot
 
@@ -409,10 +421,36 @@ export async function handleChatMessage(req: Request, res: Response) {
       
       const topMatches = props.slice(0, 3);
       let catalog = "";
+      
       if (topMatches.length > 0) {
-        catalog = topMatches.map((p: any) =>
+        // Validación rápida de al menos las primeras 2 propiedades
+        console.log(`[CHATBOT] Validando existencia de propiedades: ${topMatches.map(p => p.Reference).join(', ')}`);
+        
+        const validatedProperties = [];
+        for (let i = 0; i < Math.min(topMatches.length, 3); i++) {
+          const prop = topMatches[i];
+          try {
+            // Test rápido: si la propiedad existe, fetchPropertyDetails devuelve datos
+            const exists = await fetchPropertyDetails(prop.Reference);
+            if (exists) {
+              validatedProperties.push(prop);
+              console.log(`[CHATBOT] ✅ Propiedad válida: ${prop.Reference}`);
+            } else {
+              console.log(`[CHATBOT] ❌ Propiedad no existe: ${prop.Reference}`);
+            }
+          } catch (e) {
+            console.log(`[CHATBOT] ❌ Error validando ${prop.Reference}:`, e);
+          }
+        }
+        
+        // Usar solo propiedades validadas
+        const propertiesToShow = validatedProperties.length > 0 ? validatedProperties : topMatches.slice(0, 1);
+        
+        catalog = propertiesToShow.map((p: any) =>
           `- REF ${p.Reference} | ${p.TypeName} en ${p.Location} | ${p.Beds} Dorm | €${p.Price.toLocaleString()} | <a href="https://www.wandaestates.com/property/${p.Reference}" target="_self" style="color: #2B5F8C; text-decoration: none; font-weight: 600;">🔗 ${getTranslation('viewProperty', language)}</a>`
         ).join("\n");
+        
+        console.log(`[CHATBOT] Catálogo creado con ${propertiesToShow.length} propiedades validadas`);
       }
 
       // Buscar propiedad específica por referencia si el cliente la mencionó
