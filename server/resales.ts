@@ -74,7 +74,7 @@ export async function fetchProperties(customFilters: any = {}) {
         p1: p1,
         p2: p2,
         p_output: 'json',
-        p_Agency_FilterId: '71569',
+        FilterAgencyId: '71569',
         p_PropertyStatus: 'Available',
         p_MustHavePictures: '1',
         p_min: customFilters.p_min || '0',
@@ -91,7 +91,7 @@ export async function fetchProperties(customFilters: any = {}) {
         queryParams.append('p1', p1);
         queryParams.append('p2', p2);
         queryParams.append('p_output', 'json');
-        queryParams.append('p_Agency_FilterId', '1');
+        queryParams.append('FilterAgencyId', '71569');
         queryParams.append('p_RefId', customFilters.p_RefId.replace(/\D/g, ''));
         queryParams.append('p_Reference', customFilters.p_RefId);
     } else {
@@ -99,7 +99,7 @@ export async function fetchProperties(customFilters: any = {}) {
             p1: p1,
             p2: p2,
             p_output: 'json',
-            p_Agency_FilterId: '71569',
+            FilterAgencyId: '71569',
             p_PropertyStatus: 'Available',
             p_MustHavePictures: '1',
             p_PageSize: pageSize,
@@ -244,7 +244,7 @@ export async function fetchPropertyDetails(propertyId: string) {
     try {
         // Try SearchProperties with p_RefId first (works for most alphanumeric references)
         const searchParams = new URLSearchParams({
-            p1, p2, p_output: 'json', p_Agency_FilterId: '71569', p_RefId: propertyId
+            p1, p2, p_output: 'json', FilterAgencyId: '71569', p_RefId: propertyId
         });
 
         console.log(`[fetchPropertyDetails] Trying search for ${propertyId}`);
