@@ -297,7 +297,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                 onChange={() => setFilters({ ...filters, searchMode: "sale", p_newBuild: "" })}
                                 className="w-4 h-4 accent-[#2B5F8C]"
                             />
-                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#2B5F8C] transition-colors">En Venta</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#2B5F8C] transition-colors">{t('properties.forsale')}</span>
                         </label>
 
                         <label className="flex items-center gap-3 cursor-pointer group">
@@ -308,7 +308,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                 onChange={() => setFilters({ ...filters, searchMode: "rent_long", p_newBuild: "" })}
                                 className="w-4 h-4 accent-[#2B5F8C]"
                             />
-                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#2B5F8C] transition-colors">Alquiler Larga Temporada</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#2B5F8C] transition-colors">{t('properties.longrent')}</span>
                         </label>
 
                         <label className="flex items-center gap-3 cursor-pointer group">
@@ -322,7 +322,7 @@ export default function ResalesPropertyGrid({ isNewDevelopment = false, initialL
                                     setFilters({ ...filters, p_MustHaveFeatures: newFeats });
                                 }}
                             />
-                            <span className="text-xs font-bold uppercase tracking-widest text-[#C9A961] group-hover:text-[#2B5F8C] transition-colors">Para Reformar</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-[#C9A961] group-hover:text-[#2B5F8C] transition-colors">{t('properties.renovation')}</span>
                         </label>
                     </div>
 
