@@ -74,7 +74,7 @@ export async function fetchProperties(customFilters: any = {}) {
         p1: p1,
         p2: p2,
         p_output: 'json',
-        p_Agency_FilterId: '1',
+        p_Agency_FilterId: '71569',
         p_PropertyStatus: 'Available',
         p_MustHavePictures: '1',
         p_min: customFilters.p_min || '0',
@@ -99,7 +99,7 @@ export async function fetchProperties(customFilters: any = {}) {
             p1: p1,
             p2: p2,
             p_output: 'json',
-            p_Agency_FilterId: '1',
+            p_Agency_FilterId: '71569',
             p_PropertyStatus: 'Available',
             p_MustHavePictures: '1',
             p_PageSize: pageSize,
@@ -244,7 +244,7 @@ export async function fetchPropertyDetails(propertyId: string) {
     try {
         // Try SearchProperties with p_RefId first (works for most alphanumeric references)
         const searchParams = new URLSearchParams({
-            p1, p2, p_output: 'json', p_Agency_FilterId: '1', p_RefId: propertyId
+            p1, p2, p_output: 'json', p_Agency_FilterId: '71569', p_RefId: propertyId
         });
 
         console.log(`[fetchPropertyDetails] Trying search for ${propertyId}`);
