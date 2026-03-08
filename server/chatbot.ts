@@ -310,10 +310,15 @@ export async function handleChatMessage(req: Request, res: Response) {
     }
 
     // Detectar si es una consulta de búsqueda proactiva
+    const searchKeywords = [
+      'options', 'show me', 'busco', 'quiero', 'find', 'looking for', 
+      'available', 'disponible', 'necesito', 'want', 'interested', 
+      'me gustaria', 'searching', 'buscando', 'encontrar', 'ver',
+      'properties', 'propiedades', 'casas', 'homes'
+    ];
+    
     const isPropertySearchQuery = detectedLocation || targetPrice || specificRef || 
-      lowerMsg.includes('options') || lowerMsg.includes('show me') || lowerMsg.includes('busco') || 
-      lowerMsg.includes('quiero') || lowerMsg.includes('find') || lowerMsg.includes('looking for') ||
-      lowerMsg.includes('available') || lowerMsg.includes('disponible');
+      searchKeywords.some(keyword => lowerMsg.includes(keyword));
 
     let livePropertiesContext = "";
     try {
@@ -330,19 +335,31 @@ export async function handleChatMessage(req: Request, res: Response) {
         { loc: false, pr: true, bd: false },
       ];
 
-      // Si el usuario menciona ubicación pero no precio específico, usar rango amplio de lujo
-      if (isPropertySearchQuery && detectedLocation && !targetPrice) {
-        console.log(`[CHATBOT] Búsqueda proactiva: ubicación detectada sin precio específico`);
+      // BÚSQUEDA PROACTIVA: Si menciona ubicación + tipo/búsqueda, mostrar automáticamente
+      const hasLocationAndType = detectedLocation && (detectedTypeKey || isPropertySearchQuery);
+      const shouldShowProactiveResults = hasLocationAndType && !specificRef;
+      
+      if (shouldShowProactiveResults) {
+        console.log(`[CHATBOT] Búsqueda proactiva activada: ubicación='${detectedLocation}', tipo='${detectedType}', búsqueda=${isPropertySearchQuery}`);
+        
         const proactiveParams = { 
           ...baseParams, 
           p_location: detectedLocation,
-          p_min: '500000', // Mínimo para lujo en Costa del Sol
-          p_max: '5000000' // Rango amplio para mostrar opciones
+          p_min: targetPrice ? String(minPrice || Math.floor(targetPrice * 0.6)) : '500000',
+          p_max: targetPrice ? String(maxPrice || Math.floor(targetPrice * 1.4)) : '5000000'
         };
+        
+        if (detectedTypeKey) {
+          proactiveParams.p_PropertyTypes = propertyTypesMap[detectedTypeKey];
+        }
+        
+        console.log(`[CHATBOT] Parámetros búsqueda proactiva:`, proactiveParams);
+        
         const proactiveData = await fetchProperties(proactiveParams);
-        if (proactiveData?.data?.Property) {
+        if (proactiveData?.success && proactiveData?.data?.Property) {
           const proactiveProps = Array.isArray(proactiveData.data.Property) ? proactiveData.data.Property : [proactiveData.data.Property];
-          props = proactiveProps.slice(0, 8).map(mapProperty);
+          props = proactiveProps.slice(0, 6).map(mapProperty).filter(p => p && p.Reference);
+          console.log(`[CHATBOT] Propiedades proactivas encontradas: ${props.length}`);
         }
       }
 
