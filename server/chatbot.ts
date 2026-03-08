@@ -253,6 +253,8 @@ export async function handleChatMessage(req: Request, res: Response) {
     const detectedTypeKey = Object.keys(propertyTypesMap).find(key => lowerMsg.includes(key));
     let detectedType = detectedTypeKey ? propertyTypesMap[detectedTypeKey] : 'Villa,Apartment,Penthouse,Townhouse';
 
+    console.log(`[CHATBOT] Detección: Location='${detectedLocation}', Type='${detectedType}', Message='${normalizedMsg.substring(0, 50)}...'`);
+
     let detectedBeds = "";
     const bedRegex = /(\d+)\+?\s*(?:dormitorio|habitacion|habitación|hab|beds|bedroom|bed)/i;
     const bedMatch = lowerMsg.match(bedRegex);
@@ -267,7 +269,23 @@ export async function handleChatMessage(req: Request, res: Response) {
     let maxPrice: number | null = null;
 
     const isAround = lowerMsg.includes('around') || lowerMsg.includes('alrededor') || lowerMsg.includes('cerca') || lowerMsg.includes('approx') || lowerMsg.includes('alredeodr');
-    const singleMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|million|millions|m|k|mio)/i);
+    
+    // Detectar tanto números como palabras en inglés
+    let singleMatch = lowerMsg.match(/(\d+(?:\.\d+)?)\s*(millón|millon|millones|million|millions|m|k|mio)/i);
+    
+    // Detectar "one million", "two million", etc.
+    const wordNumbers: Record<string, number> = {
+      'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+      'half': 0.5, 'uno': 1, 'dos': 2, 'tres': 3, 'cuatro': 4, 'cinco': 5, 'medio': 0.5
+    };
+    
+    if (!singleMatch) {
+      const wordMatch = lowerMsg.match(/(one|two|three|four|five|six|seven|eight|nine|ten|half|uno|dos|tres|cuatro|cinco|medio)\s+(million|millions|millón|millones|mio)/i);
+      if (wordMatch) {
+        const wordNum = wordNumbers[wordMatch[1].toLowerCase()] || 1;
+        singleMatch = [wordMatch[0], String(wordNum), wordMatch[2]];
+      }
+    }
 
     if (singleMatch) {
       const unit = singleMatch[2].toLowerCase();
@@ -287,12 +305,22 @@ export async function handleChatMessage(req: Request, res: Response) {
         if (targetPrice > 1000000) minPrice = targetPrice * 0.6;
         else minPrice = targetPrice * 0.5;
       }
+      
+      console.log(`[CHATBOT] Precio detectado: Target=${targetPrice}, Min=${minPrice}, Max=${maxPrice}`);
     }
+
+    // Detectar si es una consulta de búsqueda proactiva
+    const isPropertySearchQuery = detectedLocation || targetPrice || specificRef || 
+      lowerMsg.includes('options') || lowerMsg.includes('show me') || lowerMsg.includes('busco') || 
+      lowerMsg.includes('quiero') || lowerMsg.includes('find') || lowerMsg.includes('looking for') ||
+      lowerMsg.includes('available') || lowerMsg.includes('disponible');
 
     let livePropertiesContext = "";
     try {
       let props: any[] = [];
       const baseParams: any = { p_PageSize: '60', p_PropertyTypes: detectedType, p_Agency_FilterId: '1', p_MustHavePictures: '1' };
+      
+      console.log(`[CHATBOT] Es consulta de propiedades: ${isPropertySearchQuery}`);
 
       // Multi-Tier Search
       const searchTiers = [
@@ -301,6 +329,22 @@ export async function handleChatMessage(req: Request, res: Response) {
         { loc: true, pr: false, bd: false },
         { loc: false, pr: true, bd: false },
       ];
+
+      // Si el usuario menciona ubicación pero no precio específico, usar rango amplio de lujo
+      if (isPropertySearchQuery && detectedLocation && !targetPrice) {
+        console.log(`[CHATBOT] Búsqueda proactiva: ubicación detectada sin precio específico`);
+        const proactiveParams = { 
+          ...baseParams, 
+          p_location: detectedLocation,
+          p_min: '500000', // Mínimo para lujo en Costa del Sol
+          p_max: '5000000' // Rango amplio para mostrar opciones
+        };
+        const proactiveData = await fetchProperties(proactiveParams);
+        if (proactiveData?.data?.Property) {
+          const proactiveProps = Array.isArray(proactiveData.data.Property) ? proactiveData.data.Property : [proactiveData.data.Property];
+          props = proactiveProps.slice(0, 8).map(mapProperty);
+        }
+      }
 
       for (const tier of searchTiers) {
         if (props.length >= 10) break;
@@ -344,6 +388,8 @@ export async function handleChatMessage(req: Request, res: Response) {
         props.sort((a, b) => Math.abs(a.Price - finalPrice) - Math.abs(b.Price - finalPrice));
       }
 
+      console.log(`[CHATBOT] Propiedades encontradas: ${props.length}, después de filtros y ordenación`);
+      
       const topMatches = props.slice(0, 3);
       let catalog = "";
       if (topMatches.length > 0) {
